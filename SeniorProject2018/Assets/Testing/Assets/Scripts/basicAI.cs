@@ -94,7 +94,18 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 		void OnTriggerEnter (Collider coll)
 		{
-			if(coll.tag == "Player")
+			FieldOfView script = GameObject.Find("AIThirdPersonController").GetComponent<FieldOfView>();
+			bool viewCheck = false;
+
+			foreach (Transform visibleTarget in script.visibleTargets) {
+
+				if(visibleTarget.CompareTag("Player")){
+					print("TRUE");
+					viewCheck = true;
+				}
+			}
+			print(coll.tag+":"+viewCheck);
+			if(coll.tag == "Player"  && viewCheck)
 			{
 				state = basicAI.State.CHASE;
 				target = coll.gameObject;
