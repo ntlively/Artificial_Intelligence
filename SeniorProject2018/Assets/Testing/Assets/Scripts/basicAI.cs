@@ -2,6 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// BUG REPORT
+// 1) ON TRIGGER ENTER DOES NOT TRIGGER IF PLAYER SPAWNS INSIDE SIGHT RADIUS
+// 2) NO CASE FOR LEAVING SPHERE COLLIDER TRIGGER ZONE
+// 3) CHASE SPEED IN SCRIPT NOT SETTING PROPERLY
+// 4) DON'T NEED SPHERE COLLIDER, BUT WHERE TO PUT VISION CHECK BESIDES ON TRIGGER ENTER
+
+
+
 namespace UnityStandardAssets.Characters.ThirdPerson
 {
 	public class basicAI : MonoBehaviour {
@@ -25,7 +33,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 
 		// Variables for CHASE
-		public float chaseSpeed = 1.0f;
+		public float chaseSpeed = 0.1f;
 		public GameObject target;
 
 
@@ -104,8 +112,10 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 					viewCheck = true;
 				}
 			}
-			print(coll.tag+":"+viewCheck);
-			if(coll.tag == "Player"  && viewCheck)
+			//print(coll.tag+":"+viewCheck);
+			//coll.tag == "Player"  &&
+
+			if(viewCheck)
 			{
 				state = basicAI.State.CHASE;
 				target = coll.gameObject;
