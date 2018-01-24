@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// BUG REPORT
+// 1) PHYSICS.RAYCAST REQUIRES A BOX COLLIDER OR SIMILAR TO DETECT COLLISIONS, MESH COLLIDERS ARE GARBO
+
+
 public class FieldOfView : MonoBehaviour {
 
 	// Variable Declaration
