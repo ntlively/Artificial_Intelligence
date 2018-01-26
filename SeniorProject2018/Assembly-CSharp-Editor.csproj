@@ -51,7 +51,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Testing\Assets\Editor\AI_Editor.cs" />
+     <Compile Include="Assets\Artificial_IntellyGents\Assets\Editor\Hearing_Editor.cs" />
+     <Compile Include="Assets\Artificial_IntellyGents\Assets\Editor\Vision_Editor.cs" />
      <None Include="Assets\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />
      <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonBasic.shader" />
      <None Include="Assets\Standard Assets\Prototyping\Shaders\WorldCoordDiffuse.shader" />

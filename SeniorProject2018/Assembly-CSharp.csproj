@@ -51,6 +51,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\basicAI.cs" />
+     <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Hearing.cs" />
+     <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Vision.cs" />
      <Compile Include="Assets\SampleScenes\Menu\Scripts\MenuSceneLoader.cs" />
      <Compile Include="Assets\SampleScenes\Menu\Scripts\PauseMenu.cs" />
      <Compile Include="Assets\SampleScenes\Menu\Scripts\SceneAndURLLoader.cs" />
@@ -59,9 +62,6 @@
      <Compile Include="Assets\SampleScenes\Scripts\ParticleSceneControls.cs" />
      <Compile Include="Assets\SampleScenes\Scripts\PlaceTargetWithMouse.cs" />
      <Compile Include="Assets\SampleScenes\Scripts\SlowMoButton.cs" />
-     <Compile Include="Assets\Testing\Assets\Scripts\basicAI.cs" />
-     <Compile Include="Assets\Testing\Assets\Scripts\FieldOfSound.cs" />
-     <Compile Include="Assets\Testing\Assets\Scripts\FieldOfView.cs" />
      <None Include="Assets\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />
      <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonBasic.shader" />
      <None Include="Assets\Standard Assets\Prototyping\Shaders\WorldCoordDiffuse.shader" />
