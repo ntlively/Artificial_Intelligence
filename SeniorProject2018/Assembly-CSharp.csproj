@@ -53,6 +53,8 @@
   <ItemGroup>
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\basicAI.cs" />
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Hearing.cs" />
+     <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\predActor.cs" />
+     <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\predDirector.cs" />
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Vision.cs" />
      <Compile Include="Assets\SampleScenes\Menu\Scripts\MenuSceneLoader.cs" />
      <Compile Include="Assets\SampleScenes\Menu\Scripts\PauseMenu.cs" />

@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // BUG REPORT
-//
+// 1) NEED TO STANDARDIZE UNITS FOR DECAY MEASUREMENTS AND DB LEVELS
+// 2) NEED TO STORE ADJUSTED DB LEVEL BACK ON SOURCE?
 
 // NOTES
 // 1) visualizer does not accurately portray the actual field of sound. (plane vs cone math)
@@ -30,17 +31,19 @@ public class Hearing : MonoBehaviour {
 	public float refreshDelay;
 
 	public List<Transform> hearableTargets = new List<Transform>();
-
+	public RaycastHit[] walls;
 	public float meshResolution;
 
 	public MeshFilter soundMeshFilter;
 	Mesh soundMesh;
 
+	//private GameObject visual;
 
 	void Start(){
 		soundMesh = new Mesh();
 		soundMesh.name = "Sound Mesh";
 		soundMeshFilter.mesh = soundMesh;
+		//visual = GameObject.Find("SoundVisualization");
 
 		StartCoroutine ("FindSoundTargetsWithDelay",refreshDelay);
 	}
@@ -63,6 +66,8 @@ public class Hearing : MonoBehaviour {
 
 	void FindHearableTargets(){
 		hearableTargets.Clear ();
+		walls = new RaycastHit[0];
+
 		// Targets update their sphere colliders to be larger based of their own decibel level
 		Collider[] targetsInSoundRadius = Physics.OverlapSphere (transform.position, soundRadius, targetMask);
 
@@ -77,17 +82,23 @@ public class Hearing : MonoBehaviour {
 			//float sourceDB = target.GetComponent<Hearing>().decibel;
 			float sourceDB = 10;
 			sourceDB = sourceDB *(1/distToTarget);
+			//Debug.Log("dist"+distToTarget);
 
 			// Decay sound if it is outside hearing angle
 			if(!(Vector3.Angle (transform.forward, dirToTarget) < soundAngle / 2)){					
 				sourceDB = sourceDB*(hearingAngleDecay);
 			}
 
-			// Decay sound if there is a wall in the way
-			if(!Physics.Raycast(transform.position,dirToTarget,distToTarget,obstacleMask)){
-				sourceDB = sourceDB*(wallDecay);
-			}
+			// Decay sound if there are walls in the way
 
+        	walls = Physics.RaycastAll(transform.position,dirToTarget,distToTarget,obstacleMask);
+			// Debug.Log(walls.Length);
+			for(int j = 0;j < walls.Length;j++){
+				sourceDB = sourceDB*(wallDecay);
+				//Debug.Log("Wall Decay Applied");
+			}
+			//Debug.Log(sourceDB);
+			
 			// Might want to store the calculated decibel to decide between options?
 			if(sourceDB >= hearingLimit){
 				//target.GetComponent<Hearing>().calcDB = sourceDB;
@@ -144,12 +155,13 @@ public class Hearing : MonoBehaviour {
 		RaycastHit hit;
 
 		if(Physics.Raycast(transform.position,dir, out hit, soundRadius, obstacleMask))
-		{
-			return new SoundCastInfo(true, hit.point, hit.distance, globalAngle);
+		{	
+			int numHits = Physics.RaycastAll(transform.position,dir, soundRadius, obstacleMask).Length;
+			return new SoundCastInfo(true, numHits, transform.position+dir*soundRadius, soundRadius, globalAngle);
 		}
 		else
 		{
-			return new SoundCastInfo(false, transform.position+dir*soundRadius,soundRadius,globalAngle);
+			return new SoundCastInfo(false, 0, transform.position+dir*soundRadius, soundRadius, globalAngle);
 		}	
 	}
 
@@ -157,12 +169,14 @@ public class Hearing : MonoBehaviour {
 
 	public struct SoundCastInfo{
 		public bool hit;
+		public int numHits;
 		public Vector3 point;
 		public float dst;
 		public float angle;
 
-		public SoundCastInfo(bool _hit, Vector3 _point, float _dst, float _angle){
+		public SoundCastInfo(bool _hit,int _numHits, Vector3 _point, float _dst, float _angle){
 			hit = _hit;
+			numHits = _numHits;
 			point = _point;
 			dst = _dst;
 			angle = _angle;
@@ -181,3 +195,19 @@ public class Hearing : MonoBehaviour {
 	}
 
 }
+
+
+
+
+
+
+
+		// Color edit;
+		// ColorUtility.TryParseHtmlString("#ACA6EEFF", out edit);
+		// visual.GetComponent<Renderer>().material.SetColor("_Color", edit);
+		
+		// for(int j = 0;j < walls.Length;j++){
+		// 	edit.a = edit.a * 0.8f;
+		// 	edit.r = edit.r * 1.1f;
+		// 	visual.GetComponent<Renderer>().material.SetColor("_Color", edit);
+		// }
