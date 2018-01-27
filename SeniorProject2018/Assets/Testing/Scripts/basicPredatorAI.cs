@@ -65,7 +65,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				}
 				if (agent.isOnOffMeshLink)
 				{
-					character.Move(agent.desiredVelocity,false,true);
+					character.Move(Vector3.zero,false,true);
 					if (method == OffMeshLinkMoveMethod.NormalSpeed)
 						yield return StartCoroutine(NormalSpeed(agent));
 					else if (method == OffMeshLinkMoveMethod.Parabola)
