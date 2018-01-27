@@ -68,8 +68,8 @@ public class Vision : MonoBehaviour {
 			if (Vector3.Angle (transform.forward, dirToTarget) < viewAngle / 2) {					
 				float dstToTarget = Vector3.Distance (transform.position, target.position);
 				// Physics.Raycast(transform.position,dir, out hit, viewRadius, obstacleMask)
-				RaycastHit hit;
-				if(!Physics.Raycast(transform.position,dirToTarget,out hit,dstToTarget,obstacleMask)){
+				//RaycastHit hit;
+				if(!Physics.Raycast(transform.position,dirToTarget,dstToTarget,obstacleMask)){
 					//Debug.Log("NO WALL");
 					visibleTargets.Add (target);
 				}

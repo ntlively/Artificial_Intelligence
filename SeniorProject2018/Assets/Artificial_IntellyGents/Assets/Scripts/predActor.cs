@@ -47,6 +47,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			agent.updatePosition = true;
 			agent.updateRotation = false;
 
+
 			state = predActor.State.PATROL;
 			alive = true;
 
@@ -104,21 +105,28 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 		void OnTriggerEnter (Collider coll)
 		{
-			//visionScript = GameObject.Find("AIThirdPersonController").GetComponent<Vision>();
 			bool viewCheck = false;
 
 			foreach (Transform visibleTarget in visionScript.visibleTargets) {
-
+				//Debug.Log(visibleTarget);
+				//Debug.Log(coll.gameObject);
 				if(visibleTarget.CompareTag("Player")){
 					//print("TRUE");
+					//Debug.Log(visibleTarget);
+
 					viewCheck = true;
+					target = coll.gameObject;
+					//target.transform = visibleTarget;
+					state = predActor.State.CHASE;
 				}
 			}
-			if(viewCheck)
-			{
-				state = predActor.State.CHASE;
-				target = coll.gameObject;
-			}
+			// if(viewCheck)
+			// {
+
+			// 	target = coll.gameObject;
+			// 	state = predActor.State.CHASE;
+				
+			// }
 		}
 	}	
 }
