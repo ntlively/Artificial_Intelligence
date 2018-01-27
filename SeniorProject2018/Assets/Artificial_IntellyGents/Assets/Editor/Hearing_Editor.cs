@@ -23,9 +23,11 @@ public class FOS_Editor : Editor {
 		Handles.DrawLine (fos.transform.position,fos.transform.position + soundAngleA*fos.soundRadius);
 		Handles.DrawLine (fos.transform.position,fos.transform.position + soundAngleB*fos.soundRadius);
 		// Draw line between selected and hearableTarget
-		Handles.color = Color.red;
+		Handles.color = Color.blue;
+		Vector3 modify = fos.transform.position + new Vector3(1.0f,0,0);
+
 		foreach (Transform hearableTarget in fos.hearableTargets) {
-			Handles.DrawLine (fos.transform.position, hearableTarget.position);
+			Handles.DrawLine (modify, hearableTarget.position);
 		}
 	}
 

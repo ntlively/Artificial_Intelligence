@@ -42,8 +42,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		void Start () {
 			agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
 			character = GetComponent<ThirdPersonCharacter>();
-			visionScript = GetComponent<Vision>();
-			hearingScript = GetComponent<Hearing>();
+			visionScript = this.GetComponent<Vision>();
+			hearingScript = this.GetComponent<Hearing>();
 			agent.updatePosition = true;
 			agent.updateRotation = false;
 
@@ -104,13 +104,13 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 		void OnTriggerEnter (Collider coll)
 		{
-//			Vision visionScript = GameObject.Find("AIThirdPersonController").GetComponent<Vision>();
+			//visionScript = GameObject.Find("AIThirdPersonController").GetComponent<Vision>();
 			bool viewCheck = false;
 
 			foreach (Transform visibleTarget in visionScript.visibleTargets) {
 
 				if(visibleTarget.CompareTag("Player")){
-					print("TRUE");
+					//print("TRUE");
 					viewCheck = true;
 				}
 			}

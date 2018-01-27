@@ -24,8 +24,10 @@ public class FOV_Editor : Editor {
 		Handles.DrawLine (fov.transform.position,fov.transform.position + viewAngleB*fov.viewRadius);
 		// Draw line between selected and visibleTarget
 		Handles.color = Color.red;
+		Vector3 modify = fov.transform.position + new Vector3(-1.0f,0,0);
+		//fov.transform.position
 		foreach (Transform visibleTarget in fov.visibleTargets) {
-			Handles.DrawLine (fov.transform.position, visibleTarget.position);
+			Handles.DrawLine (modify, visibleTarget.position);
 		}
 	}
 

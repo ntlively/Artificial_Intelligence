@@ -35,6 +35,8 @@ public class Vision : MonoBehaviour {
 		viewMesh.name = "View Mesh";
 		viewMeshFilter.mesh = viewMesh;
 
+		targetMask =   1 << 9 ;
+		obstacleMask = 1 << 10;
 		StartCoroutine ("FindViewTargetsWithDelay",refreshDelay);
 	}
 
@@ -65,8 +67,10 @@ public class Vision : MonoBehaviour {
 			// if something in the target layer is in the view angle
 			if (Vector3.Angle (transform.forward, dirToTarget) < viewAngle / 2) {					
 				float dstToTarget = Vector3.Distance (transform.position, target.position);
-
-				if(!Physics.Raycast(transform.position,dirToTarget,dstToTarget,obstacleMask)){
+				// Physics.Raycast(transform.position,dir, out hit, viewRadius, obstacleMask)
+				RaycastHit hit;
+				if(!Physics.Raycast(transform.position,dirToTarget,out hit,dstToTarget,obstacleMask)){
+					//Debug.Log("NO WALL");
 					visibleTargets.Add (target);
 				}
 			}
