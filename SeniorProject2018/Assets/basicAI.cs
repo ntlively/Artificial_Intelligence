@@ -20,7 +20,9 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 		
 		//Variable patrolling
 		//public GameObject[] waypoints;
+		//private WayPointClass currentWaypoint;
 		private WayPointClass currentWaypoint;
+		WayPointMaster sn;
 		public float patrolSpeed = 0.5f;
 
 		//Variables for Chasing
@@ -39,9 +41,13 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 			state = basicAI.State.PATROL;
 			alive = true;
 
+			sn = this.GetComponent<WayPointMaster>();
+
+
+			currentWaypoint = sn.NewWayPoint();
 			//Get a random way point
-			GameObject[] tempPoints = GameObject.FindGameObjectsWithTag("Waypoint");
-			currentWaypoint = tempPoints[0].GetComponent<WayPointClass>();
+			//GameObject[] tempPoints = GameObject.FindGameObjectsWithTag("Waypoint");
+			//currentWaypoint = tempPoints[0].GetComponent<WayPointClass>();
 			//waypoints = GameObject.FindGameObjectsWithTag("Waypoint");
 
 			//Start FSM Finite state machine
@@ -60,6 +66,10 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 					case State.CHASE:
 						Chase();
 						break;
+						//New States
+						//Stealth
+						//Wait
+						//Talks
 
 				}
 
@@ -81,7 +91,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 			//If the player is close to way point, set the next way point.
 			else if (Vector3.Distance(this.transform.position, currentWaypoint.transform.position) <= 2)
 			{
-				currentWaypoint = currentWaypoint.NextWayPoint(currentWaypoint); 
+				currentWaypoint = sn.NextWayPoint(currentWaypoint); 
 			}
 			//If there are no way points close by.
 			else

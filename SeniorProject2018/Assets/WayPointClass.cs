@@ -13,7 +13,7 @@ public class WayPointClass : MonoBehaviour {
 	public bool preyEvidence;
 	public float evidenceTimer;
 
-	List<WayPointClass> waypoints;
+	//List<WayPointClass> waypoints;
 
 	void Start ()
 	{
@@ -25,7 +25,7 @@ public class WayPointClass : MonoBehaviour {
 		evidenceTimer = 20.0f;
 
 		//Get all way points for the player.
-		waypoints = new List<WayPointClass>();
+		/*waypoints = new List<WayPointClass>();
 		GameObject[] tempPoints = GameObject.FindGameObjectsWithTag("Waypoint");
 
 		//Debug.LogError("Faild to find waypoints"+ tempPoints.Length);
@@ -33,7 +33,7 @@ public class WayPointClass : MonoBehaviour {
 		{
 			WayPointClass temp = tempPoints[i].GetComponent<WayPointClass>();
 			waypoints.Add(temp); 
-		}
+		}*/
 
 	}
 
@@ -80,10 +80,10 @@ public class WayPointClass : MonoBehaviour {
 		}
 	}
 
-	public WayPointClass NewWayPoint()
+	/*public WayPointClass NewWayPoint()
 	{
 		return waypoints.ElementAt(0);
-	}
+	}* /
 
 
 	//Give new waypoint
@@ -119,7 +119,7 @@ public class WayPointClass : MonoBehaviour {
 		nextWaypoint = notVisited[waypointIndex];
 
 		return nextWaypoint;
-	}
+	}*/
 
 
 // -----------------------------------------------------------------------------------------
