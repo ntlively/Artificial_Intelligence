@@ -208,7 +208,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4829990813703742, guid: 88b1cd30b39d4cf48bbd9998c7ccad69, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 0.49
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4829990813703742, guid: 88b1cd30b39d4cf48bbd9998c7ccad69, type: 2}
       propertyPath: m_LocalPosition.z
@@ -249,7 +249,24 @@ Prefab:
       propertyPath: chaseSpeed
       value: 0.9
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 4866077837660172, guid: 88b1cd30b39d4cf48bbd9998c7ccad69, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0.53267515
+      objectReference: {fileID: 0}
+    - target: {fileID: 4866077837660172, guid: 88b1cd30b39d4cf48bbd9998c7ccad69, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0.07034045
+      objectReference: {fileID: 0}
+    - target: {fileID: 4866077837660172, guid: 88b1cd30b39d4cf48bbd9998c7ccad69, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0.83613265
+      objectReference: {fileID: 0}
+    - target: {fileID: 4866077837660172, guid: 88b1cd30b39d4cf48bbd9998c7ccad69, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: -0.11041513
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 114389827006550636, guid: 88b1cd30b39d4cf48bbd9998c7ccad69, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 88b1cd30b39d4cf48bbd9998c7ccad69, type: 2}
   m_IsPrefabParent: 0
 --- !u!1 &449096696 stripped
@@ -505,6 +522,33 @@ MeshCollider:
   m_InflateMesh: 0
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1293399299 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1062597478265964, guid: 88b1cd30b39d4cf48bbd9998c7ccad69,
+    type: 2}
+  m_PrefabInternal: {fileID: 326461738}
+--- !u!114 &1293399300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1293399299}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc39e8c5430b95441be6d7cf792951d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  predator: {fileID: 0}
+  agent: {fileID: 0}
+  character: {fileID: 0}
+  visionScript: {fileID: 0}
+  hearingScript: {fileID: 0}
+  state: 0
+  waypoints:
+  - {fileID: 808127589}
+  patrolSpeed: 0.5
+  chaseSpeed: 0.9
+  target: {fileID: 0}
 --- !u!1 &1328129751 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1354956180552266, guid: fa6797b328818cc47bead9ca43fa4913,
@@ -926,20 +970,3 @@ MeshCollider:
   m_InflateMesh: 0
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &2125343586 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1250479870087602, guid: 452a52eee2c9e4641b5007c16bdae6a1,
-    type: 2}
-  m_PrefabInternal: {fileID: 48731731}
---- !u!135 &2125343593
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2125343586}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}

@@ -102,7 +102,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 		void OnTriggerEnter (Collider coll)
 		{
-			Vision script = GameObject.Find("AIThirdPersonController").GetComponent<Vision>();
+			Vision script = GameObject.Find("Predator").GetComponent<Vision>();
 			bool viewCheck = false;
 
 			foreach (Transform visibleTarget in script.visibleTargets) {
