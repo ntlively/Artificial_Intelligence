@@ -8,8 +8,11 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 	public class basicPredatorAI : MonoBehaviour {
 
 		// Variable Declarations
+		public GameObject predator;
 		public UnityEngine.AI.NavMeshAgent agent;
 		public ThirdPersonCharacter character;
+		public Vision visionScript;
+		public Hearing hearingScript;
 
 		public enum State{
 			PATROL,
@@ -32,11 +35,18 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		public float chaseSpeed = 1.0f;
 		public GameObject target;
 
+		void Awake(){
+			predator = GameObject.Find("Predator");
+			agent = predator.GetComponent<UnityEngine.AI.NavMeshAgent>();
+			character = predator.GetComponent<ThirdPersonCharacter>();
+			visionScript = predator.GetComponent<Vision>();
+			hearingScript = predator.GetComponent<Hearing>();
+		}
 
 		// Use this for initialization
 		void Start () {
-			agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
-			character = GetComponent<ThirdPersonCharacter>();
+			//agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
+			//character = GetComponent<ThirdPersonCharacter>();
 
 			agent.updatePosition = true;
 			agent.updateRotation = false;

@@ -62,6 +62,8 @@
      <Compile Include="Assets\Testing\Scripts\basicPredatorAI.cs" />
      <Compile Include="Assets\Testing\Scripts\basicPreyAI.cs" />
      <Compile Include="Assets\Testing\Scripts\GUI.cs" />
+     <Compile Include="Assets\Testing\Scripts\Hearing.cs" />
+     <Compile Include="Assets\Testing\Scripts\Vision.cs" />
      <None Include="Assets\SampleScenes\Shaders\Skybox-Procedural.shader" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>

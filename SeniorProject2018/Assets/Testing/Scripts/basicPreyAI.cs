@@ -8,8 +8,11 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 	public class basicPreyAI : MonoBehaviour {
 
 		// Variable Declarations
+		public GameObject prey;
 		public UnityEngine.AI.NavMeshAgent agent;
 		public ThirdPersonCharacter character;
+		public Vision visionScript;
+		public Hearing hearingScript;
 
 		public enum State{
 			PATROL,
@@ -34,11 +37,18 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		public GameObject[] fleepoints;
 		private float fleeAngle = 0.0f;
 
+		void Awake(){
+			prey = GameObject.Find("Prey");
+			agent = prey.GetComponent<UnityEngine.AI.NavMeshAgent>();
+			character = prey.GetComponent<ThirdPersonCharacter>();
+			visionScript = prey.GetComponent<Vision>();
+			hearingScript = prey.GetComponent<Hearing>();
+		}
 
 		// Use this for initialization
 		void Start () {
-			agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
-			character = GetComponent<ThirdPersonCharacter>();
+			//agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
+			//character = GetComponent<ThirdPersonCharacter>();
 
 			agent.updatePosition = true;
 			agent.updateRotation = false;
@@ -104,12 +114,12 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		{
 			agent.speed = fleeSpeed;
 
-			if(Vector3.Distance(this.transform.position,fleepoints[fleepointINDEX].transform.position)> 30)
+			if(Vector3.Distance(this.transform.position,fleepoints[fleepointINDEX].transform.position)> 5)
 			{
 				agent.SetDestination(fleepoints[fleepointINDEX].transform.position);
 				character.Move(agent.desiredVelocity,false,false); //velocity, crouch, jump
 			}
-			else if (Vector3.Distance(this.transform.position,fleepoints[fleepointINDEX].transform.position)<=30)
+			else if (Vector3.Distance(this.transform.position,fleepoints[fleepointINDEX].transform.position)<=5)
 			{
 				fleepointINDEX += 1;
 				if(fleepointINDEX>=fleepoints.Length)
