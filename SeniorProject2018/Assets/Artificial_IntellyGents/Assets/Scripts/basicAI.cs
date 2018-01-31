@@ -8,7 +8,7 @@ using UnityEngine;
 // 3) CHASE SPEED IN SCRIPT NOT SETTING PROPERLY
 // 4) DON'T NEED SPHERE COLLIDER, BUT WHERE TO PUT VISION CHECK BESIDES ON TRIGGER ENTER
 
-
+//YES
 
 namespace UnityStandardAssets.Characters.ThirdPerson
 {
