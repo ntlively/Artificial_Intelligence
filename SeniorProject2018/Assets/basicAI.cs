@@ -12,7 +12,11 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 
 		public enum State{
 			PATROL,
-			CHASE
+			CHASE,
+			SNEAK,
+			WAIT,
+			TALK,
+
 		}
 
 		public State state; //current state.
@@ -29,6 +33,9 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 		public float chaseSpeed = 1.0f;
 		public GameObject target;
 
+		//Sound object
+		public DecibelTracker noise;
+
 		// Use this for initialization
 		void Start ()
 		{
@@ -42,8 +49,10 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 			alive = true;
 
 			sn = this.GetComponent<WayPointMaster>();
+			noise = this.GetComponent<DecibelTracker>();
 
-
+			//Patroling 
+			//Tracks visited way points.
 			currentWaypoint = sn.NewWayPoint();
 			//Get a random way point
 			//GameObject[] tempPoints = GameObject.FindGameObjectsWithTag("Waypoint");
@@ -66,10 +75,15 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 					case State.CHASE:
 						Chase();
 						break;
-						//New States
-						//Stealth
-						//Wait
-						//Talks
+					case State.SNEAK:
+						Sneak();
+						break;
+					case State.WAIT:
+						Wait();
+						break;
+					case State.TALK:
+						Talk();
+						break;
 
 				}
 
@@ -81,6 +95,10 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 		{
 			//Have the character move to a random way point based on errors.
 			agent.speed = patrolSpeed;
+
+			//Set sound
+			noise.setCurrentDecibel(this);
+			this.GetComponent<SphereCollider>().radius = noise.currentDecibel;
 
 			//If player is within the range of a random way point, go to it.
 			if(Vector3.Distance(this.transform.position, currentWaypoint.transform.position )>= 2)
@@ -103,10 +121,52 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 
 		void Chase()
 		{
+			//Set Speed
 			agent.speed = chaseSpeed;
+			//Sound change
+			noise.setCurrentDecibel(this);
+			this.GetComponent<SphereCollider>().radius = noise.currentDecibel;
+
+
 			agent.SetDestination(target.transform.position);
 			character.Move(agent.desiredVelocity, false,false);
 		}
+
+		void Sneak()
+		{
+			//Set speed
+				//Predator will move slower
+			//Set sound	
+				//Predator will move quieter
+
+			//Predator will move quietly if prey hasn't detected their presence.
+			//Prey movement speed.
+				//If starts to move faster
+					//Change state to Chase
+				//Else 
+					//Continuing sneaking.
+		}
+
+		void Wait()
+		{
+			//State in which is trigger depending on
+				// Patroling Time
+				// Prey seen in area
+				// etc...
+		}
+
+		void Talk ()
+		{
+			//Trigger when one or more predators enter vision.
+			//AND Predator is currently not in chase state
+
+			//Predators will exchange information using Blackboard
+		}
+
+
+
+		//State changing
+			//Switch to chase if prey.
 
 		void OnTriggerEnter(Collider coll)
 		{
