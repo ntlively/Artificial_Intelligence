@@ -10,7 +10,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 
 		// Use this for initialization
 		
-		public basicAI character;
+		public bev_basicAI character;
+		public ThirdPersonCharacter agent;
 
 		//Sound set up 
 		public float currentDecibel = 0.5f;
@@ -22,33 +23,46 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 		public const float SneakDecibel = 0.5f;
 
 
-		//Set Decibel level depending on current state
-		public void setCurrentDecibel(basicAI chara)
+		void Awake () 
+		{	
+			character = GetComponent<basicAI>();
+			agent = GetComponent<ThirdPersonCharacter>();
+
+		}
+
+		void Start()
 		{
-			//Set current decibel level
-			if(chara.state == basicAI.State.PATROL)
+			StartCoroutine("setCurrentDecibel");
+		}
+
+		//Set Decibel level depending on current state
+		IEnumerator setCurrentDecibel()
+		{
+			while (character.alive)
 			{
-				currentDecibel = PatrolDecibel;
-			}
-			else if(chara.state == basicAI.State.CHASE)
-			{
-			  currentDecibel = RunningDecibel;
+				//Set current decibel level
+				if(character.state == basicAI.State.PATROL)
+				{
+					currentDecibel = PatrolDecibel;
+				}
+				else if(character.state == basicAI.State.CHASE)
+				{
+					currentDecibel = RunningDecibel;
+				}
+
+				character.GetComponent<SphereCollider>().radius = currentDecibel;
+
+				yield return null;
 			}
 
-			//Set sphere collider size
-			//return currentDecibel;
-
+		
 		}
 		//Get current decidel level
 		public float getCurrentDecibel()
 		{
 			return currentDecibel;
 		}
-
-		void Start () 
-		{	
-			
-		}
+		
 		// Update is called once per frame
 		/*void Update () {
 			

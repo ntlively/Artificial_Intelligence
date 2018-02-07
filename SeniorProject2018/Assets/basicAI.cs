@@ -20,7 +20,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 		}
 
 		public State state; //current state.
-		private bool alive; //whether the AI lives.
+		public bool alive; //whether the AI lives.
 		
 		//Variable patrolling
 		//public GameObject[] waypoints;
@@ -34,7 +34,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 		public GameObject target;
 
 		//Sound object
-		public DecibelTracker noise;
+		//public DecibelTracker noise;
 
 		// Use this for initialization
 		void Start ()
@@ -49,7 +49,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 			alive = true;
 
 			sn = this.GetComponent<WayPointMaster>();
-			noise = this.GetComponent<DecibelTracker>();
+			//noise = this.GetComponent<DecibelTracker>();
 
 			//Patroling 
 			//Tracks visited way points.
@@ -97,8 +97,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 			agent.speed = patrolSpeed;
 
 			//Set sound
-			noise.setCurrentDecibel(this);
-			this.GetComponent<SphereCollider>().radius = noise.currentDecibel;
+			//noise.setCurrentDecibel(this);
+			//this.GetComponent<SphereCollider>().radius = noise.currentDecibel;
 
 			//If player is within the range of a random way point, go to it.
 			if(Vector3.Distance(this.transform.position, currentWaypoint.transform.position )>= 2)
@@ -124,9 +124,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 			//Set Speed
 			agent.speed = chaseSpeed;
 			//Sound change
-			noise.setCurrentDecibel(this);
-			this.GetComponent<SphereCollider>().radius = noise.currentDecibel;
-
+			//noise.setCurrentDecibel(this);
+			//this.GetComponent<SphereCollider>().radius = noise.currentDecibel;
 
 			agent.SetDestination(target.transform.position);
 			character.Move(agent.desiredVelocity, false,false);
