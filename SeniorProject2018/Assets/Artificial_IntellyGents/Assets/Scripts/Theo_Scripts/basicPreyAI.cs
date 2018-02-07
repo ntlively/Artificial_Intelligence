@@ -21,7 +21,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 		public State state;
 		private bool alive;
-		public OffMeshLinkMoveMethod method = OffMeshLinkMoveMethod.Parabola;
+		//public OffMeshLinkMoveMethod method = OffMeshLinkMoveMethod.Parabola;
 		public float jumpHeight = 2.0f;
 		public float jumpDuration = 0.5f;
 
@@ -75,15 +75,15 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 						Flee();
 						break;
 				}
-				if (agent.isOnOffMeshLink)
-				{
-					character.Move(agent.desiredVelocity,false,true);
-					if (method == OffMeshLinkMoveMethod.NormalSpeed)
-						yield return StartCoroutine(NormalSpeed(agent));
-					else if (method == OffMeshLinkMoveMethod.Parabola)
-						yield return StartCoroutine(Parabola(agent, jumpHeight, jumpDuration));
-					agent.CompleteOffMeshLink();
-				}
+				// if (agent.isOnOffMeshLink)
+				// {
+				// 	character.Move(agent.desiredVelocity,false,true);
+				// 	if (method == OffMeshLinkMoveMethod.NormalSpeed)
+				// 		yield return StartCoroutine(NormalSpeed(agent));
+				// 	else if (method == OffMeshLinkMoveMethod.Parabola)
+				// 		yield return StartCoroutine(Parabola(agent, jumpHeight, jumpDuration));
+				// 	agent.CompleteOffMeshLink();
+				// }
 				yield return null;
 			}
 		}
@@ -104,10 +104,20 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 					waypointINDEX = 0;
 				}
 			}
-			else
+			if (visionScript.visibleTargets.Count >0)
 			{
-				character.Move(Vector3.zero,false,false);
+				foreach (Transform visibleTarget in visionScript.visibleTargets) {
+					if(visibleTarget.CompareTag("Predator")){
+						//Debug.Log("WE GOT ONE");
+						// target = visibleTarget;
+						state = basicPreyAI.State.FLEE;
+					}
+				}
 			}
+			// else
+			// {
+			// 	character.Move(Vector3.zero,false,false);
+			// }
 		}
 
 		void Flee()
@@ -149,37 +159,37 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				}
 			}
 		}
-		public enum OffMeshLinkMoveMethod
-		{
-			Teleport,
-			NormalSpeed,
-			Parabola
-		}
+		// public enum OffMeshLinkMoveMethod
+		// {
+		// 	Teleport,
+		// 	NormalSpeed,
+		// 	Parabola
+		// }
 
-		IEnumerator NormalSpeed(UnityEngine.AI.NavMeshAgent agent)
-		{
-			UnityEngine.AI.OffMeshLinkData data = agent.currentOffMeshLinkData;
-			Vector3 endPos = data.endPos + Vector3.up * agent.baseOffset;
-			while (agent.transform.position != endPos)
-			{
-				agent.transform.position = Vector3.MoveTowards(agent.transform.position, endPos, agent.speed * Time.deltaTime);
-				yield return null;
-			}
-		}
-		IEnumerator Parabola (UnityEngine.AI.NavMeshAgent agent, float jumpHeight, float jumpDuration)
-		{
-			UnityEngine.AI.OffMeshLinkData data = agent.currentOffMeshLinkData;
-			Vector3 startPos = agent.transform.position;
-			Vector3 endPos = data.endPos + Vector3.up*agent.baseOffset;
-			float normalizedTime = 0.0f;
-			while (normalizedTime < 1.0f)
-			{
-				float yOffset = jumpHeight * 4.0f*(normalizedTime - normalizedTime*normalizedTime);
-				agent.transform.position = Vector3.Lerp (startPos, endPos, normalizedTime) + yOffset * Vector3.up;
-				normalizedTime += Time.deltaTime / jumpDuration;
-				yield return null;
-			}
-		}
+		// IEnumerator NormalSpeed(UnityEngine.AI.NavMeshAgent agent)
+		// {
+		// 	UnityEngine.AI.OffMeshLinkData data = agent.currentOffMeshLinkData;
+		// 	Vector3 endPos = data.endPos + Vector3.up * agent.baseOffset;
+		// 	while (agent.transform.position != endPos)
+		// 	{
+		// 		agent.transform.position = Vector3.MoveTowards(agent.transform.position, endPos, agent.speed * Time.deltaTime);
+		// 		yield return null;
+		// 	}
+		// }
+		// IEnumerator Parabola (UnityEngine.AI.NavMeshAgent agent, float jumpHeight, float jumpDuration)
+		// {
+		// 	UnityEngine.AI.OffMeshLinkData data = agent.currentOffMeshLinkData;
+		// 	Vector3 startPos = agent.transform.position;
+		// 	Vector3 endPos = data.endPos + Vector3.up*agent.baseOffset;
+		// 	float normalizedTime = 0.0f;
+		// 	while (normalizedTime < 1.0f)
+		// 	{
+		// 		float yOffset = jumpHeight * 4.0f*(normalizedTime - normalizedTime*normalizedTime);
+		// 		agent.transform.position = Vector3.Lerp (startPos, endPos, normalizedTime) + yOffset * Vector3.up;
+		// 		normalizedTime += Time.deltaTime / jumpDuration;
+		// 		yield return null;
+		// 	}
+		// }
 		// Update is called once per frame
 		// void Update () {
 			
