@@ -51,10 +51,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\basicAI.cs" />
-     <Compile Include="Assets\DecibelTracker.cs" />
-     <Compile Include="Assets\PatrolGuide.cs" />
-     <Compile Include="Assets\preyAI.cs" />
+     <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Bev_Scripts\bev_basicAI.cs" />
+     <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Bev_Scripts\DecibelTracker.cs" />
+     <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Bev_Scripts\PatrolGuide.cs" />
+     <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Bev_Scripts\preyAI.cs" />
+     <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Bev_Scripts\WayPointClass.cs" />
+     <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Bev_Scripts\WayPointMaster.cs" />
+     <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Nate_Scripts\Hearing.cs" />
+     <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Nate_Scripts\nate_basicAI.cs" />
+     <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Nate_Scripts\predActor.cs" />
+     <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Nate_Scripts\predDirector.cs" />
+     <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Nate_Scripts\Vision.cs" />
+     <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Theo_Scripts\basicPredatorAI.cs" />
+     <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Theo_Scripts\basicPreyAI.cs" />
+     <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Theo_Scripts\jumpMod.cs" />
      <Compile Include="Assets\SampleScenes\Menu\Scripts\MenuSceneLoader.cs" />
      <Compile Include="Assets\SampleScenes\Menu\Scripts\PauseMenu.cs" />
      <Compile Include="Assets\SampleScenes\Menu\Scripts\SceneAndURLLoader.cs" />
@@ -63,8 +73,6 @@
      <Compile Include="Assets\SampleScenes\Scripts\ParticleSceneControls.cs" />
      <Compile Include="Assets\SampleScenes\Scripts\PlaceTargetWithMouse.cs" />
      <Compile Include="Assets\SampleScenes\Scripts\SlowMoButton.cs" />
-     <Compile Include="Assets\WayPointClass.cs" />
-     <Compile Include="Assets\WayPointMaster.cs" />
      <None Include="Assets\SampleScenes\Shaders\Skybox-Procedural.shader" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
