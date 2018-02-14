@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using BayesianUtils;
 // BUG REPORT
 // 1) ON TRIGGER ENTER DOES NOT TRIGGER IF PLAYER SPAWNS INSIDE SIGHT RADIUS
 // 2) NO CASE FOR LEAVING SPHERE COLLIDER TRIGGER ZONE
@@ -23,11 +23,16 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 		public enum State{
 			PATROL,
-			CHASE
+			CHASE,
+			SNEAK,
+			WAIT,
+			TALK
 		}
 
 		public State state;
 		private bool alive;
+
+		public BayesNet  testNet;
 
 		// Variables for PATROL
 		public List<GameObject> waypoints = new List<GameObject>();
@@ -40,6 +45,35 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		public Transform target;
 
 		void Awake(){
+			List<BayesNode> nodeList = new List<BayesNode>();
+			// // // // // //
+			Dictionary<string, float> predActionStates = new Dictionary<string, float>();
+			BayesNode predActions = new BayesNode(predActionStates);
+			nodeList.Add(predActions);
+			// // // // // //
+			List<BayesNode> children = new List<BayesNode>();
+            Dictionary<string, float> states = new Dictionary<string, float>();
+			children.Add(predActions);
+			BayesNode preyActions = new BayesNode(children,states);
+			nodeList.Add(preyActions);
+			// // // // // //
+			children = new List<BayesNode>();
+            states = new Dictionary<string, float>();
+			children.Add(predActions);
+			children.Add(preyActions);
+			BayesNode environment = new BayesNode(children,states);
+			nodeList.Add(environment);
+			// // // // // //			
+			testNet = new BayesNet(nodeList);
+			// test.Add(new BayesNode());
+			// test.Add(new BayesNode());
+			// testNet = new BayesNet(test);
+
+			//testNet.AddNode(testNet._nodes[0], new BayesNode());
+
+			// Debug.Log(testNet._nodes[0]._children.Count);
+			// Debug.Log(testNet._nodes.Count);
+
 			predator = GameObject.Find("Predator");
 			agent = predator.GetComponent<UnityEngine.AI.NavMeshAgent>();
 			//Debug.Log(agent);
@@ -48,6 +82,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			visionScript = predator.GetComponent<Vision>();
 			//Debug.Log(visionScript);
 			hearingScript = predator.GetComponent<Hearing>();
+
+			//Debug.Log(testNet.name);
 		}
 
 

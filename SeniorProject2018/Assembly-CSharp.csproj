@@ -57,6 +57,7 @@
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Bev_Scripts\preyAI.cs" />
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Bev_Scripts\WayPointClass.cs" />
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Bev_Scripts\WayPointMaster.cs" />
+     <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Nate_Scripts\BayesianUtils.cs" />
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Nate_Scripts\Hearing.cs" />
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Nate_Scripts\nate_basicAI.cs" />
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Nate_Scripts\predActor.cs" />

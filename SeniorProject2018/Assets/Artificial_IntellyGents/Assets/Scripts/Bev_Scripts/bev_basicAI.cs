@@ -15,8 +15,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 			CHASE,
 			SNEAK,
 			WAIT,
-			TALK,
-
+			TALK
 		}
 
 		public State state; //current state.
