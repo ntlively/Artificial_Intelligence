@@ -3,38 +3,71 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 //using Vision;
-
+//
  namespace BayesianUtils
  {
  
      public class BayesNode
      {
     
-        public List<BayesNode> _children;
-        // public List<BayesNode> _siblings;
-        public Dictionary<string, float> _fuzzyStates;
+        public List<BayesNode>              _children;
+        public List<float>                  _inputMod;
+        public Dictionary<string, float>    _input;
+        public Dictionary<string, float>    _fuzzyStates;
 
         public BayesNode
         (
             //optional parameter
-            List<BayesNode> children = default(List<BayesNode>),
-            Dictionary<string, float> states = default(Dictionary<string, float>)
+            List<BayesNode>             children,
+            List<float>                 inputMod,
+            Dictionary<string, float>   input   ,
+            Dictionary<string, float>   states
         )
         {
             //checks if parameter exists, if not, default to empty list
-             _children = children ?? new List<BayesNode>();
-             _fuzzyStates = states ?? new Dictionary<string, float>();
+            _children =     children ?? new List<BayesNode>();
+            _inputMod =     inputMod ?? new List<float>();
+            _input =        input    ?? new Dictionary<string, float>();
+            _fuzzyStates =  states   ?? new Dictionary<string, float>();
+
+            foreach(BayesNode child in _children)
+            {
+                foreach(KeyValuePair<string, float> parent in _fuzzyStates)
+                {
+                    child._input.Add(parent.Key, parent.Value);
+                }
+            }
+            //need to test the above to see if the input values will update automatically from parent to child.  If it's copy by value
+            //then I will need to push the changes manually
+
 
          }
-        //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
-        public void AddChild(BayesNode child)
-        {
-            _children.Add(child);
-        }
-        //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
-        // public void AddSibling(BayesNode child)
+        //~~~~~~~~~~~~~~needs to be changed to init input of child when added~~~~~~~~~~~~~~~~~//
+        // public void AddChild(BayesNode child)
         // {
-        //     _siblings.Add(child);
+        //     _children.Add(child);
+        // }
+        //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+        // public void PushInputs()
+        // {
+        //     for(int i=0; i< _children.Count;i++)
+        //     {
+                
+        //         foreach(KeyValuePair<K, V> parent in _fuzzyStates)
+        //         {
+        //             foreach(KeyValuePair<K, V> child in _children[i]._input)
+        //             {
+        //                 if(child.Key == parent.Key)
+        //                 {
+        //                     child.Value = parent.Value;
+        //                 }
+        //                 else
+        //                 {
+        //                     child.Add(parent.Key,parent.Value);
+        //                 }
+        //             } 
+        //         }
+        //     }
         // }
         //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
@@ -88,16 +121,16 @@ using UnityEngine;
 
          }
 
-        public void AddNode(BayesNode parent, BayesNode child)
-        {
-            _nodes.Add(child);
-            parent.AddChild(child);
-        }
+        // public void AddNode(BayesNode parent, BayesNode child)
+        // {
+        //     _nodes.Add(child);
+        //     parent.AddChild(child);
+        // }
 
         // Update Bayes Net with sensor information, and then return the best option
         public Dictionary<string, float> Predict(int information)
         {
-            int info = information;
+            //int info = information;
             BayesNode header = _nodes[0];
             var nodeQueue = new Queue<BayesNode>();
             // Loop through the tree, and have each node update it's probability values based on info
@@ -127,3 +160,12 @@ using UnityEngine;
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
      
  }
+
+
+
+
+            // //optional parameter
+            // List<BayesNode>             children  = default(List<BayesNode>),
+            // List<float>                 inputMod  = default(List<float>),
+            // Dictionary<string, float>   input     = default(Dictionary<string, float>),
+            // Dictionary<string, float>   states    = default(Dictionary<string, float>)
