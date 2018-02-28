@@ -51,6 +51,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Artificial_IntellyGents\Assets\Editor\ExportNavMeshToObj.cs" />
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Editor\Hearing_Editor.cs" />
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Editor\Vision_Editor.cs" />
  <Reference Include="UnityEngine.UI">

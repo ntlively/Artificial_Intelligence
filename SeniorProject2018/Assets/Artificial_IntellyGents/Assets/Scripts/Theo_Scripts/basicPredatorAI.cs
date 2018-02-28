@@ -13,6 +13,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		public ThirdPersonCharacter character;
 		public Vision visionScript;
 		public Hearing hearingScript;
+		public MapData waypointGraph;
 
 		public enum State{
 			PATROL,
@@ -26,7 +27,6 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		public float jumpDuration = 0.5f;
 
 		// Variables for PATROL
-		public GameObject[] waypoints;
 		private int waypointINDEX = 0;
 		public float patrolSpeed = 0.5f;
 
@@ -41,6 +41,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			character = predator.GetComponent<ThirdPersonCharacter>();
 			visionScript = predator.GetComponent<Vision>();
 			hearingScript = predator.GetComponent<Hearing>();
+			waypointGraph = new MapData();
+			waypointGraph.triangulate();
 		}
 
 		// Use this for initialization
@@ -89,15 +91,15 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		void Patrol()
 		{
 			agent.speed = patrolSpeed;
-			if(Vector3.Distance(this.transform.position,waypoints[waypointINDEX].transform.position)>= 2)
+			if(Vector3.Distance(this.transform.position,waypointGraph.navPoints[waypointINDEX].position)>= 2)
 			{
-				agent.SetDestination(waypoints[waypointINDEX].transform.position);
+				agent.SetDestination(waypointGraph.navPoints[waypointINDEX].position);
 				character.Move(agent.desiredVelocity,false,false); //velocity, crouch, jump
 			}
-			else if (Vector3.Distance(this.transform.position,waypoints[waypointINDEX].transform.position)<=2)
+			else if (Vector3.Distance(this.transform.position,waypointGraph.navPoints[waypointINDEX].position)<=2)
 			{
 				waypointINDEX += 1;
-				if(waypointINDEX>=waypoints.Length)
+				if(waypointINDEX>=waypointGraph.navPoints.Count)
 				{
 					waypointINDEX = 0;
 				}
@@ -121,7 +123,14 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		void Chase()
 		{
 			agent.speed = chaseSpeed;
-			agent.SetDestination(target.transform.position);
+			if(target.GetComponent<UnityEngine.AI.NavMeshAgent>().isOnOffMeshLink)
+			{
+				agent.SetDestination(target.GetComponent<UnityEngine.AI.NavMeshAgent>().currentOffMeshLinkData.endPos);
+			}
+			else
+			{
+				agent.SetDestination(target.transform.position);
+			}
 			character.Move(agent.desiredVelocity,false,false);
 		}
 

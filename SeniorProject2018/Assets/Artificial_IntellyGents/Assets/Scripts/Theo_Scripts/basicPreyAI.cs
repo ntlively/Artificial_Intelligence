@@ -13,9 +13,13 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		public ThirdPersonCharacter character;
 		public Vision visionScript;
 		public Hearing hearingScript;
+		//public NavMeshPainter meshPainter;
+		public MapData waypointGraph;
 
 		public enum State{
-			PATROL,
+			SEARCH,
+			HIDE,
+			SNEAK,
 			FLEE
 		}
 
@@ -26,15 +30,12 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		public float jumpDuration = 0.5f;
 
 		// Variables for PATROL
-		public GameObject[] waypoints;
 		private int waypointINDEX = 0;
 		public float patrolSpeed = 0.5f;
 
 
 		// Variables for FLEE
 		public float fleeSpeed = 1.0f;
-		private int fleepointINDEX = 0;
-		public GameObject[] fleepoints;
 		private float fleeAngle = 0.0f;
 
 		void Awake(){
@@ -43,6 +44,9 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			character = prey.GetComponent<ThirdPersonCharacter>();
 			visionScript = prey.GetComponent<Vision>();
 			hearingScript = prey.GetComponent<Hearing>();
+			//meshPainter = prey.GetComponent<NavMeshPainter>();
+			waypointGraph = new MapData();
+			waypointGraph.triangulate();
 		}
 
 		// Use this for initialization
@@ -53,7 +57,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			agent.updatePosition = true;
 			agent.updateRotation = false;
 
-			state = basicPreyAI.State.PATROL;
+			state = basicPreyAI.State.SEARCH;
 			alive = true;
 
 
@@ -68,7 +72,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			{
 				switch(state)
 				{
-					case State.PATROL:
+					case State.SEARCH:
 						Patrol();
 						break;
 					case State.FLEE:
@@ -91,15 +95,15 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		void Patrol()
 		{
 			agent.speed = patrolSpeed;
-			if(Vector3.Distance(this.transform.position,waypoints[waypointINDEX].transform.position)>= 2)
+			if(Vector3.Distance(this.transform.position,waypointGraph.navPoints[waypointINDEX].position)>= 2)
 			{
-				agent.SetDestination(waypoints[waypointINDEX].transform.position);
+				agent.SetDestination(waypointGraph.navPoints[waypointINDEX].position);
 				character.Move(agent.desiredVelocity,false,false); //velocity, crouch, jump
 			}
-			else if (Vector3.Distance(this.transform.position,waypoints[waypointINDEX].transform.position)<=2)
+			else if (Vector3.Distance(this.transform.position,waypointGraph.navPoints[waypointINDEX].position)<=2)
 			{
 				waypointINDEX += 1;
-				if(waypointINDEX>=waypoints.Length)
+				if(waypointINDEX>=waypointGraph.navPoints.Count)
 				{
 					waypointINDEX = 0;
 				}
@@ -110,6 +114,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 					if(visibleTarget.CompareTag("Predator")){
 						//Debug.Log("WE GOT ONE");
 						// target = visibleTarget;
+						
 						state = basicPreyAI.State.FLEE;
 					}
 				}
@@ -124,17 +129,17 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		{
 			agent.speed = fleeSpeed;
 
-			if(Vector3.Distance(this.transform.position,fleepoints[fleepointINDEX].transform.position)> 5)
+			if(Vector3.Distance(this.transform.position,waypointGraph.navPoints[waypointINDEX].position)> 5)
 			{
-				agent.SetDestination(fleepoints[fleepointINDEX].transform.position);
+				agent.SetDestination(waypointGraph.navPoints[waypointINDEX].position);
 				character.Move(agent.desiredVelocity,false,false); //velocity, crouch, jump
 			}
-			else if (Vector3.Distance(this.transform.position,fleepoints[fleepointINDEX].transform.position)<=5)
+			else if (Vector3.Distance(this.transform.position,waypointGraph.navPoints[waypointINDEX].position)<=5)
 			{
-				fleepointINDEX += 1;
-				if(fleepointINDEX>=fleepoints.Length)
+				waypointINDEX += 1;
+				if(waypointINDEX>=waypointGraph.navPoints.Count)
 				{
-					fleepointINDEX = 0;
+					waypointINDEX = 0;
 				}
 			}
 			else
@@ -149,12 +154,12 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			{
 				state = basicPreyAI.State.FLEE;
 				fleeAngle = Vector3.Angle(this.transform.position - coll.gameObject.transform.position, this.transform.forward);
-				for(int i = 0; i < fleepoints.Length; i++)
+				for(int i = 0; i < waypointGraph.navPoints.Count; i++)
 				{
-					if((fleeAngle > (Vector3.Angle(fleepoints[i].transform.position - this.transform.position,this.transform.forward))) &&
-						Vector3.Distance(this.transform.position,fleepoints[i].transform.position) > 10)
+					if((fleeAngle > (Vector3.Angle(waypointGraph.navPoints[i].position - this.transform.position,this.transform.forward))) &&
+						Vector3.Distance(this.transform.position,waypointGraph.navPoints[i].position) > 10)
 					{
-						fleepointINDEX = i;
+						waypointINDEX = i;
 					}
 				}
 			}

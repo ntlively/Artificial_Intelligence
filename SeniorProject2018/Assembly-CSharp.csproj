@@ -65,6 +65,9 @@
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Theo_Scripts\basicPredatorAI.cs" />
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Theo_Scripts\basicPreyAI.cs" />
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Theo_Scripts\jumpMod.cs" />
+     <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Theo_Scripts\MapData.cs" />
+     <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Theo_Scripts\NavMeshPainter.cs" />
+     <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Theo_Scripts\NavPoint.cs" />
      <Compile Include="Assets\SampleScenes\Menu\Scripts\MenuSceneLoader.cs" />
      <Compile Include="Assets\SampleScenes\Menu\Scripts\PauseMenu.cs" />
      <Compile Include="Assets\SampleScenes\Menu\Scripts\SceneAndURLLoader.cs" />
@@ -73,6 +76,12 @@
      <Compile Include="Assets\SampleScenes\Scripts\ParticleSceneControls.cs" />
      <Compile Include="Assets\SampleScenes\Scripts\PlaceTargetWithMouse.cs" />
      <Compile Include="Assets\SampleScenes\Scripts\SlowMoButton.cs" />
+     <Compile Include="Assets\TexturePainter ( Place Me Out of Resources)\ColorSelector\ColorSelector.cs" />
+     <Compile Include="Assets\TexturePainter ( Place Me Out of Resources)\Scripts\GUIManager.cs" />
+     <Compile Include="Assets\TexturePainter ( Place Me Out of Resources)\Scripts\ModelViewControls.cs" />
+     <Compile Include="Assets\TexturePainter ( Place Me Out of Resources)\Scripts\TexturePainter.cs" />
+     <None Include="Assets\TexturePainter ( Place Me Out of Resources)\ReadMe.txt" />
+     <None Include="Assets\TexturePainter ( Place Me Out of Resources)\ColorSelector\Shaders\ColorSelector.shader" />
      <None Include="Assets\SampleScenes\Shaders\Skybox-Procedural.shader" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
