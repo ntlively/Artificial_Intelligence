@@ -48,23 +48,25 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			List<BayesNode> nodeList = new List<BayesNode>();
 			// // // // // //
 			Dictionary<string, float> predActionStates = new Dictionary<string, float>();
-			BayesNode predActions = new BayesNode(predActionStates);
+			BayesNode predActions = new BayesNode(null,null,null,predActionStates);
 			nodeList.Add(predActions);
 			// // // // // //
 			List<BayesNode> children = new List<BayesNode>();
             Dictionary<string, float> states = new Dictionary<string, float>();
+			states.Add("running",0.5f);
 			children.Add(predActions);
-			BayesNode preyActions = new BayesNode(children,states);
+			BayesNode preyActions = new BayesNode(children,null,null,states);
 			nodeList.Add(preyActions);
 			// // // // // //
-			children = new List<BayesNode>();
-            states = new Dictionary<string, float>();
-			children.Add(predActions);
-			children.Add(preyActions);
-			BayesNode environment = new BayesNode(children,states);
-			nodeList.Add(environment);
+				// children = new List<BayesNode>();
+				// states = new Dictionary<string, float>();
+				// children.Add(predActions);
+				// children.Add(preyActions);
+				// BayesNode environment = new BayesNode(children,null,null,states);
+				// nodeList.Add(environment);
 			// // // // // //			
 			testNet = new BayesNet(nodeList);
+			testNet.Predict(0.5f);
 			// test.Add(new BayesNode());
 			// test.Add(new BayesNode());
 			// testNet = new BayesNet(test);
