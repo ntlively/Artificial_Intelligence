@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using BayesianUtils;
-using NeuralNet.NeuralNet;
 // BUG REPORT
 // 1) ON TRIGGER ENTER DOES NOT TRIGGER IF PLAYER SPAWNS INSIDE SIGHT RADIUS
 // 2) NO CASE FOR LEAVING SPHERE COLLIDER TRIGGER ZONE
@@ -46,26 +45,26 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		public Transform target;
 
 		void Awake(){
-			// List<BayesNode> nodeList = new List<BayesNode>();
-			// // // // // // //
-			// Dictionary<string, float> predActionStates = new Dictionary<string, float>();
-			// BayesNode predActions = new BayesNode(predActionStates);
-			// nodeList.Add(predActions);
-			// // // // // // //
-			// List<BayesNode> children = new List<BayesNode>();
-            // Dictionary<string, float> states = new Dictionary<string, float>();
-			// children.Add(predActions);
-			// BayesNode preyActions = new BayesNode(children,states);
-			// nodeList.Add(preyActions);
-			// // // // // // //
-			// children = new List<BayesNode>();
-            // states = new Dictionary<string, float>();
-			// children.Add(predActions);
-			// children.Add(preyActions);
-			// BayesNode environment = new BayesNode(children,states);
-			// nodeList.Add(environment);
-			// // // // // // //			
-			// testNet = new BayesNet(nodeList);
+			List<BayesNode> nodeList = new List<BayesNode>();
+			// // // // // //
+			Dictionary<string, float> predActionStates = new Dictionary<string, float>();
+			BayesNode predActions = new BayesNode(predActionStates);
+			nodeList.Add(predActions);
+			// // // // // //
+			List<BayesNode> children = new List<BayesNode>();
+            Dictionary<string, float> states = new Dictionary<string, float>();
+			children.Add(predActions);
+			BayesNode preyActions = new BayesNode(children,states);
+			nodeList.Add(preyActions);
+			// // // // // //
+			children = new List<BayesNode>();
+            states = new Dictionary<string, float>();
+			children.Add(predActions);
+			children.Add(preyActions);
+			BayesNode environment = new BayesNode(children,states);
+			nodeList.Add(environment);
+			// // // // // //			
+			testNet = new BayesNet(nodeList);
 			// test.Add(new BayesNode());
 			// test.Add(new BayesNode());
 			// testNet = new BayesNet(test);

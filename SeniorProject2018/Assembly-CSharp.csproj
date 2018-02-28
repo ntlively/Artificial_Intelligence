@@ -58,13 +58,8 @@
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Bev_Scripts\WayPointClass.cs" />
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Bev_Scripts\WayPointMaster.cs" />
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Nate_Scripts\BayesianUtils.cs" />
-     <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Nate_Scripts\CryptoRandom.cs" />
-     <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Nate_Scripts\Dendrite.cs" />
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Nate_Scripts\Hearing.cs" />
-     <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Nate_Scripts\Layer.cs" />
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Nate_Scripts\nate_basicAI.cs" />
-     <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Nate_Scripts\NeuralNetwork.cs" />
-     <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Nate_Scripts\Neuron.cs" />
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Nate_Scripts\predActor.cs" />
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Nate_Scripts\predDirector.cs" />
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Nate_Scripts\Vision.cs" />
