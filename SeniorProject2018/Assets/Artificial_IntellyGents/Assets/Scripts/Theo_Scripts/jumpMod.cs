@@ -14,8 +14,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 		private bool alive;
 		public OffMeshLinkMoveMethod method = OffMeshLinkMoveMethod.Parabola;
-		public float jumpHeight = 2.0f;
-		public float jumpDuration = 0.5f;
+		public float jumpHeight = 1.5f;
+		public float jumpDuration = 0.75f;
 
 		void Awake(){
 			predator = GameObject.Find("Predator");

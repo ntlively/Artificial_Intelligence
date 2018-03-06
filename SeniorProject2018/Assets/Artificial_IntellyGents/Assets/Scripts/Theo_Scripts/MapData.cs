@@ -21,14 +21,14 @@ public class MapData : MonoBehaviour
 		mesh.triangles = navMesh.indices;
 		//navPoints = new NavPoint[mesh.vertices.Length];
 
-		Debug.Log("number of vertices:" + mesh.vertices.Length);
+		//Debug.Log("number of vertices:" + mesh.vertices.Length);
 		for(int i = 0; i < mesh.vertices.Length; i++)
 		{
 			navPoints.Add(new NavPoint(mesh.vertices[i]));
 		}
 
 
-		Debug.Log("number of nav points:" + navPoints.Count);
+		//Debug.Log("number of nav points:" + navPoints.Count);
 		for(int material = 0; material < mesh.subMeshCount; material++)
 		{
 			int[] triangles = mesh.GetTriangles(material);

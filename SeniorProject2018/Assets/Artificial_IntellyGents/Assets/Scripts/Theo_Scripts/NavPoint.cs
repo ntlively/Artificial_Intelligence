@@ -10,6 +10,7 @@ public class NavPoint : MonoBehaviour
 	public float distAvg;
 	public int enemySpotted;	//Opposite type has been spotted here
 	public int friendSpotted;	//Same type and self has been spotten here
+	public int preyCaught;
 
 	public NavPoint(Vector3 _position)
 	{
@@ -18,6 +19,7 @@ public class NavPoint : MonoBehaviour
 		distAvg = 0;
 		enemySpotted = 0;
 		friendSpotted = 0;
+		preyCaught = 0;
 	}
 
 	public void addNeighbor(int index)

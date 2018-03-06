@@ -26,8 +26,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		public State state;
 		private bool alive;
 		//public OffMeshLinkMoveMethod method = OffMeshLinkMoveMethod.Parabola;
-		public float jumpHeight = 2.0f;
-		public float jumpDuration = 0.5f;
+		//public float jumpHeight = 2.0f;
+		//public float jumpDuration = 0.5f;
 
 		// Variables for PATROL
 		private int waypointINDEX = 0;
@@ -37,6 +37,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		// Variables for FLEE
 		public float fleeSpeed = 1.0f;
 		private float fleeAngle = 0.0f;
+		private Transform chaser;
 
 		void Awake(){
 			prey = GameObject.Find("Prey");
@@ -113,8 +114,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				foreach (Transform visibleTarget in visionScript.visibleTargets) {
 					if(visibleTarget.CompareTag("Predator")){
 						//Debug.Log("WE GOT ONE");
-						// target = visibleTarget;
-						
+						chaser = visibleTarget;
+						setFleeAngle(chaser);
 						state = basicPreyAI.State.FLEE;
 					}
 				}
@@ -128,6 +129,9 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		void Flee()
 		{
 			agent.speed = fleeSpeed;
+
+			if(Vector3.)
+
 
 			if(Vector3.Distance(this.transform.position,waypointGraph.navPoints[waypointINDEX].position)> 5)
 			{
@@ -148,21 +152,9 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			}
 		}
 
-		void OnTriggerEnter (Collider coll)
+		void setFleeAngle(Transform chaser)
 		{
-			if(coll.tag == "Predator")
-			{
-				state = basicPreyAI.State.FLEE;
-				fleeAngle = Vector3.Angle(this.transform.position - coll.gameObject.transform.position, this.transform.forward);
-				for(int i = 0; i < waypointGraph.navPoints.Count; i++)
-				{
-					if((fleeAngle > (Vector3.Angle(waypointGraph.navPoints[i].position - this.transform.position,this.transform.forward))) &&
-						Vector3.Distance(this.transform.position,waypointGraph.navPoints[i].position) > 10)
-					{
-						waypointINDEX = i;
-					}
-				}
-			}
+			fleeAngle = Vector3.Angle(this.transform.position - chaser.position, this.transform.forward);
 		}
 		// public enum OffMeshLinkMoveMethod
 		// {

@@ -23,8 +23,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		public State state;
 		private bool alive;
 		//public OffMeshLinkMoveMethod method = OffMeshLinkMoveMethod.Parabola;
-		public float jumpHeight = 2.0f;
-		public float jumpDuration = 0.5f;
+		//public float jumpHeight = 2.0f;
+		//public float jumpDuration = 0.5f;
 
 		// Variables for PATROL
 		private int waypointINDEX = 0;
