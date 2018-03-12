@@ -119,10 +119,10 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			}
 			if (visionScript.visibleTargets.Count >0)
 			{
-				foreach (Transform visibleTarget in visionScript.visibleTargets) {
-					if(visibleTarget.CompareTag("Player")){
+				foreach (Vision.VisionInfo visibleTarget in visionScript.visibleTargets) {
+					if(visibleTarget.target.CompareTag("Player")){
 						//Debug.Log("WE GOT ONE");
-						target = visibleTarget;
+						target = visibleTarget.target;
 						state = nate_basicAI.State.CHASE;
 					}
 				}

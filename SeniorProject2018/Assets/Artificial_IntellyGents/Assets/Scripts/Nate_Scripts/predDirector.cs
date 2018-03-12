@@ -106,9 +106,9 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			Vision script = GameObject.Find("AIThirdPersonController").GetComponent<Vision>();
 			bool viewCheck = false;
 
-			foreach (Transform visibleTarget in script.visibleTargets) {
+			foreach (Vision.VisionInfo visibleTarget in script.visibleTargets) {
 
-				if(visibleTarget.CompareTag("Player")){
+				if(visibleTarget.target.CompareTag("Player")){
 					print("TRUE");
 					viewCheck = true;
 				}

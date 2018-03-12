@@ -23,7 +23,7 @@ public class Vision : MonoBehaviour {
 	// Refresh delay in case you want it slower to refresh
 	public float refreshDelay;
 	// A list of all targets visible in the FOV
-	public List<Transform> visibleTargets = new List<Transform>();
+	public List<VisionInfo> visibleTargets = new List<VisionInfo>();
 	// Variables related to rendering the FOV
 	public float meshResolution;
 	public MeshFilter viewMeshFilter;
@@ -58,9 +58,22 @@ public class Vision : MonoBehaviour {
 
 	void FindVisibleTargets(){
 		visibleTargets.Clear ();
-		Collider[] targetsInViewRadius = Physics.OverlapSphere (transform.position, viewRadius, targetMask);
+//		Collider[] targetsInViewRadius = Physics.OverlapSphere (transform.position, viewRadius, targetMask);
+		List<Collider> targetsInViewRadius = new List<Collider>(Physics.OverlapSphere (transform.position, viewRadius, targetMask));
+		List<Collider> temp = new List<Collider>();
+		foreach (Collider coll in targetsInViewRadius) 
+		{
+			if(coll.GetType() == typeof(CapsuleCollider))
+			{
+				temp.Add(coll);
+			}
+		}
 
-		for(int i=0;i<targetsInViewRadius.Length;i++){
+		targetsInViewRadius = temp;
+
+
+
+		for(int i=0;i<targetsInViewRadius.Count;i++){
 			Transform target = targetsInViewRadius [i].transform;
 			Vector3 dirToTarget = (target.position - transform.position).normalized;
 
@@ -71,7 +84,7 @@ public class Vision : MonoBehaviour {
 				//RaycastHit hit;
 				if(!Physics.Raycast(transform.position,dirToTarget,dstToTarget,obstacleMask)){
 					//Debug.Log("NO WALL");
-					visibleTargets.Add (target);
+					visibleTargets.Add (new VisionInfo(target,dstToTarget));
 				}
 			}
 		}
@@ -133,7 +146,17 @@ public class Vision : MonoBehaviour {
 		}	
 	}
 
+	//make serializable so it shows up in unity editor
+	[System.Serializable]
+	public struct VisionInfo{
+		public Transform target;
+		public float distance;
 
+		public VisionInfo(Transform _target, float _distance){
+			target = _target;
+			distance = _distance;
+		}
+	}
 
 	public struct ViewCastInfo{
 		public bool hit;

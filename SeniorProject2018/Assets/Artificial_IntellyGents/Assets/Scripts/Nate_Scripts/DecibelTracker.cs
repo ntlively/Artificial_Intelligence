@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+// LOG
+// EDITED DECIBEL TRACKER TO WORK OFF THIRD PERSON CHARACTER SO THAT IT CAN WORK FOR GENERIC TYPE.  NEED TO UPDATE ACTOR SCRIPTS AND SUCH TO EDIT THIRDPERSON STATE ACCORDINGLY
 
 namespace UnityStandardAssets.Characters.ThirdPerson{
 
 	public class DecibelTracker : MonoBehaviour {
 
 		// Use this for initialization
-		
-		public bev_basicAI character;
-		public ThirdPersonCharacter agent;
 
+		public DataManager manager;
 		//Sound set up 
 		public float currentDecibel = 0.5f;
 
@@ -25,8 +25,9 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 
 		void Awake () 
 		{	
-			character = GetComponent<bev_basicAI>();
-			agent = GetComponent<ThirdPersonCharacter>();
+
+			manager = GetComponent<DataManager>();
+			currentDecibel = 2.0f;
 
 		}
 
@@ -38,19 +39,27 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 		//Set Decibel level depending on current state
 		IEnumerator setCurrentDecibel()
 		{
-			while (character.alive)
+			while (manager.alive)
 			{
 				//Set current decibel level
-				if(character.state == bev_basicAI.State.PATROL)
+				if(manager.state == DataManager.State.PATROL)
 				{
 					currentDecibel = PatrolDecibel;
 				}
-				else if(character.state == bev_basicAI.State.CHASE)
+				else if(manager.state == DataManager.State.CHASE)
 				{
 					currentDecibel = RunningDecibel;
 				}
+				else if(manager.state == DataManager.State.SNEAK)
+				{
+					currentDecibel = SneakDecibel;
+				}
+				else if(manager.state == DataManager.State.WAIT || manager.state == DataManager.State.TALK || manager.state == DataManager.State.THINK )
+				{
+					currentDecibel = IdleDecibel;
+				}
 
-				character.GetComponent<SphereCollider>().radius = currentDecibel;
+				manager.gameObject.GetComponent<SphereCollider>().radius = currentDecibel;
 
 				yield return null;
 			}

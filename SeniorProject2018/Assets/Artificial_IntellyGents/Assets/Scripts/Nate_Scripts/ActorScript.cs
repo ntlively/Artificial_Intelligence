@@ -13,25 +13,28 @@ using NeuralNet.NeuralNet;
 
 namespace UnityStandardAssets.Characters.ThirdPerson
 {
-	public class predActor : MonoBehaviour {
+	public class ActorScript : MonoBehaviour {
 
 		// Variable Declarations
-		public GameObject predator;
+		//public GameObject predator;
 		public UnityEngine.AI.NavMeshAgent agent;
 		public ThirdPersonCharacter character;
+
+		public DataManager manager;
 		public Vision visionScript;
 		public Hearing hearingScript;
 
-		public enum State{
-			PATROL,
-			CHASE,
-			SNEAK,
-			WAIT,
-			TALK
-		}
+		// public enum State{
+		// 	PATROL,
+		// 	CHASE,
+		// 	SNEAK,
+		// 	WAIT,
+		// 	TALK,
+		// 	THINK
+		// }
 
-		public State state;
-		private bool alive;
+		// public State state;
+		// public bool alive;
 
 		public BayesNet  testNet;
 
@@ -44,8 +47,9 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		// Variables for CHASE
 		public float chaseSpeed = 0.1f;
 		public Transform target;
-
+		public GameObject actor;
 		void Awake(){
+
 			// List<BayesNode> nodeList = new List<BayesNode>();
 			// // // // // // //
 			// Dictionary<string, float> predActionStates = new Dictionary<string, float>();
@@ -75,16 +79,32 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			// Debug.Log(testNet._nodes[0]._children.Count);
 			// Debug.Log(testNet._nodes.Count);
 
-			predator = GameObject.Find("Predator");
-			agent = predator.GetComponent<UnityEngine.AI.NavMeshAgent>();
+			actor = this.gameObject;
+			agent = actor.GetComponent<UnityEngine.AI.NavMeshAgent>();
 			//Debug.Log(agent);
-			character = predator.GetComponent<ThirdPersonCharacter>();
+			character = actor.GetComponent<ThirdPersonCharacter>();
+
+			manager = actor.GetComponent<DataManager>();
 			//Debug.Log(character);
-			visionScript = predator.GetComponent<Vision>();
+			visionScript = actor.GetComponent<Vision>();
 			//Debug.Log(visionScript);
-			hearingScript = predator.GetComponent<Hearing>();
+			hearingScript = actor.GetComponent<Hearing>();
 
 			//Debug.Log(testNet.name);
+
+			
+			NeuralNetwork nn = new NeuralNetwork(0.9, new int[] { 2, 4, 6 });
+
+			// List<double> ins = new List<double>();
+            // ins.Add(hearingScript.hearableTargets[0].decibel);
+            // ins.Add(1);
+
+			// List<double> ots = new List<double>();
+			// ots.Add(0);
+			// ots.Add(0);
+
+            // for(int i = 0; i <100000; i++)
+        	// 	nn.Train(ins, ots);
 		}
 
 
@@ -105,8 +125,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			agent.updateRotation = false;
 
 
-			state = predActor.State.PATROL;
-			alive = true;
+			manager.state = DataManager.State.PATROL;
+			manager.alive = true;
 
 			//start finite state machine (FSM)
 			StartCoroutine("Predator");
@@ -122,15 +142,18 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 		IEnumerator Predator()
 		{
-			while(alive)
+			while(manager.alive)
 			{
-				switch(state)
+				switch(manager.state)
 				{
-					case State.PATROL:
+					case DataManager.State.PATROL:
 						Patrol();
 						break;
-					case State.CHASE:
+					case DataManager.State.CHASE:
 						Chase();
+						break;
+					case DataManager.State.THINK:
+						Think();
 						break;
 				}
 				yield return null;
@@ -139,7 +162,6 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		
 		void Patrol()
 		{
-//			Debug.Log(visionScript.visibleTargets.Count);
 			agent.speed = patrolSpeed;
 			if(Vector3.Distance(this.transform.position,waypoints[waypointINDEX].transform.position)>= 2)
 			{
@@ -157,12 +179,15 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			}
 			if (visionScript.visibleTargets.Count >0)
 			{
-				foreach (Transform visibleTarget in visionScript.visibleTargets) {
-					if(visibleTarget.CompareTag("Player")){
+				int index = 0;
+				foreach (Vision.VisionInfo visibleTarget in visionScript.visibleTargets) {
+					if(visibleTarget.target.CompareTag("Player")){
 						//Debug.Log("WE GOT ONE");
-						target = visibleTarget;
-						state = predActor.State.CHASE;
+						target = visibleTarget.target;
+						manager.SwapState(DataManager.State.CHASE,visibleTarget,new Hearing.SoundInfo(null,0.0f));
+						//manager.state = DataManager.State.CHASE;
 					}
+					index++;
 				}
 			}
 			// else
@@ -176,6 +201,24 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			agent.speed = chaseSpeed;
 			agent.SetDestination(target.position);
 			character.Move(agent.desiredVelocity,false,false);
+
+			float dstToTarget = Vector3.Distance (transform.position, target.position);
+			if(dstToTarget<2)
+			{
+				target.gameObject.GetComponent<DataManager>().alive = false;
+			}
+
+			if(!target.gameObject.GetComponent<DataManager>().alive)
+			{
+				manager.state = DataManager.State.THINK;
+			}
+		}
+		
+		void Think()
+		{
+			//reinforce good choices from stack in data manager.  retrain neural net
+			//agent.SetDestination(target.position);
+			//character.Move(agent.desiredVelocity,false,false);
 		}
 
 	}	

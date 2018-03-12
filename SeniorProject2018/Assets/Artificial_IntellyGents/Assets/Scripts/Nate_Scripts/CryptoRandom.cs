@@ -18,7 +18,7 @@ namespace NeuralNet.NeuralNet
                 }
                 finally
                 {
-                    Debug.Log("RNGCryptoServiceProvider in CryptoRandom.cs has failed.  Most likely because it is not System.IDisposable");
+                    //Debug.Log("RNGCryptoServiceProvider in CryptoRandom.cs has failed.  Most likely because it is not System.IDisposable");
                 }
         }
 
