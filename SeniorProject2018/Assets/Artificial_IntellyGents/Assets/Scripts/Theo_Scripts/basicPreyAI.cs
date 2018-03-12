@@ -130,7 +130,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		{
 			agent.speed = fleeSpeed;
 
-			if(Vector3.)
+			//if(Vector3.)
 
 
 			if(Vector3.Distance(this.transform.position,waypointGraph.navPoints[waypointINDEX].position)> 5)

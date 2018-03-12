@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace UnityStandardAssets.Characters.ThirdPerson
 {
@@ -17,7 +18,10 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 		public enum State{
 			PATROL,
-			CHASE
+			CHASE,
+			SNEAK,
+			WAIT,
+			TALK
 		}
 
 		public State state;
@@ -25,6 +29,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		//public OffMeshLinkMoveMethod method = OffMeshLinkMoveMethod.Parabola;
 		//public float jumpHeight = 2.0f;
 		//public float jumpDuration = 0.5f;
+		private WayPointClass currentWaypoint;
+		public PatrolGuide sn;
 
 		// Variables for PATROL
 		private int waypointINDEX = 0;
@@ -35,14 +41,25 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		public float chaseSpeed = 1.0f;
 		public Transform target;
 
+		public DecibelTracker noise;
+
+		public float waitTimer = 10.0f;
+		public float patrolTimer = 30.0f;
+		public float talkTimer = 10.0f;
+
+		public static Stack<MemoryNode> memory = new Stack<MemoryNode>();
+
 		void Awake(){
 			predator = GameObject.Find("Predator");
-			agent = predator.GetComponent<UnityEngine.AI.NavMeshAgent>();
+			agent = GetComponent<NavMeshAgent>();
 			character = predator.GetComponent<ThirdPersonCharacter>();
 			visionScript = predator.GetComponent<Vision>();
 			hearingScript = predator.GetComponent<Hearing>();
 			waypointGraph = new MapData();
 			waypointGraph.triangulate();
+
+			sn = this.GetComponent<PatrolGuide>();
+			noise = this.GetComponent<DecibelTracker>();
 		}
 
 		// Use this for initialization
@@ -74,16 +91,16 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 					case State.CHASE:
 						Chase();
 						break;
+					case State.SNEAK:
+						Sneak();
+						break;
+					case State.WAIT:
+						Wait();
+						break;
+					case State.TALK:
+						Talk();
+						break;
 				}
-				// if (agent.isOnOffMeshLink)
-				// {
-				// 	character.Move(Vector3.zero,false,true);
-				// 	if (method == OffMeshLinkMoveMethod.NormalSpeed)
-				// 		yield return StartCoroutine(NormalSpeed(agent));
-				// 	else if (method == OffMeshLinkMoveMethod.Parabola)
-				// 		yield return StartCoroutine(Parabola(agent, jumpHeight, jumpDuration));
-				// 	agent.CompleteOffMeshLink();
-				// }
 				yield return null;
 			}
 		}
@@ -91,18 +108,19 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		void Patrol()
 		{
 			agent.speed = patrolSpeed;
-			if(Vector3.Distance(this.transform.position,waypointGraph.navPoints[waypointINDEX].position)>= 2)
+
+			if(Vector3.Distance(this.transform.position,sn.nextWaypoint)>= 2)
 			{
-				agent.SetDestination(waypointGraph.navPoints[waypointINDEX].position);
+				agent.SetDestination(sn.nextWaypoint);
 				character.Move(agent.desiredVelocity,false,false); //velocity, crouch, jump
 			}
-			else if (Vector3.Distance(this.transform.position,waypointGraph.navPoints[waypointINDEX].position)<=2)
+			else if (Vector3.Distance(this.transform.position,sn.nextWaypoint)<=2)
 			{
-				waypointINDEX += 1;
-				if(waypointINDEX>=waypointGraph.navPoints.Count)
-				{
-					waypointINDEX = 0;
-				}
+				sn.nextPatrolPosition();
+			}
+			else
+			{
+				character.Move(Vector3.zero, false, false);
 			}
 			if (visionScript.visibleTargets.Count >0)
 			{
@@ -114,69 +132,61 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 					}
 				}
 			}
-			// else
-			// {
-			// 	character.Move(Vector3.zero,false,false);
-			// }
+			patrolTimer = patrolTimer-Time.deltaTime;
+			if(patrolTimer <= 0.0)
+			{
+				patrolTimer = 100.0f;
+				state = basicPredatorAI.State.WAIT;
+			}
 		}
 
 		void Chase()
 		{
 			agent.speed = chaseSpeed;
-			if(target.GetComponent<UnityEngine.AI.NavMeshAgent>().isOnOffMeshLink)
+			if(target.tag == "prey" &&target.GetComponent<NavMeshAgent>().isOnOffMeshLink)
 			{
-				agent.SetDestination(target.GetComponent<UnityEngine.AI.NavMeshAgent>().currentOffMeshLinkData.endPos);
+				agent.SetDestination(target.GetComponent<NavMeshAgent>().currentOffMeshLinkData.endPos);
 			}
 			else
 			{
 				agent.SetDestination(target.transform.position);
 			}
 			character.Move(agent.desiredVelocity,false,false);
+
+			//sound change
 		}
 
-		// void OnTriggerEnter (Collider coll)
-		// {
-		// 	if(coll.tag == "Prey")
-		// 	{
-		// 		state = basicPredatorAI.State.CHASE;
-		// 		target = coll.gameObject;
-		// 	}
-		// }
+		void Sneak()
+		{
 
-		// public enum OffMeshLinkMoveMethod
-		// {
-		// 	Teleport,
-		// 	NormalSpeed,
-		// 	Parabola
-		// }
+		}
 
-		// IEnumerator NormalSpeed(UnityEngine.AI.NavMeshAgent agent)
-		// {
-		// 	UnityEngine.AI.OffMeshLinkData data = agent.currentOffMeshLinkData;
-		// 	Vector3 endPos = data.endPos + Vector3.up * agent.baseOffset;
-		// 	while (agent.transform.position != endPos)
-		// 	{
-		// 		agent.transform.position = Vector3.MoveTowards(agent.transform.position, endPos, agent.speed * Time.deltaTime);
-		// 		yield return null;
-		// 	}
-		// }
-		// IEnumerator Parabola (UnityEngine.AI.NavMeshAgent agent, float jumpHeight, float jumpDuration)
-		// {
-		// 	UnityEngine.AI.OffMeshLinkData data = agent.currentOffMeshLinkData;
-		// 	Vector3 startPos = agent.transform.position;
-		// 	Vector3 endPos = data.endPos + Vector3.up*agent.baseOffset;
-		// 	float normalizedTime = 0.0f;
-		// 	while (normalizedTime < 1.0f)
-		// 	{
-		// 		float yOffset = jumpHeight * 4.0f*(normalizedTime - normalizedTime*normalizedTime);
-		// 		agent.transform.position = Vector3.Lerp (startPos, endPos, normalizedTime) + yOffset * Vector3.up;
-		// 		normalizedTime += Time.deltaTime / jumpDuration;
-		// 		yield return null;
-		// 	}
-		// }
-		// Update is called once per frame
-		// void Update () {
+		void Wait()
+		{
 			
-		// }
+			agent.SetDestination(this.transform.position);
+			character.Move(Vector3.zero, false, false);
+			waitTimer = waitTimer-Time.deltaTime;
+
+			character.transform.Rotate(Vector3.up * Time.deltaTime);
+			//State in which is trigger depending on
+			if(waitTimer <= 0.0)
+			{
+				waitTimer = 10.0f;
+				state = basicPredatorAI.State.PATROL;
+				// Patroling Time
+				// Prey seen in area
+				// etc...
+			}
+		}
+		
+		void Talk ()
+		{
+			//Trigger when one or more predators enter vision.
+			//AND Predator is currently not in chase state
+
+			//Predators will exchange information using Blackboard
+			Debug.LogError("Talking");
+		}
 	}	
 }

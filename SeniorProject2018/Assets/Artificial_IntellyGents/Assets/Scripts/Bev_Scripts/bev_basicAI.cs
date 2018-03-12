@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+//using UnityEngine.SceneManagement;
 
 namespace UnityStandardAssets.Characters.ThirdPerson{
 
@@ -26,18 +27,27 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 		//public GameObject[] waypoints;
 		//private WayPointClass currentWaypoint;
 		private WayPointClass currentWaypoint;
-		WayPointMaster sn;
-		public float patrolSpeed = 0.5f;
+		PatrolGuide sn;
+		public float patrolSpeed = 0.7f;
 
 		//Variables for Chasing
-		public float chaseSpeed = 1.0f;
-		public GameObject target;
+		public float chaseSpeed = 1.2f;
+		public Transform target;
 
 		//Sound object
 		public DecibelTracker noise;
 
-		// Use this for initialization
-		void Start ()
+		public float waitTimer = 10.0f; 
+		public float patrolTimer = 30.0f;
+		public float talkTimer = 10.0f; 
+
+		public static Stack<MemoryNode> memory = new Stack<MemoryNode>();
+
+		public Vision visionScript;
+		public Hearing hearingScript;
+		public GameObject predator;
+
+		void Awake()
 		{
 			agent = GetComponent<NavMeshAgent>();
 			character = GetComponent<ThirdPersonCharacter>();
@@ -48,17 +58,17 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 			state = bev_basicAI.State.PATROL;
 			alive = true;
 
-			sn = this.GetComponent<WayPointMaster>();
+			sn = this.GetComponent<PatrolGuide>();
 			noise = this.GetComponent<DecibelTracker>();
 
-			//Patroling 
-			//Tracks visited way points.
-			currentWaypoint = sn.NewWayPoint();
-			//Get a random way point
-			//GameObject[] tempPoints = GameObject.FindGameObjectsWithTag("Waypoint");
-			//currentWaypoint = tempPoints[0].GetComponent<WayPointClass>();
-			//waypoints = GameObject.FindGameObjectsWithTag("Waypoint");
+			predator = GameObject.Find("Predator");
+			visionScript = predator.GetComponent<Vision>();
+			hearingScript = predator.GetComponent<Hearing>();
 
+		}
+		// Use this for initialization
+		void Start ()
+		{
 			//Start FSM Finite state machine
 			StartCoroutine("FSM");
 		}
@@ -96,20 +106,17 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 			//Have the character move to a random way point based on errors.
 			agent.speed = patrolSpeed;
 
-			//Set sound
-			//noise.setCurrentDecibel(this);
-			//this.GetComponent<SphereCollider>().radius = noise.currentDecibel;
+			//
 
-			//If player is within the range of a random way point, go to it.
-			if(Vector3.Distance(this.transform.position, currentWaypoint.transform.position )>= 2)
+			if(Vector3.Distance(this.transform.position, sn.nextWaypoint )>= 2)
 			{
-				agent.SetDestination(currentWaypoint.transform.position);
+				agent.SetDestination(sn.nextWaypoint);
 				character.Move(agent.desiredVelocity, false, false);
 			}
 			//If the player is close to way point, set the next way point.
-			else if (Vector3.Distance(this.transform.position, currentWaypoint.transform.position) <= 2)
+			else if (Vector3.Distance(this.transform.position, sn.nextWaypoint) <= 2)
 			{
-				currentWaypoint = sn.NextWayPoint(currentWaypoint); 
+				sn.nextPatrolPosition(); 
 			}
 			//If there are no way points close by.
 			else
@@ -117,17 +124,33 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 				character.Move(Vector3.zero, false, false);
 			}
 
+			if (visionScript.visibleTargets.Count >0)
+			{
+				foreach (Transform visibleTarget in visionScript.visibleTargets) {
+					if(visibleTarget.CompareTag("Player")){
+						//Debug.Log("WE GOT ONE");
+						target = visibleTarget;
+						state = bev_basicAI.State.CHASE;
+					}
+				}
+			}
+
+
+			patrolTimer = patrolTimer-Time.deltaTime;
+			if(patrolTimer <= 0.0)
+			{
+				patrolTimer = 100.0f;
+				state = bev_basicAI.State.WAIT;
+			}
 		}
 
 		void Chase()
 		{
+			character.Move(Vector3.zero, false, false);
 			//Set Speed
 			agent.speed = chaseSpeed;
+
 			//Sound change
-			//noise.setCurrentDecibel();
-			//this.GetComponent<SphereCollider>().radius = noise.currentDecibel;
-
-
 			agent.SetDestination(target.transform.position);
 			character.Move(agent.desiredVelocity, false,false);
 		}
@@ -149,10 +172,21 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 
 		void Wait()
 		{
+			agent.SetDestination(this.transform.position);
+			character.Move(Vector3.zero, false, false);
+			waitTimer = waitTimer-Time.deltaTime;
+
+			character.transform.Rotate(Vector3.up * Time.deltaTime);
 			//State in which is trigger depending on
+			if(waitTimer <= 0.0)
+			{
+				waitTimer = 10.0f;
+				state = bev_basicAI.State.PATROL;
 				// Patroling Time
 				// Prey seen in area
 				// etc...
+			}
+
 		}
 
 		void Talk ()
@@ -161,14 +195,11 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 			//AND Predator is currently not in chase state
 
 			//Predators will exchange information using Blackboard
+			Debug.LogError("Talking");
 		}
 
 
-
-		//State changing
-			//Switch to chase if prey.
-
-		void OnTriggerEnter(Collider coll)
+		/*void OnTriggerEnter(Collider coll)
 		{
 			if (coll.tag == "Player")
 			{
@@ -177,11 +208,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 			}
 
 
-		}
+		} */
+
 		
-		// Update is called once per frame
-		//void Update () {
-			
-		//}
 	}
 }
