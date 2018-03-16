@@ -31,7 +31,7 @@ public class DataManager : MonoBehaviour {
 	}
 	// stack for reward tracking
 	public Stack<RewardTrackingInfo> rewardTracking;
-
+	public Stack<List<double>> netTracking;
 
 
 //~////////////////////////////////////////////////////////~//
@@ -39,7 +39,8 @@ public class DataManager : MonoBehaviour {
 	void Awake () {
 		alive = true;
 		state = DataManager.State.WAIT;
-		rewardTracking = new Stack<RewardTrackingInfo>(); 
+		rewardTracking = new Stack<RewardTrackingInfo>();
+		netTracking = new  Stack<List<double>>();
 	}
 	
 	// Update is called once per frame
