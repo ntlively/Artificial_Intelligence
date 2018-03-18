@@ -15,11 +15,14 @@ public class PatrolGuide : MonoBehaviour {
 			public Vector3 nextWaypoint = new Vector3 (0.0f, 0.0f, 0.0f); 
 			public Vector3 prevWaypoint = new Vector3 (0.0f, 0.0f, 0.0f); 
 			public List<WeightPoint> reachablePoints = new List<WeightPoint>();
+			public MapData waypointGraph;
 
 
 	//Awake
 	void Awake()
 	{
+		waypointGraph = new MapData();
+		waypointGraph.triangulate();
 		Vector3 fillPoints = new Vector3 (-21.0f, 1.0f, 20.0f);
 		int row = 0;
 		//Set map 
@@ -28,6 +31,9 @@ public class PatrolGuide : MonoBehaviour {
 
 			fillPoints [0] = fillPoints[0] + 1.0f;
 			row++;
+
+			//Generate weight for position
+			float newWeight = generateWeight(fillPoints);
 
 			//create object
 			WeightPoint temp = new WeightPoint(6.25f, fillPoints);
@@ -105,12 +111,37 @@ public class PatrolGuide : MonoBehaviour {
 		
 	}
 
+	public float generateWeight(Vector3 testPoint)
+	{
+		
+		
+		/*RaycastHit hit;
+		if(Physics.Raycast(testPoint,Vector3.up, 1.0f, 11, out hit) || Physics.Raycast(testPoint,Vector3.down, 1.0f, out hit,11));
+		
+        MeshCollider meshCollider = hit.collider as MeshCollider;
+        if (meshCollider != null || meshCollider.sharedMesh != null)
+		{
+			
+			Mesh mesh = meshCollider.sharedMesh;
+			Vector3[] normals = mesh.normals;
+			int[] triangles = mesh.triangles;
+			Vector3 n0 = normals[triangles[hit.triangleIndex * 3 + 0]];
+			Vector3 n1 = normals[triangles[hit.triangleIndex * 3 + 1]];
+			Vector3 n2 = normals[triangles[hit.triangleIndex * 3 + 2]];
+			Vector3 baryCenter = hit.barycentricCoordinate;
+			Vector3 interpolatedNormal = n0 * baryCenter.x + n1 * baryCenter.y + n2 * baryCenter.z;
+			interpolatedNormal = interpolatedNormal.normalized;
+			Transform hitTransform = hit.collider.transform;
+		}*/
+
+		return 0.0f;
+	}
 
 	//Patrol point
 	public Vector3 nextPatrolPosition () 
 	{
 		//Filter reachable points
-		reachablePoints = weightedList.Where( x => (Vector3.Distance(nextWaypoint, x.position) > 10 && Vector3.Distance(nextWaypoint, x.position) < 13)).ToList();
+		reachablePoints = weightedList.Where( x => (Vector3.Distance(nextWaypoint, x.position) < 5)).ToList();
 
      //(Vector3.Distance(nextWaypoint, point.position) > 10 && Vector3.Distance(nextWaypoint, point.position) < 13)
 		Vector3 position = new Vector3 (0.0f, 1.0f, 0.0f);

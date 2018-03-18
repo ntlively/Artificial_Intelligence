@@ -14,7 +14,6 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		public ThirdPersonCharacter character;
 		public Vision visionScript;
 		public Hearing hearingScript;
-		public MapData waypointGraph;
 
 		public enum State{
 			PATROL,
@@ -55,8 +54,6 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			character = predator.GetComponent<ThirdPersonCharacter>();
 			visionScript = predator.GetComponent<Vision>();
 			hearingScript = predator.GetComponent<Hearing>();
-			waypointGraph = new MapData();
-			waypointGraph.triangulate();
 
 			sn = this.GetComponent<PatrolGuide>();
 			noise = this.GetComponent<DecibelTracker>();

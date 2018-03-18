@@ -5,21 +5,26 @@ using UnityEngine;
 [System.Serializable]
 public class MapData : MonoBehaviour
 {
+	private Mesh mesh;
+	private MeshCollider collider;
 	public List<NavPoint> navPoints;
 
 	public MapData()
 	{
 		navPoints = new List<NavPoint>();
+		//gameObject.layer = 1 << 11;
 	}
 
 	public void triangulate()
 	{
 		UnityEngine.AI.NavMeshTriangulation navMesh;
 		navMesh = UnityEngine.AI.NavMesh.CalculateTriangulation();
-		Mesh mesh = new Mesh();
+		mesh = new Mesh();
 		mesh.vertices = navMesh.vertices;
 		mesh.triangles = navMesh.indices;
 		//navPoints = new NavPoint[mesh.vertices.Length];
+		collider = new MeshCollider();
+		collider.sharedMesh = mesh;
 
 		//Debug.Log("number of vertices:" + mesh.vertices.Length);
 		for(int i = 0; i < mesh.vertices.Length; i++)
