@@ -24,10 +24,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 		public bool alive; //whether the AI lives.
 		
 		//Variable patrolling
-		//public GameObject[] waypoints;
-		//private WayPointClass currentWaypoint;
 		private WayPointClass currentWaypoint;
-		PatrolGuide sn;
+		PatrolGuide patroler;
 		public float patrolSpeed = 0.7f;
 
 		//Variables for Chasing
@@ -37,8 +35,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 		//Sound object
 		public DecibelTracker noise;
 
-		public float waitTimer = 10.0f; 
-		public float patrolTimer = 30.0f;
+		public float waitTimer = 5.0f; 
+		public float patrolTimer = 10.0f;
 		public float talkTimer = 10.0f; 
 
 		public static Stack<MemoryNode> memory = new Stack<MemoryNode>();
@@ -46,6 +44,13 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 		public Vision visionScript;
 		public Hearing hearingScript;
 		public GameObject predator;
+
+		//Obstacle Avoidance
+		public bool obstacle = false; // No obstacle
+		//TODO: Use vision to detect Obstacles
+		Vector3 forwardRay;
+		Vector3 sideLeft;
+		Vector3 sideRight;
 
 		void Awake()
 		{
@@ -58,12 +63,16 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 			state = bev_basicAI.State.PATROL;
 			alive = true;
 
-			sn = this.GetComponent<PatrolGuide>();
+			patroler = this.GetComponent<PatrolGuide>();
 			noise = this.GetComponent<DecibelTracker>();
 
 			predator = GameObject.Find("Predator");
 			visionScript = predator.GetComponent<Vision>();
 			hearingScript = predator.GetComponent<Hearing>();
+
+			forwardRay = transform.TransformDirection (Vector3.forward);
+			sideLeft = transform.TransformDirection (Vector3.left);
+			sideRight = transform.TransformDirection (Vector3.right);
 
 		}
 		// Use this for initialization
@@ -106,23 +115,58 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 			//Have the character move to a random way point based on errors.
 			agent.speed = patrolSpeed;
 
-			//
+			forwardRay = transform.TransformDirection (Vector3.forward);
+			sideLeft = transform.TransformDirection (new Vector3(-10,1,10));
+			sideRight = transform.TransformDirection (new Vector3(10,1,10));
+			Vector3 newPlayer = new Vector3(transform.position.x, 1.0f, transform.position.z);
 
-			if(Vector3.Distance(this.transform.position, sn.nextWaypoint )>= 2)
+			//Check for obstacle
+			if(Physics.Raycast(newPlayer, forwardRay, 1f) ||
+			   Physics.Raycast(newPlayer, sideLeft, 10f) ||
+			   Physics.Raycast(newPlayer, sideRight, 10f))
 			{
-				agent.SetDestination(sn.nextWaypoint);
+				obstacle = true;
+				/*Debug.DrawRay(newPlayer, forwardRay, Color.red);
+				Debug.DrawRay(newPlayer, sideLeft, Color.red);
+				Debug.DrawRay(newPlayer, sideRight, Color.red);*/
+			}
+			else 
+			{
+				obstacle = false;
+			}
+
+			if(Vector3.Distance(this.transform.position, patroler.nextWaypoint )>= 2)
+			{
+				agent.SetDestination(patroler.nextWaypoint);
 				character.Move(agent.desiredVelocity, false, false);
 			}
 			//If the player is close to way point, set the next way point.
-			else if (Vector3.Distance(this.transform.position, sn.nextWaypoint) <= 2)
+			else if (Vector3.Distance(this.transform.position, patroler.nextWaypoint) <= 2)
 			{
-				sn.nextPatrolPosition(); 
+				patroler.nextPatrolPosition(); 
 			}
 			//If there are no way points close by.
 			else
 			{
 				character.Move(Vector3.zero, false, false);
 			}
+			//character.Move(agent.desiredVelocity, false, false);
+			//agent.SetDestination(new Vector3(0,0,0));
+
+			//Obstacle Adjustment
+			//TO DO: Account for large obstacles
+			
+			/*if(obstacle)
+			{
+				if(Physics.Raycast(newPlayer, sideLeft, 10f))
+				{
+					transform.Rotate(new Vector3(0f,40f,0f)*Time.deltaTime);
+				}
+				else if(Physics.Raycast(newPlayer, sideRight,10f))
+				{
+					transform.Rotate(new Vector3(0f,-40f,0f)*Time.deltaTime);
+				}
+			}*/
 
 			if (visionScript.visibleTargets.Count >0)
 			{
@@ -132,6 +176,12 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 						target = visibleTarget;
 						state = bev_basicAI.State.CHASE;
 					}
+					
+					if(visibleTarget.CompareTag("Predator")){
+						//Debug.Log("WE GOT ONE");
+						target = visibleTarget;
+						state = bev_basicAI.State.TALK;
+					}
 				}
 			}
 
@@ -140,7 +190,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 			if(patrolTimer <= 0.0)
 			{
 				patrolTimer = 100.0f;
-				state = bev_basicAI.State.WAIT;
+				//state = bev_basicAI.State.WAIT;
 			}
 		}
 
@@ -198,17 +248,6 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 			Debug.LogError("Talking");
 		}
 
-
-		/*void OnTriggerEnter(Collider coll)
-		{
-			if (coll.tag == "Player")
-			{
-				state = bev_basicAI.State.CHASE;
-				target = coll.gameObject;
-			}
-
-
-		} */
 
 		
 	}

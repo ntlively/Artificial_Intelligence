@@ -54,7 +54,9 @@
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Bev_Scripts\bev_basicAI.cs" />
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Bev_Scripts\DecibelTracker.cs" />
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Bev_Scripts\MemoryNode.cs" />
+     <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Bev_Scripts\ObstacleMovement.cs" />
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Bev_Scripts\PatrolGuide.cs" />
+     <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Bev_Scripts\Predatorspawn.cs" />
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Bev_Scripts\preyAI.cs" />
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Bev_Scripts\WayPointClass.cs" />
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Bev_Scripts\WayPointMaster.cs" />
@@ -66,6 +68,9 @@
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Theo_Scripts\basicPredatorAI.cs" />
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Theo_Scripts\basicPreyAI.cs" />
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Theo_Scripts\jumpMod.cs" />
+     <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Theo_Scripts\MapData.cs" />
+     <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Theo_Scripts\NavMeshPainter.cs" />
+     <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Theo_Scripts\NavPoint.cs" />
      <Compile Include="Assets\SampleScenes\Menu\Scripts\MenuSceneLoader.cs" />
      <Compile Include="Assets\SampleScenes\Menu\Scripts\PauseMenu.cs" />
      <Compile Include="Assets\SampleScenes\Menu\Scripts\SceneAndURLLoader.cs" />
