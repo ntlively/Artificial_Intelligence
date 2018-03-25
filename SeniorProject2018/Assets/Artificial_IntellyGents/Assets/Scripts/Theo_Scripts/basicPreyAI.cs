@@ -13,8 +13,6 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		public ThirdPersonCharacter character;
 		public Vision visionScript;
 		public Hearing hearingScript;
-		//public NavMeshPainter meshPainter;
-		public MapData waypointGraph;
 
 		public enum State{
 			SEARCH,
@@ -25,9 +23,10 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 		public State state;
 		private bool alive;
-		//public OffMeshLinkMoveMethod method = OffMeshLinkMoveMethod.Parabola;
-		//public float jumpHeight = 2.0f;
-		//public float jumpDuration = 0.5f;
+
+		private WayPointClass currentWaypoint;
+
+		public PatrolGuide sn;
 
 		// Variables for PATROL
 		private int waypointINDEX = 0;
@@ -39,15 +38,23 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		private float fleeAngle = 0.0f;
 		private Transform chaser;
 
+		public DecibelTracker noise;
+
+		public static Stack<MemoryNode> memory = new Stack<MemoryNode>();
+
 		void Awake(){
 			prey = GameObject.Find("Prey");
 			agent = prey.GetComponent<UnityEngine.AI.NavMeshAgent>();
 			character = prey.GetComponent<ThirdPersonCharacter>();
 			visionScript = prey.GetComponent<Vision>();
 			hearingScript = prey.GetComponent<Hearing>();
-			//meshPainter = prey.GetComponent<NavMeshPainter>();
-			waypointGraph = new MapData();
-			waypointGraph.triangulate();
+
+			sn = this.GetComponent<PatrolGuide>();
+			sn.nextWaypoint = this.transform.position;
+			noise = this.GetComponent<DecibelTracker>();
+
+			
+			//sn.nextHidePosition();
 		}
 
 		// Use this for initialization
@@ -74,40 +81,40 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				switch(state)
 				{
 					case State.SEARCH:
-						Patrol();
+						Search();
 						break;
 					case State.FLEE:
 						Flee();
 						break;
+					case State.HIDE:
+						Hide();
+						break;
+					case State.SNEAK:
+						Sneak();
+						break;
 				}
-				// if (agent.isOnOffMeshLink)
-				// {
-				// 	character.Move(agent.desiredVelocity,false,true);
-				// 	if (method == OffMeshLinkMoveMethod.NormalSpeed)
-				// 		yield return StartCoroutine(NormalSpeed(agent));
-				// 	else if (method == OffMeshLinkMoveMethod.Parabola)
-				// 		yield return StartCoroutine(Parabola(agent, jumpHeight, jumpDuration));
-				// 	agent.CompleteOffMeshLink();
-				// }
 				yield return null;
 			}
 		}
 		
-		void Patrol()
+		void Search()
 		{
 			agent.speed = patrolSpeed;
-			if(Vector3.Distance(this.transform.position,waypointGraph.navPoints[waypointINDEX].position)>= 2)
+
+			if(Vector3.Distance(this.transform.position,sn.nextWaypoint)>= 1)
 			{
-				agent.SetDestination(waypointGraph.navPoints[waypointINDEX].position);
+				agent.SetDestination(sn.nextWaypoint);
 				character.Move(agent.desiredVelocity,false,false); //velocity, crouch, jump
 			}
-			else if (Vector3.Distance(this.transform.position,waypointGraph.navPoints[waypointINDEX].position)<=2)
+			else if (Vector3.Distance(this.transform.position,sn.nextWaypoint)<=1)
 			{
-				waypointINDEX += 1;
-				if(waypointINDEX>=waypointGraph.navPoints.Count)
-				{
-					waypointINDEX = 0;
-				}
+				sn.nextHidePosition();
+				if(sn.nextWaypoint == sn.prevWaypoint)
+					state = basicPreyAI.State.HIDE;
+			}
+			else
+			{
+				character.Move(Vector3.zero, false, false);
 			}
 			if (visionScript.visibleTargets.Count >0)
 			{
@@ -120,10 +127,6 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 					}
 				}
 			}
-			// else
-			// {
-			// 	character.Move(Vector3.zero,false,false);
-			// }
 		}
 
 		void Flee()
@@ -133,18 +136,14 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			//if(Vector3.)
 
 
-			if(Vector3.Distance(this.transform.position,waypointGraph.navPoints[waypointINDEX].position)> 5)
+			if(Vector3.Distance(this.transform.position,sn.nextWaypoint)>= 5)
 			{
-				agent.SetDestination(waypointGraph.navPoints[waypointINDEX].position);
+				agent.SetDestination(sn.nextWaypoint);
 				character.Move(agent.desiredVelocity,false,false); //velocity, crouch, jump
 			}
-			else if (Vector3.Distance(this.transform.position,waypointGraph.navPoints[waypointINDEX].position)<=5)
+			else if (Vector3.Distance(this.transform.position,sn.nextWaypoint)<=2)
 			{
-				waypointINDEX += 1;
-				if(waypointINDEX>=waypointGraph.navPoints.Count)
-				{
-					waypointINDEX = 0;
-				}
+				sn.nextRandomPosition();
 			}
 			else
 			{
@@ -156,40 +155,16 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		{
 			fleeAngle = Vector3.Angle(this.transform.position - chaser.position, this.transform.forward);
 		}
-		// public enum OffMeshLinkMoveMethod
-		// {
-		// 	Teleport,
-		// 	NormalSpeed,
-		// 	Parabola
-		// }
 
-		// IEnumerator NormalSpeed(UnityEngine.AI.NavMeshAgent agent)
-		// {
-		// 	UnityEngine.AI.OffMeshLinkData data = agent.currentOffMeshLinkData;
-		// 	Vector3 endPos = data.endPos + Vector3.up * agent.baseOffset;
-		// 	while (agent.transform.position != endPos)
-		// 	{
-		// 		agent.transform.position = Vector3.MoveTowards(agent.transform.position, endPos, agent.speed * Time.deltaTime);
-		// 		yield return null;
-		// 	}
-		// }
-		// IEnumerator Parabola (UnityEngine.AI.NavMeshAgent agent, float jumpHeight, float jumpDuration)
-		// {
-		// 	UnityEngine.AI.OffMeshLinkData data = agent.currentOffMeshLinkData;
-		// 	Vector3 startPos = agent.transform.position;
-		// 	Vector3 endPos = data.endPos + Vector3.up*agent.baseOffset;
-		// 	float normalizedTime = 0.0f;
-		// 	while (normalizedTime < 1.0f)
-		// 	{
-		// 		float yOffset = jumpHeight * 4.0f*(normalizedTime - normalizedTime*normalizedTime);
-		// 		agent.transform.position = Vector3.Lerp (startPos, endPos, normalizedTime) + yOffset * Vector3.up;
-		// 		normalizedTime += Time.deltaTime / jumpDuration;
-		// 		yield return null;
-		// 	}
-		// }
-		// Update is called once per frame
-		// void Update () {
-			
-		// }
+		void Hide()
+		{
+			//Hide function
+			character.Move(Vector3.zero,true,false);
+		}
+
+		void Sneak()
+		{
+			//Sneak function
+		}
 	}	
 }

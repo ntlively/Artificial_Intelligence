@@ -8,7 +8,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 	public class jumpMod : MonoBehaviour {
 
 		// Variable Declarations
-		public GameObject predator;
+		public GameObject actor;
 		public UnityEngine.AI.NavMeshAgent agent;
 		public ThirdPersonCharacter character;
 
@@ -18,9 +18,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		public float jumpDuration = 0.75f;
 
 		void Awake(){
-			predator = GameObject.Find("Predator");
-			agent = predator.GetComponent<UnityEngine.AI.NavMeshAgent>();
-			character = predator.GetComponent<ThirdPersonCharacter>();
+			agent = this.GetComponent<UnityEngine.AI.NavMeshAgent>();
+			character = this.GetComponent<ThirdPersonCharacter>();
 		}
 
 		// Use this for initialization

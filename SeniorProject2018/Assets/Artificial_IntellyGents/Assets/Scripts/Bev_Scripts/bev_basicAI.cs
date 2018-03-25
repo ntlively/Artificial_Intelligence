@@ -116,7 +116,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 			//If the player is close to way point, set the next way point.
 			else if (Vector3.Distance(this.transform.position, sn.nextWaypoint) <= 2)
 			{
-				sn.nextPatrolPosition(); 
+				sn.nextRandomPosition(); 
 			}
 			//If there are no way points close by.
 			else

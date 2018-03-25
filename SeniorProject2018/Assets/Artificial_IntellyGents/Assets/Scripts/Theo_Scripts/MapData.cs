@@ -2,17 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
+//[System.Serializable]
 public class MapData : MonoBehaviour
 {
-	private Mesh mesh;
-	private MeshCollider collider;
+	public Mesh mesh;
+	public MeshCollider collider;
 	public List<NavPoint> navPoints;
 
-	public MapData()
+
+	void Start()
 	{
 		navPoints = new List<NavPoint>();
-		//gameObject.layer = 1 << 11;
+		triangulate();
 	}
 
 	public void triangulate()
@@ -25,6 +26,7 @@ public class MapData : MonoBehaviour
 		//navPoints = new NavPoint[mesh.vertices.Length];
 		collider = new MeshCollider();
 		collider.sharedMesh = mesh;
+		gameObject.layer = 11;
 
 		//Debug.Log("number of vertices:" + mesh.vertices.Length);
 		for(int i = 0; i < mesh.vertices.Length; i++)

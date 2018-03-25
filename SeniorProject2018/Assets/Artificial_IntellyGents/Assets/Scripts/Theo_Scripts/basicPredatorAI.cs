@@ -25,9 +25,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 		public State state;
 		private bool alive;
-		//public OffMeshLinkMoveMethod method = OffMeshLinkMoveMethod.Parabola;
-		//public float jumpHeight = 2.0f;
-		//public float jumpDuration = 0.5f;
+		
 		private WayPointClass currentWaypoint;
 		public PatrolGuide sn;
 
@@ -56,6 +54,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			hearingScript = predator.GetComponent<Hearing>();
 
 			sn = this.GetComponent<PatrolGuide>();
+			sn.nextWaypoint = this.transform.position;
 			noise = this.GetComponent<DecibelTracker>();
 		}
 
@@ -106,14 +105,14 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		{
 			agent.speed = patrolSpeed;
 
-			if(Vector3.Distance(this.transform.position,sn.nextWaypoint)>= 2)
+			if(Vector3.Distance(this.transform.position,sn.nextWaypoint)>= 1)
 			{
 				agent.SetDestination(sn.nextWaypoint);
 				character.Move(agent.desiredVelocity,false,false); //velocity, crouch, jump
 			}
-			else if (Vector3.Distance(this.transform.position,sn.nextWaypoint)<=2)
+			else if (Vector3.Distance(this.transform.position,sn.nextWaypoint)<=1)
 			{
-				sn.nextPatrolPosition();
+				sn.nextHuntPosition();
 			}
 			else
 			{
@@ -129,12 +128,12 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 					}
 				}
 			}
-			patrolTimer = patrolTimer-Time.deltaTime;
-			if(patrolTimer <= 0.0)
-			{
-				patrolTimer = 100.0f;
-				state = basicPredatorAI.State.WAIT;
-			}
+			// patrolTimer = patrolTimer-Time.deltaTime;
+			// if(patrolTimer <= 0.0)
+			// {
+			// 	patrolTimer = 100.0f;
+			// 	state = basicPredatorAI.State.WAIT;
+			// }
 		}
 
 		void Chase()
