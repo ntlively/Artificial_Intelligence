@@ -52,6 +52,12 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 		Vector3 sideLeft;
 		Vector3 sideRight;
 
+
+		//Communcation
+		public bool shout = false;
+		public bool predatorHeard = false;
+		public bool needUpdate = false;
+
 		void Awake()
 		{
 			agent = GetComponent<NavMeshAgent>();
@@ -66,9 +72,9 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 			patroler = this.GetComponent<PatrolGuide>();
 			noise = this.GetComponent<DecibelTracker>();
 
-			predator = GameObject.Find("Predator");
-			visionScript = predator.GetComponent<Vision>();
-			hearingScript = predator.GetComponent<Hearing>();
+			//predator = //GameObject.Find("Predator");
+			visionScript = this.GetComponent<Vision>();
+			hearingScript = this.GetComponent<Hearing>();
 
 			forwardRay = transform.TransformDirection (Vector3.forward);
 			sideLeft = transform.TransformDirection (Vector3.left);
@@ -120,7 +126,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 			sideRight = transform.TransformDirection (new Vector3(10,1,10));
 			Vector3 newPlayer = new Vector3(transform.position.x, 1.0f, transform.position.z);
 
-			//Check for obstacle
+			/*//Check for obstacle
 			if(Physics.Raycast(newPlayer, forwardRay, 1f) ||
 			   Physics.Raycast(newPlayer, sideLeft, 10f) ||
 			   Physics.Raycast(newPlayer, sideRight, 10f))
@@ -128,12 +134,12 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 				obstacle = true;
 				/*Debug.DrawRay(newPlayer, forwardRay, Color.red);
 				Debug.DrawRay(newPlayer, sideLeft, Color.red);
-				Debug.DrawRay(newPlayer, sideRight, Color.red);*/
+				Debug.DrawRay(newPlayer, sideRight, Color.red);
 			}
 			else 
 			{
 				obstacle = false;
-			}
+			}*/
 
 			if(Vector3.Distance(this.transform.position, patroler.nextWaypoint )>= 2)
 			{
@@ -144,6 +150,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 			else if (Vector3.Distance(this.transform.position, patroler.nextWaypoint) <= 2)
 			{
 				patroler.nextPatrolPosition(); 
+				agent.SetDestination(patroler.nextWaypoint);
 			}
 			//If there are no way points close by.
 			else
@@ -168,23 +175,9 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 				}
 			}*/
 
-			if (visionScript.visibleTargets.Count >0)
-			{
-				foreach (Transform visibleTarget in visionScript.visibleTargets) {
-					if(visibleTarget.CompareTag("Player")){
-						//Debug.Log("WE GOT ONE");
-						target = visibleTarget;
-						state = bev_basicAI.State.CHASE;
-					}
-					
-					if(visibleTarget.CompareTag("Predator")){
-						//Debug.Log("WE GOT ONE");
-						target = visibleTarget;
-						state = bev_basicAI.State.TALK;
-					}
-				}
-			}
-
+			
+			visionFunction();
+			hearingFunction();
 
 			patrolTimer = patrolTimer-Time.deltaTime;
 			if(patrolTimer <= 0.0)
@@ -243,10 +236,94 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 		{
 			//Trigger when one or more predators enter vision.
 			//AND Predator is currently not in chase state
+			
+			//Stop the guy who was spotted
 
 			//Predators will exchange information using Blackboard
-			Debug.LogError("Talking");
+	
+			//Move to predator until 2 blocks away. 
+			if(Vector3.Distance(this.transform.position, target.transform.position) > 3.0 && shout)
+			{
+				agent.speed = patrolSpeed;
+				character.Move(agent.desiredVelocity, false, false);
+				agent.SetDestination(target.transform.position);
+			}
+			else
+			{
+				character.Move(Vector3.zero, false, false);
+				agent.SetDestination(this.transform.position);
+				transform.LookAt(target);
+				if(shout)
+				{
+					shout = false;
+				}
+
+				if(Vector3.Distance(this.transform.position, target.transform.position) <= 2.0)
+				{
+					talkTimer = talkTimer-Time.deltaTime;
+					if(talkTimer <= 0.0)
+					{
+						talkTimer = 10.0f;
+						state = bev_basicAI.State.PATROL;
+					}
+
+				}
+	
+				
+			}
+
+	
 		}
+
+		void visionFunction()
+		{
+			if (visionScript.visibleTargets.Count >0)
+				{
+					foreach (Vision.VisionInfo visibleTarget in visionScript.visibleTargets) 
+					{
+						if(visibleTarget.target.CompareTag("Player")){
+							//Debug.Log("WE GOT ONE");
+							target = visibleTarget.target;
+							state = bev_basicAI.State.CHASE;
+						}
+
+						if(visibleTarget.target.CompareTag("Predator") && needUpdate){
+							Debug.Log("Vision");
+							target = visibleTarget.target;
+							state = bev_basicAI.State.TALK;
+							shout = true;
+						}
+					}
+				}
+
+		}
+
+		//Checking for call out 
+		void hearingFunction()
+		{
+
+			if (hearingScript.hearableTargets.Count >0)
+				{
+					foreach (Hearing.SoundInfo hearableTarget in hearingScript.hearableTargets) 
+					{
+						if(hearableTarget.target.CompareTag("Player")){
+							//Debug.Log("WE GOT ONE");
+							target = hearableTarget.target;
+							state = bev_basicAI.State.CHASE;
+						}
+
+						if(hearableTarget.target.CompareTag("Predator") && hearableTarget.target.GetComponent<bev_basicAI>().shout){
+							Debug.Log("Hearing");
+							target = hearableTarget.target;
+							state = bev_basicAI.State.TALK;
+						}
+					}
+				}
+
+
+		}
+
+
 
 
 		

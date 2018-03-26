@@ -17,7 +17,7 @@ public class Predatorspawn : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
-		if(spawnCall == true)
+		if(spawnCall == false)
 		{
 				Spawn();
 		}

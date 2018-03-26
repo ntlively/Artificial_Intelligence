@@ -17,9 +17,9 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 		public float currentDecibel = 0.5f;
 
 		//Constant decibel levels for each Predator State
-		public const float PatrolDecibel = 2.0f;
-		public const float RunningDecibel = 4.0f;
-		public const float IdleDecibel = 1.0f;
+		public const float PatrolDecibel = 10.0f;
+		public const float RunningDecibel = 20.0f;
+		public const float IdleDecibel = 5.0f;
 		public const float SneakDecibel = 0.5f;
 
 

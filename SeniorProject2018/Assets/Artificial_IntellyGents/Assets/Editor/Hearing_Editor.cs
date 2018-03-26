@@ -26,8 +26,8 @@ public class FOS_Editor : Editor {
 		Handles.color = Color.blue;
 		Vector3 modify = fos.transform.position + new Vector3(1.0f,0,0);
 
-		foreach (Transform hearableTarget in fos.hearableTargets) {
-			Handles.DrawLine (modify, hearableTarget.position);
+		foreach (Hearing.SoundInfo hearableTarget in fos.hearableTargets) {
+			Handles.DrawLine (modify, hearableTarget.target.position);
 		}
 	}
 

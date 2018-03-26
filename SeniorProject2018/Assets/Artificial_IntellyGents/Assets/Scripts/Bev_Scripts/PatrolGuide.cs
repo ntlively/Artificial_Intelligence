@@ -72,9 +72,9 @@ using UnityEngine.AI;
 			//Add in percentage 
 			if(row == 15)
 			{
-			fillPoint2[0] = -17.5f;
-			fillPoint2[2] = fillPoint2[2]-1.0f;
-			row = 0;
+				fillPoint2[0] = -17.5f;
+				fillPoint2[2] = fillPoint2[2]-1.0f;
+				row = 0;
 
 			}
 		}
