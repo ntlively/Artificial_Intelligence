@@ -52,8 +52,13 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Bev_Scripts\bev_basicAI.cs" />
+     <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Bev_Scripts\Blackboard.cs" />
+     <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Bev_Scripts\MemoryNode.cs" />
+     <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Bev_Scripts\ObstacleMovement.cs" />
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Bev_Scripts\PatrolGuide.cs" />
+     <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Bev_Scripts\Predatorspawn.cs" />
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Bev_Scripts\preyAI.cs" />
+     <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Bev_Scripts\SafeZoneSpawner.cs" />
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Bev_Scripts\WayPointClass.cs" />
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Bev_Scripts\WayPointMaster.cs" />
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Nate_Scripts\ActorScript.cs" />
