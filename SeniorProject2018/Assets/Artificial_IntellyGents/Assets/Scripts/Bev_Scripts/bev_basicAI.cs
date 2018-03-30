@@ -275,6 +275,12 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 	
 		}
 
+		void onDrawGizmo()
+		{
+			Gizmos.color = Color.red;
+			Gizmos.DrawWireSphere(this.transform.position, 0.5f);
+		}
+
 		void visionFunction()
 		{
 			if (visionScript.visibleTargets.Count >0)

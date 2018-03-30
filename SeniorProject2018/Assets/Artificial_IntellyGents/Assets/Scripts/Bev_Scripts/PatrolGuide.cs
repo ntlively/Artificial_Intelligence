@@ -98,17 +98,17 @@ using UnityEngine.AI;
 		int row = 0;	
 	
 		//Display entire influence map using cubes
-		for(int k = 0; k < weightedList.Count; k++)
+		/*for(int k = 0; k < weightedList.Count; k++)
 		{
 			//If the point is on the second level display as blue
-			if (weightedList[k].position[1] == 4.5f)
+			/*if (weightedList[k].position[1] == 4.5f)
 			{
 				Gizmos.color = Color.blue;
 				//Adjust cubes so that the top right corner of the cube is the center of the cube.	
 				fillPoints[0] = weightedList[k].position[0];
 				fillPoints[1] = weightedList[k].position[1];
 				fillPoints[2] = weightedList[k].position[2];
-			}
+			} 
 			else
 			{
 				//Lower level of influence map.
@@ -117,7 +117,7 @@ using UnityEngine.AI;
 
 			
 			Gizmos.DrawCube(fillPoints, new Vector3(1.0f, 1.0f, 1.0f));
-		}
+		}*/
 
 
 		//Displays the current reachable waypoints from pervious waypoint.
