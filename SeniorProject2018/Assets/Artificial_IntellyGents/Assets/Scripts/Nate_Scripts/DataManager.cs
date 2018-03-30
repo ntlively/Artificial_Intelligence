@@ -5,9 +5,18 @@ using UnityEngine;
 public class DataManager : MonoBehaviour {
 
 
-
+	// booleans
 	public bool alive;
+	public bool shout = false;
+	//public bool predatorHeard = false;
+	public bool needUpdate = false;
+	
+	// floats
+	public float patrolSpeed = 0.5f;
+	public float chaseSpeed = 0.1f;
+	// States
 	public State state;
+
 	public enum State{
 		PATROL,
 		CHASE,
@@ -17,6 +26,9 @@ public class DataManager : MonoBehaviour {
 		THINK
 	}
 
+	// Stacks
+	public Stack<RewardTrackingInfo> rewardTracking;
+	public Stack<List<double>> netTracking;
 
 	public struct RewardTrackingInfo{
 		public State state;
@@ -29,12 +41,7 @@ public class DataManager : MonoBehaviour {
 			hearingData = _hearingData;
 		}
 	}
-	// stack for reward tracking
-	public Stack<RewardTrackingInfo> rewardTracking;
-	public Stack<List<double>> netTracking;
 
-
-//~////////////////////////////////////////////////////////~//
 	// Use this for initialization
 	void Awake () {
 		alive = true;
@@ -42,10 +49,4 @@ public class DataManager : MonoBehaviour {
 		rewardTracking = new Stack<RewardTrackingInfo>();
 		netTracking = new  Stack<List<double>>();
 	}
-
-	// public void SwapState(DataManager.State _state,Vision.VisionInfo _visionData,Hearing.SoundInfo _hearingData)
-	// {
-	// 	state = _state;
-	// 	rewardTracking.Push(new RewardTrackingInfo(state,_visionData,_hearingData));
-	// }
 }

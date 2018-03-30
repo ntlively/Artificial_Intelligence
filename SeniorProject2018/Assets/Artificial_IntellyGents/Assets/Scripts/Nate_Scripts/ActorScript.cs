@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-//using BayesianUtils;
 
 // BUG REPORT
 
@@ -11,31 +10,21 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 {
 	public class ActorScript : MonoBehaviour {
 
-		// Variable Declarations
-		//public GameObject predator;
-		public UnityEngine.AI.NavMeshAgent agent;
-		public ThirdPersonCharacter character;
+		public GameObject 					actor;
+		public UnityEngine.AI.NavMeshAgent 	agent;
+		public ThirdPersonCharacter 		character;
 
-		public DataManager manager;
-		public DirectorScript director;
-		public Vision visionScript;
-		public Hearing hearingScript;
+		public DataManager 					manager;
+		public DirectorScript 				director;
+		public PatrolGuide 					patroller;
 
-		//public BayesNet  testNet;
-		// Variables for PATROL
-		public List<GameObject> waypoints = new List<GameObject>();
-		private int waypointINDEX = 0;
-		public float patrolSpeed = 0.5f;
+		public Vision 						visionScript;
+		public Hearing 						hearingScript;
 
 
 		// Variables for CHASE
-		public float chaseSpeed = 0.1f;
 		public Transform target;
-		public GameObject actor;
 
-
-		// Variables for THINK
-		//NeuralNetwork neuralNet;
 
 		void Awake(){
 
@@ -46,6 +35,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			visionScript	= actor.GetComponent<Vision>();
 			hearingScript	= actor.GetComponent<Hearing>();
 			director		= actor.GetComponent<DirectorScript>();
+			patroller		= actor.GetComponent<PatrolGuide>();
 		}
 
 
@@ -85,37 +75,39 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		
 		void Patrol()
 		{
-			agent.speed = patrolSpeed;
-			if(Vector3.Distance(this.transform.position,waypoints[waypointINDEX].transform.position)>= 2)
+			//Have the character move to a random way point based on errors.
+			agent.speed = manager.patrolSpeed;
+
+			if(Vector3.Distance(this.transform.position, patroller.nextWaypoint )>= 2)
 			{
-				agent.SetDestination(waypoints[waypointINDEX].transform.position);
-				character.Move(agent.desiredVelocity,false,false); //velocity, crouch, jump
+				agent.SetDestination(patroller.nextWaypoint);
+				character.Move(agent.desiredVelocity, false, false);
 			}
-			else if (Vector3.Distance(this.transform.position,waypoints[waypointINDEX].transform.position)<2)
+			//If the player is close to way point, set the next way point.
+			else if (Vector3.Distance(this.transform.position, patroller.nextWaypoint) <= 2)
 			{
-				waypointINDEX += 1;
-				if(waypointINDEX >= waypoints.Count)
-				{
-					waypointINDEX = 0;
-				}
+				patroller.nextPatrolPosition(); 
+				agent.SetDestination(patroller.nextWaypoint);
 			}
-			if (visionScript.visibleTargets.Count >0)
+			//If there are no way points close by.
+			else
 			{
-				int index = 0;
-				foreach (Vision.VisionInfo visibleTarget in visionScript.visibleTargets) {
-					if(visibleTarget.target.CompareTag("Player")){
-						target = visibleTarget.target;
-						manager.state = DataManager.State.THINK;
-					}
-					index++;
-				}
+				character.Move(Vector3.zero, false, false);
 			}
 			
+			visionFunction();
+			//hearingFunction();
+
+			patroller.patrolTimer = patroller.patrolTimer-Time.deltaTime;
+			if(patroller.patrolTimer <= 0.0)
+			{
+				patroller.patrolTimer = 100.0f;
+			}
 		}
 
 		void Chase()
 		{
-			agent.speed = chaseSpeed;
+			agent.speed = manager.chaseSpeed;
 			agent.SetDestination(target.position);
 			character.Move(agent.desiredVelocity,false,false);
 
@@ -142,6 +134,27 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				checkKnowledge(true);
 			}	
 
+		}
+		void visionFunction()
+		{
+			if (visionScript.visibleTargets.Count >0)
+				{
+					foreach (Vision.VisionInfo visibleTarget in visionScript.visibleTargets) 
+					{
+						if(visibleTarget.target.CompareTag("Player")){
+							//Debug.Log("WE GOT ONE");
+							target = visibleTarget.target;
+							manager.state = DataManager.State.THINK;
+						}
+
+						if(visibleTarget.target.CompareTag("Predator") && manager.needUpdate){
+							Debug.Log("Vision");
+							target = visibleTarget.target;
+							manager.state = DataManager.State.TALK;
+							manager.shout = true;
+						}
+					}
+				}
 		}
 
 		void checkKnowledge(bool tracking){

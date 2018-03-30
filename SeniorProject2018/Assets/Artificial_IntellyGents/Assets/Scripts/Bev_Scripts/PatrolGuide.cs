@@ -9,6 +9,7 @@ using UnityEngine.AI;
 
 	//Variables 
 		//Patroling 
+		public float patrolTimer = 10.0f;
 		//Area influences, 
 			//Holds percentage amounts for areas the predator knows about
 			public List<WeightPoint> weightedList = new List<WeightPoint>();
