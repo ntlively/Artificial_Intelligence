@@ -42,15 +42,10 @@ public class DataManager : MonoBehaviour {
 		rewardTracking = new Stack<RewardTrackingInfo>();
 		netTracking = new  Stack<List<double>>();
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
-	public void SwapState(DataManager.State _state,Vision.VisionInfo _visionData,Hearing.SoundInfo _hearingData)
-	{
-		state = _state;
-		rewardTracking.Push(new RewardTrackingInfo(state,_visionData,_hearingData));
-	}
+	// public void SwapState(DataManager.State _state,Vision.VisionInfo _visionData,Hearing.SoundInfo _hearingData)
+	// {
+	// 	state = _state;
+	// 	rewardTracking.Push(new RewardTrackingInfo(state,_visionData,_hearingData));
+	// }
 }

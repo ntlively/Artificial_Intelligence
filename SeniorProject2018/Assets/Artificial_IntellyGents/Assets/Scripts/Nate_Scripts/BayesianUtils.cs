@@ -97,7 +97,7 @@ using UnityEngine;
         // Update Bayes Net with sensor information, and then return the best option
         public Dictionary<string, float> Predict(int information)
         {
-            int info = information;
+            //int info = information;
             BayesNode header = _nodes[0];
             var nodeQueue = new Queue<BayesNode>();
             // Loop through the tree, and have each node update it's probability values based on info

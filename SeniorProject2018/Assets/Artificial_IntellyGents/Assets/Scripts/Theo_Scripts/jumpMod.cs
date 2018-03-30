@@ -18,7 +18,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		public float jumpDuration = 0.5f;
 
 		void Awake(){
-			predator = GameObject.Find("Predator");
+			predator = this.gameObject;
 			agent = predator.GetComponent<UnityEngine.AI.NavMeshAgent>();
 			character = predator.GetComponent<ThirdPersonCharacter>();
 		}

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 // LOG
-// EDITED DECIBEL TRACKER TO WORK OFF THIRD PERSON CHARACTER SO THAT IT CAN WORK FOR GENERIC TYPE.  NEED TO UPDATE ACTOR SCRIPTS AND SUCH TO EDIT THIRDPERSON STATE ACCORDINGLY
+// EDITED DECIBEL TRACKER TO WORK OFF DATAMANAGER SO THAT IT CAN WORK FOR GENERIC TYPE
 
 namespace UnityStandardAssets.Characters.ThirdPerson{
 
@@ -71,10 +71,5 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 		{
 			return currentDecibel;
 		}
-		
-		// Update is called once per frame
-		/*void Update () {
-			
-		}*/
 	}
 }

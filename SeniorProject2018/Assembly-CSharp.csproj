@@ -62,12 +62,12 @@
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Nate_Scripts\DataManager.cs" />
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Nate_Scripts\DecibelTracker.cs" />
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Nate_Scripts\Dendrite.cs" />
+     <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Nate_Scripts\DirectorScript.cs" />
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Nate_Scripts\Hearing.cs" />
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Nate_Scripts\Layer.cs" />
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Nate_Scripts\nate_basicAI.cs" />
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Nate_Scripts\NeuralNetwork.cs" />
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Nate_Scripts\Neuron.cs" />
-     <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Nate_Scripts\predDirector.cs" />
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Nate_Scripts\Vision.cs" />
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Theo_Scripts\basicPredatorAI.cs" />
      <Compile Include="Assets\Artificial_IntellyGents\Assets\Scripts\Theo_Scripts\basicPreyAI.cs" />
