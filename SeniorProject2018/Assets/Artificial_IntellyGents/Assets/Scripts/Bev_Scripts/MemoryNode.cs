@@ -36,7 +36,6 @@ public class WeightPoint {
 	public float wallDist;
 	public int numWalls;
 
-	public bool visited;
 	public float visitTime;
 	private float startTime;
 	private float visitedTimer;
@@ -57,10 +56,7 @@ public class WeightPoint {
 		preyCaught = 0.0f;
 		predatorSpotted = 0.0f;
 
-		visited = false;
-		visitTime = 10.0f;
-		startTime = 0.0f;
-		visitedTimer = 0.0f;
+		visitTime = 0.0f;
 	}
 	
 	// Use this for initialization
@@ -69,26 +65,9 @@ public class WeightPoint {
 	}*/
 	
 	//Update is called once per frame
-	public void startTimer ()
+	public void setTime ()
 	{
-		startTime = Time.time;
-		visited = true;
-	}
-
-	public void updateTimer()
-	{
-		if(visited)
-		{
-			visitedTimer =  Time.time - startTime;
-
-			if(visitedTimer > visitTime)
-			{
-				visitedTimer = 0.0f;
-				startTime = 0.0f;
-				visited = false;
-			}
-		}
-		
+		visitTime = Time.time;
 	}
 }
 

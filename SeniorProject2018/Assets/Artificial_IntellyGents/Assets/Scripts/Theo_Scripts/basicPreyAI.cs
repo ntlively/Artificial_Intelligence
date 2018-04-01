@@ -124,6 +124,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 						chaser = visibleTarget;
 						setFleeAngle(chaser);
 						state = basicPreyAI.State.FLEE;
+						sn.nextFleePosition(chaser.transform.position);
 					}
 				}
 			}
@@ -133,17 +134,14 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		{
 			agent.speed = fleeSpeed;
 
-			//if(Vector3.)
-
-
-			if(Vector3.Distance(this.transform.position,sn.nextWaypoint)>= 5)
+			if(Vector3.Distance(this.transform.position,sn.nextWaypoint)>= 1)
 			{
 				agent.SetDestination(sn.nextWaypoint);
 				character.Move(agent.desiredVelocity,false,false); //velocity, crouch, jump
 			}
-			else if (Vector3.Distance(this.transform.position,sn.nextWaypoint)<=2)
+			else if (Vector3.Distance(this.transform.position,sn.nextWaypoint)<=1)
 			{
-				sn.nextRandomPosition();
+				sn.nextFleePosition(chaser.transform.position);
 			}
 			else
 			{
@@ -159,12 +157,44 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		void Hide()
 		{
 			//Hide function
+			transform.Rotate(0.0f,2.5f,0.0f);
 			character.Move(Vector3.zero,true,false);
+
+			if (visionScript.visibleTargets.Count >0)
+			{
+				foreach (Transform visibleTarget in visionScript.visibleTargets) {
+					if(visibleTarget.CompareTag("Predator")){
+						//Debug.Log("WE GOT ONE");
+						chaser = visibleTarget;
+						setFleeAngle(chaser);
+						state = basicPreyAI.State.FLEE;
+						sn.nextFleePosition(chaser.transform.position);
+					}
+				}
+			}
 		}
 
 		void Sneak()
 		{
 			//Sneak function
+		}
+
+		public void caught(Vector3 catcherPos)
+		{
+			Vector3 hitDirection = (this.transform.position - catcherPos).normalized;
+			alive = false;
+			this.transform.GetChild(0).gameObject.SetActive(false);
+			this.transform.GetChild(1).gameObject.SetActive(false);
+			this.transform.GetChild(6).gameObject.SetActive(true);
+			this.transform.GetChild(6).GetComponent<Rigidbody>().AddForce(hitDirection,ForceMode.Impulse);
+			this.transform.GetChild(6).tag = "Dead";
+			this.GetComponent<Rigidbody>().isKinematic = true;
+			agent.SetDestination(this.transform.position);
+		}
+
+		public bool isAlive()
+		{
+			return alive;
 		}
 	}	
 }

@@ -55,6 +55,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 			sn = this.GetComponent<PatrolGuide>();
 			sn.nextWaypoint = this.transform.position;
+			sn.prevWaypoint = this.transform.position;
 			noise = this.GetComponent<DecibelTracker>();
 		}
 
@@ -68,7 +69,6 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 			state = basicPredatorAI.State.PATROL;
 			alive = true;
-
 
 			//start finite state machine (FSM)
 			StartCoroutine("FSM");
@@ -112,6 +112,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			}
 			else if (Vector3.Distance(this.transform.position,sn.nextWaypoint)<=1)
 			{
+				//sn.setSearchRadius(this.transform.position);
 				sn.nextHuntPosition();
 			}
 			else
@@ -134,6 +135,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			// 	patrolTimer = 100.0f;
 			// 	state = basicPredatorAI.State.WAIT;
 			// }
+			sn.setVisited(this.transform.position);
 		}
 
 		void Chase()
@@ -148,6 +150,12 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				agent.SetDestination(target.transform.position);
 			}
 			character.Move(agent.desiredVelocity,false,false);
+
+			if(Vector3.Distance(this.transform.position,target.transform.position) <= 1.0f)
+			{
+				target.gameObject.GetComponent<basicPreyAI>().caught(this.transform.position);
+				state = basicPredatorAI.State.PATROL;
+			}
 
 			//sound change
 		}
