@@ -33,13 +33,14 @@ public class WeightPoint {
     
 	public Vector3 position;
 	public float weight;
-	public bool visited;
+	public bool active;
 	
 	
 	public WeightPoint ( float wei, Vector3 pos)
 	{
 		position = pos;
 		weight = wei;
+		active = false;
 	}
 	
 	// Use this for initialization
