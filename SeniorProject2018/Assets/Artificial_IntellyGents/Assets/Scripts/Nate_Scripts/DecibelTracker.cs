@@ -14,13 +14,13 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 
 		public DataManager manager;
 		//Sound set up 
-		public float currentDecibel = 0.5f;
+		public float currentDecibel = 1.0f;
 
 		//Constant decibel levels for each Predator State
-		public const float PatrolDecibel = 4.0f;
-		public const float RunningDecibel = 6.0f;
-		public const float IdleDecibel = 2.0f;
-		public const float SneakDecibel = 0.5f;
+		public  float RunningDecibel = 7.0f;
+		public  float PatrolDecibel = 5.0f;
+		public  float IdleDecibel = 3.0f;
+		public  float SneakDecibel = 1.0f;
 
 
 		void Awake () 
@@ -41,22 +41,26 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 		{
 			while (manager.alive)
 			{
-				//Set current decibel level
-				if(manager.state == DataManager.State.PATROL)
+				switch(manager.state)
 				{
-					currentDecibel = PatrolDecibel;
-				}
-				else if(manager.state == DataManager.State.CHASE)
-				{
-					currentDecibel = RunningDecibel;
-				}
-				else if(manager.state == DataManager.State.SNEAK)
-				{
-					currentDecibel = SneakDecibel;
-				}
-				else if(manager.state == DataManager.State.WAIT || manager.state == DataManager.State.TALK || manager.state == DataManager.State.THINK )
-				{
-					currentDecibel = IdleDecibel;
+					case DataManager.State.PATROL:
+						currentDecibel = PatrolDecibel;
+						break;
+					case DataManager.State.CHASE:
+						currentDecibel = RunningDecibel;
+						break;
+					case DataManager.State.SNEAK:
+						currentDecibel = SneakDecibel;
+						break;
+					case DataManager.State.THINK:
+						currentDecibel = IdleDecibel;
+						break;
+					case DataManager.State.TALK:
+						currentDecibel = IdleDecibel;
+						break;
+					case DataManager.State.WAIT:
+						currentDecibel = IdleDecibel;
+						break;
 				}
 
 				manager.gameObject.GetComponent<SphereCollider>().radius = currentDecibel;

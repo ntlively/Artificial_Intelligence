@@ -137,7 +137,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   manager: {fileID: 0}
-  currentDecibel: 0.5
+  currentDecibel: 1
+  RunningDecibel: 7
+  PatrolDecibel: 5
+  IdleDecibel: 3
+  SneakDecibel: 1
 --- !u!114 &10180288
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -307,6 +311,21 @@ Prefab:
     - target: {fileID: 1695347847600252, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114037471259077288, guid: 6f4f56f72d9c92e4cb07a96270e994cb,
+        type: 2}
+      propertyPath: chaseSpeed
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 114589954978134070, guid: 6f4f56f72d9c92e4cb07a96270e994cb,
+        type: 2}
+      propertyPath: soundRadius
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 114589954978134070, guid: 6f4f56f72d9c92e4cb07a96270e994cb,
+        type: 2}
+      propertyPath: hearingLimit
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}

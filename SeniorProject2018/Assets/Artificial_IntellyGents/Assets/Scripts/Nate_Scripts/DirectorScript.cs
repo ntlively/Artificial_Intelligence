@@ -25,6 +25,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			// train neural net
 			List<double> ins = new List<double>();
 			List<double> ots = new List<double>();
+			
+			// Switch to CHASE
 			for(int i=0;i<20;i++)
 			{
 				ins.Clear();
@@ -45,6 +47,28 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				}
 			}
 
+			// Switch to SNEAK
+			for(int i=0;i<20;i++)
+			{
+				ins.Clear();
+				double soundTemp = 4.0 + ((double)i)/10.0;
+				ins.Add((double)0.0);
+				ins.Add(soundTemp);
+
+				ots.Clear();
+				ots.Add((double)0.0);
+				ots.Add((double)0.0);
+				ots.Add((double)0.9);
+				ots.Add((double)0.0);
+				ots.Add((double)0.0);
+				ots.Add((double)0.0);
+
+				for(int j = 0; j < 100; j++){
+					neuralNet.Train(ins, ots);
+				}
+			}
+
+			// Switch to PATROL
 			ins.Clear();
             ins.Add((double)0.0);
             ins.Add((double)0.0);
