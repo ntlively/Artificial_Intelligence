@@ -68,80 +68,84 @@ public class PatrolGuide : MonoBehaviour {
 		obstacleMask = 1 << 10;
 		
 		//Map of the ground floor
-		Vector3 fillPoints = new Vector3 (-19.3f, 1.0f, 19.0f);
+		Vector3 fillPoints = new Vector3 (-21.0f, 0.0f, 21.0f);
 		int row = 0;
 		
 		//Start from the left portion of the map and iterate through
 		//creating weighted points that are on the navmesh.
-		for(int i = 0; i < 1600; i++)
+		for(int i = 0; i < 5; i++)
 		{
-
-			fillPoints [0] = fillPoints[0] + 1.0f;
-			row++;
-
-			NavMeshHit hit;
-			//check if point is on navmesh
-			if(NavMesh.SamplePosition(fillPoints, out hit, 1.42f, NavMesh.AllAreas))
+			for(int j = 0; j < 1600; j++)
 			{
-				//Generate weight for position
-				float wallDistance = wallWeight(hit.position);
-				shortestDist = Mathf.Min(shortestDist,wallDistance);
-				longestDist = Mathf.Max(longestDist,wallDistance);
-				int numberWalls = wallCount(hit.position);
+				fillPoints [0] = fillPoints[0] + 1.0f;
+				row++;
 
-				//create object
-				WeightPoint temp = new WeightPoint(wallDistance, numberWalls, fillPoints, hit.position);
-				temp.navPosition[1] += 0.5f;
-				//add to list
-				weightedList.Add(temp);
+				NavMeshHit hit;
+				//check if point is on navmesh
+				if(NavMesh.SamplePosition(fillPoints, out hit, 0.71f, NavMesh.AllAreas))
+				{
+					//Generate weight for position
+					float wallDistance = wallWeight(hit.position);
+					shortestDist = Mathf.Min(shortestDist,wallDistance);
+					longestDist = Mathf.Max(longestDist,wallDistance);
+					int numberWalls = wallCount(hit.position);
+
+					//create object
+					WeightPoint temp = new WeightPoint(wallDistance, numberWalls, fillPoints, hit.position);
+					temp.navPosition[1] += 0.5f;
+					//add to list
+					weightedList.Add(temp);
+				}
+				
+				if(row == 40)
+				{
+				fillPoints[0] = -21.0f;
+				fillPoints[2] = fillPoints[2]-1.0f;
+				row = 0;
+
+				}
 			}
 			
-
-			//Add in percentage 
-			if(row == 40)
-			{
-			  fillPoints[0] = -21.0f;
-			  fillPoints[2] = fillPoints[2]-1.0f;
-			  row = 0;
-
-			}
+			fillPoints[0] = -21.0f;
+			fillPoints[1] = fillPoints[1] + 1.0f;
+			fillPoints[2] = 21.0f;
 
 		}
 		
-		//Map on the second level of the map.
-		Vector3 fillPoint2 = new Vector3 (-17.5f, 4.5f, -2.5f);
-		row = 0;
-		for(int a = 0; a < 255; a++)
-		{
-			fillPoint2 [0] = fillPoint2[0] + 1.0f;
-			row++;
+		// //Map on the second level of the map.
+		// Vector3 fillPoint2 = new Vector3 (-17.5f, 4.5f, -2.5f);
+		// row = 0;
+		// for(int a = 0; a < 255; a++)
+		// {
+		// 	fillPoint2 [0] = fillPoint2[0] + 1.0f;
+		// 	row++;
 
-			NavMeshHit hit;
-			//Check if point is on navmesh
-			if(NavMesh.SamplePosition(fillPoint2, out hit , 1.42f, NavMesh.AllAreas))
-			{
-				//Generate weight for position
-				float wallDistance = wallWeight(fillPoint2);
-				shortestDist = Mathf.Min(shortestDist,wallDistance);
-				longestDist = Mathf.Max(longestDist,wallDistance);
-				int numberWalls = wallCount(fillPoint2);
+		// 	NavMeshHit hit;
+		// 	//Check if point is on navmesh
+		// 	if(NavMesh.SamplePosition(fillPoint2, out hit , 1.42f, NavMesh.AllAreas))
+		// 	{
+		// 		//Generate weight for position
+		// 		float wallDistance = wallWeight(fillPoint2);
+		// 		shortestDist = Mathf.Min(shortestDist,wallDistance);
+		// 		longestDist = Mathf.Max(longestDist,wallDistance);
+		// 		int numberWalls = wallCount(fillPoint2);
 
-				//create object
-				WeightPoint temp = new WeightPoint(wallDistance, numberWalls, fillPoint2, hit.position);
-				temp.navPosition[1] += 0.5f;
-				//add to list
-				weightedList.Add(temp);
-			}
+		// 		//create object
+		// 		WeightPoint temp = new WeightPoint(wallDistance, numberWalls, fillPoint2, hit.position);
+		// 		temp.navPosition[1] += 0.5f;
+		// 		//add to list
+		// 		weightedList.Add(temp);
+		// 	}
 
-			//Add in percentage 
-			if(row == 15)
-			{
-			fillPoint2[0] = -17.5f;
-			fillPoint2[2] = fillPoint2[2]-1.0f;
-			row = 0;
+		// 	//Add in percentage 
+		// 	if(row == 15)
+		// 	{
+		// 	fillPoint2[0] = -17.5f;
+		// 	fillPoint2[2] = fillPoint2[2]-1.0f;
+		// 	row = 0;
 
-			}
-		}
+		// 	}
+		// }
 		
 		//Set the beginning waypoint for the agent.
 		//nextRandomPosition ();
@@ -202,6 +206,7 @@ public class PatrolGuide : MonoBehaviour {
 			Gizmos.color = new Color(redValue,greenValue,blueValue,gridOpacity);
 
 			fillPoints = weightedList[k].position;
+			fillPoints[1] += 0.05f;
 
 			Gizmos.DrawCube(fillPoints, new Vector3(1.0f, 1.0f, 1.0f));
 			//Gizmos.DrawSphere(fillPoints, 0.5f);
@@ -333,6 +338,8 @@ public class PatrolGuide : MonoBehaviour {
 	public void nextHuntPosition () 
 	{
 		//Filter reachable points
+		nextWaypoint = this.transform.position;
+		nextWaypoint[1] += 0.5f;
 		reachablePoints = weightedList.Where( x => (Vector3.Distance(nextWaypoint, x.position) < searchRadius)).ToList();
 
 		float bestWeight = nextWeight;

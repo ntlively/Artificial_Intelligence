@@ -22,9 +22,11 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		public Hearing 						hearingScript;
 
 
+
 		// Variables for CHASE
 		public Transform target;
-
+		public float sampleTime = 1.0f;
+		private float sampleTimer;
 
 		void Awake(){
 
@@ -38,6 +40,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			patroller		= actor.GetComponent<PatrolGuide>();
 			patroller.nextWaypoint = this.transform.position;
 			patroller.prevWaypoint = this.transform.position;
+
+			sampleTimer = 0.0f;
 		}
 
 
@@ -79,16 +83,18 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		{
 			//Have the character move to a random way point based on errors.
 			agent.speed = manager.patrolSpeed;
+			sampleTimer += Time.deltaTime;
 
-			if(Vector3.Distance(this.transform.position, patroller.nextWaypoint )>= 1)
+			if(Vector3.Distance(this.transform.position, patroller.nextWaypoint )>= 1.5 && sampleTimer < sampleTime)
 			{
 				agent.SetDestination(patroller.nextWaypoint);
 				character.Move(agent.desiredVelocity, false, false);
 			}
 			//If the player is close to way point, set the next way point.
-			else if (Vector3.Distance(this.transform.position, patroller.nextWaypoint) <= 1)
+			else if (Vector3.Distance(this.transform.position, patroller.nextWaypoint) <= 1.5 || sampleTimer >= sampleTime)
 			{
 				patroller.nextHuntPosition(); 
+				sampleTimer = 0.0f;
 				Debug.Log("WAYPOINT:"+ patroller.nextWaypoint);
 				//agent.SetDestination(patroller.nextWaypoint);
 			}
