@@ -8,19 +8,18 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 	public class jumpMod : MonoBehaviour {
 
 		// Variable Declarations
-		public GameObject predator;
+		public GameObject actor;
 		public UnityEngine.AI.NavMeshAgent agent;
 		public ThirdPersonCharacter character;
 
 		private bool alive;
 		public OffMeshLinkMoveMethod method = OffMeshLinkMoveMethod.Parabola;
-		public float jumpHeight = 2.0f;
-		public float jumpDuration = 0.5f;
+		public float jumpHeight = 1.5f;
+		public float jumpDuration = 0.75f;
 
 		void Awake(){
-			predator = this.gameObject;
-			agent = predator.GetComponent<UnityEngine.AI.NavMeshAgent>();
-			character = predator.GetComponent<ThirdPersonCharacter>();
+			agent = this.GetComponent<UnityEngine.AI.NavMeshAgent>();
+			character = this.GetComponent<ThirdPersonCharacter>();
 		}
 
 		// Use this for initialization

@@ -36,6 +36,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			hearingScript	= actor.GetComponent<Hearing>();
 			director		= actor.GetComponent<DirectorScript>();
 			patroller		= actor.GetComponent<PatrolGuide>();
+			patroller.nextWaypoint = this.transform.position;
+			patroller.prevWaypoint = this.transform.position;
 		}
 
 
@@ -78,31 +80,34 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			//Have the character move to a random way point based on errors.
 			agent.speed = manager.patrolSpeed;
 
-			if(Vector3.Distance(this.transform.position, patroller.nextWaypoint )>= 2)
+			if(Vector3.Distance(this.transform.position, patroller.nextWaypoint )>= 1)
 			{
 				agent.SetDestination(patroller.nextWaypoint);
 				character.Move(agent.desiredVelocity, false, false);
 			}
 			//If the player is close to way point, set the next way point.
-			else if (Vector3.Distance(this.transform.position, patroller.nextWaypoint) <= 2)
+			else if (Vector3.Distance(this.transform.position, patroller.nextWaypoint) <= 1)
 			{
-				patroller.nextPatrolPosition(); 
-				agent.SetDestination(patroller.nextWaypoint);
+				patroller.nextHuntPosition(); 
+				Debug.Log("WAYPOINT:"+ patroller.nextWaypoint);
+				//agent.SetDestination(patroller.nextWaypoint);
 			}
 			//If there are no way points close by.
 			else
 			{
 				character.Move(Vector3.zero, false, false);
 			}
+
+			patroller.setVisited(this.transform.position);
 			
 			visionFunction();
 			//hearingFunction();
 
-			patroller.patrolTimer = patroller.patrolTimer-Time.deltaTime;
+			/*patroller.patrolTimer = patroller.patrolTimer-Time.deltaTime;
 			if(patroller.patrolTimer <= 0.0)
 			{
 				patroller.patrolTimer = 100.0f;
-			}
+			}*/
 		}
 
 		void Chase()

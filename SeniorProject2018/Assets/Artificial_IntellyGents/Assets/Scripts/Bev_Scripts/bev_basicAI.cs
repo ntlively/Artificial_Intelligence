@@ -144,15 +144,15 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 				obstacle = false;
 			}*/
 
-			if(Vector3.Distance(this.transform.position, patroler.nextWaypoint )>= 2)
+			if(Vector3.Distance(this.transform.position, patroler.nextWaypoint )>= 1)
 			{
 				agent.SetDestination(patroler.nextWaypoint);
 				character.Move(agent.desiredVelocity, false, false);
 			}
 			//If the player is close to way point, set the next way point.
-			else if (Vector3.Distance(this.transform.position, patroler.nextWaypoint) <= 2)
+			else if (Vector3.Distance(this.transform.position, patroler.nextWaypoint) <= 1)
 			{
-				patroler.nextPatrolPosition(); 
+				patroler.nextHuntPosition(); 
 				agent.SetDestination(patroler.nextWaypoint);
 			}
 			//If there are no way points close by.

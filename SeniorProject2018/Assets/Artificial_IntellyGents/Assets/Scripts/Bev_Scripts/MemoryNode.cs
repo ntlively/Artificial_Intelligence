@@ -32,24 +32,41 @@ public class MemoryNode {
 public class WeightPoint {
     
 	public Vector3 position;
-	public float weight;
-	public bool visited;
+	public Vector3 navPosition;
+	public float wallDist;
+	public int numWalls;
+
+	public float visitTime;
+	private float startTime;
+	private float visitedTimer;
+
+	public float preySpotted;
+	public float preyCaught;
+	public float predatorSpotted;
+
 	
 	
-	public WeightPoint ( float wei, Vector3 pos)
+	public WeightPoint ( float dist, int walls, Vector3 pos, Vector3 navPos)
 	{
 		position = pos;
-		weight = wei;
+		navPosition = navPos;
+		wallDist = dist;
+		numWalls = walls;
+		preySpotted = 0.0f;
+		preyCaught = 0.0f;
+		predatorSpotted = 0.0f;
+
+		visitTime = 0.0f;
 	}
 	
 	// Use this for initialization
 	/*void Start () {
 		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
 	}*/
+	
+	//Update is called once per frame
+	public void setTime ()
+	{
+		visitTime = Time.time;
+	}
 }
-
