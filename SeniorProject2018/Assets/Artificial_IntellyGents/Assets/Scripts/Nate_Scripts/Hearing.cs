@@ -78,7 +78,7 @@ public class Hearing : MonoBehaviour {
 		List<Collider> temp = new List<Collider>();
 		foreach (Collider coll in targetsInSoundRadius) 
 		{
-			if(coll.GetType() == typeof(SphereCollider))
+			if(coll.GetType() == typeof(SphereCollider) && coll.gameObject.GetComponent<DataManager>().alive)
 			{
 				temp.Add(coll);
 			}

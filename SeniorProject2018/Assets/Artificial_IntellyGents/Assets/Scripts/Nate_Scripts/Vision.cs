@@ -49,7 +49,7 @@ public class Vision : MonoBehaviour {
 	IEnumerator FindViewTargetsWithDelay(float delay){
 		while (true) {
 			yield return new WaitForSeconds (delay);
-			FindVisibleTargets ();
+			FindVisibleTargets();
 		}
 	}
 
@@ -59,11 +59,11 @@ public class Vision : MonoBehaviour {
 	void FindVisibleTargets(){
 		visibleTargets.Clear ();
 //		Collider[] targetsInViewRadius = Physics.OverlapSphere (transform.position, viewRadius, targetMask);
-		List<Collider> targetsInViewRadius = new List<Collider>(Physics.OverlapSphere (transform.position, viewRadius, targetMask));
+		List<Collider> targetsInViewRadius = new List<Collider>(Physics.OverlapSphere (transform.position, viewRadius));
 		List<Collider> temp = new List<Collider>();
 		foreach (Collider coll in targetsInViewRadius) 
 		{
-			if(coll.GetType() == typeof(CapsuleCollider))
+			if(coll.GetType() == typeof(CapsuleCollider) && coll.gameObject.GetComponent<DataManager>().alive)
 			{
 				temp.Add(coll);
 			}

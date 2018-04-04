@@ -138,10 +138,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   manager: {fileID: 0}
   currentDecibel: 1
-  RunningDecibel: 7
-  PatrolDecibel: 5
-  IdleDecibel: 3
-  SneakDecibel: 1
+  RunningDecibel: 100
+  PatrolDecibel: 75
+  IdleDecibel: 25
+  SneakDecibel: 50
 --- !u!114 &10180288
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -157,8 +157,9 @@ MonoBehaviour:
   shout: 0
   needUpdate: 0
   patrolSpeed: 0.5
-  chaseSpeed: 0.1
-  state: 3
+  chaseSpeed: 0.9
+  sneakSpeed: 0.1
+  state: 2
 --- !u!1001 &48731731
 Prefab:
   m_ObjectHideFlags: 0
@@ -273,7 +274,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4469120777024560, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -13.96
+      value: -16.55
       objectReference: {fileID: 0}
     - target: {fileID: 4469120777024560, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_LocalPosition.y
@@ -281,7 +282,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4469120777024560, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -15.639106
+      value: -16.56
       objectReference: {fileID: 0}
     - target: {fileID: 4469120777024560, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_LocalRotation.x
@@ -326,6 +327,51 @@ Prefab:
         type: 2}
       propertyPath: hearingLimit
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114104158787836388, guid: 6f4f56f72d9c92e4cb07a96270e994cb,
+        type: 2}
+      propertyPath: viewRadius
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114037471259077288, guid: 6f4f56f72d9c92e4cb07a96270e994cb,
+        type: 2}
+      propertyPath: alive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114037471259077288, guid: 6f4f56f72d9c92e4cb07a96270e994cb,
+        type: 2}
+      propertyPath: state
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 114037471259077288, guid: 6f4f56f72d9c92e4cb07a96270e994cb,
+        type: 2}
+      propertyPath: shout
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114051232439652022, guid: 6f4f56f72d9c92e4cb07a96270e994cb,
+        type: 2}
+      propertyPath: RunningDecibel
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 114051232439652022, guid: 6f4f56f72d9c92e4cb07a96270e994cb,
+        type: 2}
+      propertyPath: PatrolDecibel
+      value: 75
+      objectReference: {fileID: 0}
+    - target: {fileID: 114051232439652022, guid: 6f4f56f72d9c92e4cb07a96270e994cb,
+        type: 2}
+      propertyPath: IdleDecibel
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 114051232439652022, guid: 6f4f56f72d9c92e4cb07a96270e994cb,
+        type: 2}
+      propertyPath: SneakDecibel
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 114037471259077288, guid: 6f4f56f72d9c92e4cb07a96270e994cb,
+        type: 2}
+      propertyPath: sneakSpeed
+      value: 0.3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
@@ -959,6 +1005,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 758563307edd8fc4fbf4f60fb05e881a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  actor: {fileID: 0}
+  visionScript: {fileID: 0}
+  hearingScript: {fileID: 0}
 --- !u!114 &2090159735
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -975,4 +1024,5 @@ MonoBehaviour:
   needUpdate: 0
   patrolSpeed: 0.5
   chaseSpeed: 0.1
+  sneakSpeed: 0.3
   state: 0

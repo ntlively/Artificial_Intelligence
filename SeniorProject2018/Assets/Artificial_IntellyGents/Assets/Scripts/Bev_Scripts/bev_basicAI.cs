@@ -317,7 +317,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 						}
 
 						if(visibleTarget.target.CompareTag("Predator") && needUpdate){
-							Debug.Log("Vision");
+							//Debug.Log("Vision");
 							target = visibleTarget.target;
 							manager.state = DataManager.State.TALK;
 							shout = true;
@@ -352,7 +352,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 
 
 		void checkKnowledge(bool tracking){
-			Debug.Log("Check for delta now PLZ");
+			//Debug.Log("Check for delta now PLZ");
 
 			List<double> sensors = new List<double>();
 			Vision.VisionInfo bestVisibleTarget = new Vision.VisionInfo();
@@ -379,8 +379,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 				}
 			}
 
-			Debug.Log(bestVisibleTarget.distance);
-			Debug.Log(bestHearableTarget.decibel);
+			//Debug.Log(bestVisibleTarget.distance);
+			//Debug.Log(bestHearableTarget.decibel);
 			double distance = bestVisibleTarget.distance;
 			double decibel = bestHearableTarget.decibel;
 			sensors.Add(distance); //closest
@@ -394,7 +394,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 			double tempChance = 0.0;
 			foreach (double stateChance in netChoice)
 			{
-				Debug.Log("net state chance:"+stateChance);
+				//Debug.Log("net state chance:"+stateChance);
 				double trackingVal = 0.0;
 				if(tracking)
 				{
@@ -405,8 +405,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 					trackingVal = 0.0;
 				}
 				double delta = stateChance - trackingVal;
-				Debug.Log("\n net state delta:"+delta);
-				Debug.Log("\n");
+				//Debug.Log("\n net state delta:"+delta);
+				//Debug.Log("\n");
 				if(delta > tempChance)
 				{
 					tempState = index;
@@ -414,7 +414,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 				}
 				index++;
 			}
-			Debug.Log("\n\n\n");
+			//Debug.Log("\n\n\n");
 			if(tracking)
 			{
 				manager.netTracking.Pop();
@@ -425,7 +425,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 			{
 				case 0:
 					manager.state = DataManager.State.PATROL;
-					Debug.Log("NO MORE THINK, ONLY PATROL NOW");
+					//Debug.Log("NO MORE THINK, ONLY PATROL NOW");
 					break;
 				case 1:
 					manager.state = DataManager.State.CHASE;

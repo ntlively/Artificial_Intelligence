@@ -25,6 +25,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		// Variables for CHASE
 		public Transform target;
 
+		public float visionFudge = 0.0f;
+		public float hearingFudge = 0.0f;
 
 		void Awake(){
 
@@ -65,6 +67,12 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 					case DataManager.State.CHASE:
 						Chase();
 						break;
+					case DataManager.State.SNEAK:
+						Sneak();
+						break;
+					case DataManager.State.TALK:
+						Talk();
+						break;
 					case DataManager.State.THINK:
 						Think();
 						break;
@@ -96,7 +104,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			}
 			
 			visionFunction();
-			//hearingFunction();
+			hearingFunction();
 
 			patroller.patrolTimer = patroller.patrolTimer-Time.deltaTime;
 			if(patroller.patrolTimer <= 0.0)
@@ -107,7 +115,34 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 		void Chase()
 		{
+			bool deadSwitch = false;
 			agent.speed = manager.chaseSpeed;
+			agent.SetDestination(target.position);
+			character.Move(agent.desiredVelocity,false,false);
+
+			float dstToTarget = Vector3.Distance (transform.position, target.position);
+			if(dstToTarget<0.8f)
+			{
+				target.gameObject.GetComponent<DataManager>().alive = false;
+				deadSwitch = true;
+
+			}
+
+			if(!target.gameObject.GetComponent<DataManager>().alive)
+			{
+				manager.state = DataManager.State.THINK;
+			}
+			
+			if(deadSwitch){
+				visionFunction();
+				hearingFunction();
+			}
+
+		}
+
+		void Sneak()
+		{
+			agent.speed = manager.sneakSpeed;
 			agent.SetDestination(target.position);
 			character.Move(agent.desiredVelocity,false,false);
 
@@ -118,6 +153,24 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			}
 
 			if(!target.gameObject.GetComponent<DataManager>().alive)
+			{
+				manager.state = DataManager.State.THINK;
+			}
+
+			if(visionScript.visibleTargets.Count>0)
+			{
+				manager.state = DataManager.State.THINK;
+			}
+		}
+
+		void Talk()
+		{
+			Debug.Log("Now Talking...");
+			agent.speed = manager.sneakSpeed;
+			agent.SetDestination(target.position);
+			character.Move(agent.desiredVelocity,false,false);
+
+			if(visionScript.visibleTargets.Count>0)
 			{
 				manager.state = DataManager.State.THINK;
 			}
@@ -142,23 +195,47 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 					foreach (Vision.VisionInfo visibleTarget in visionScript.visibleTargets) 
 					{
 						if(visibleTarget.target.CompareTag("Player")){
-							//Debug.Log("WE GOT ONE");
+							//Debug.Log("SAW A BITCH");
 							target = visibleTarget.target;
 							manager.state = DataManager.State.THINK;
 						}
 
 						if(visibleTarget.target.CompareTag("Predator") && manager.needUpdate){
-							Debug.Log("Vision");
+							//Debug.Log("Vision");
 							target = visibleTarget.target;
 							manager.state = DataManager.State.TALK;
 							manager.shout = true;
+							visionFudge = 1000.0f;
+							hearingFudge = 0.0f;
+						}
+					}
+				}
+		}
+		void hearingFunction()
+		{
+
+			if (hearingScript.hearableTargets.Count >0)
+				{
+					foreach (Hearing.SoundInfo hearableTarget in hearingScript.hearableTargets) 
+					{
+						if(hearableTarget.target.CompareTag("Player")){
+							//Debug.Log("HEARD A BITCH");
+							target = hearableTarget.target;
+							manager.state = DataManager.State.THINK;
+						
+						}
+
+						if(hearableTarget.target.CompareTag("Predator") && hearableTarget.target.GetComponent<DataManager>().shout){
+							//Debug.Log("Hearing");
+							target = hearableTarget.target;
+							manager.state = DataManager.State.TALK;
+							hearingFudge = 1000.0f;
 						}
 					}
 				}
 		}
 
 		void checkKnowledge(bool tracking){
-			Debug.Log("Check for delta now PLZ");
 
 			List<double> sensors = new List<double>();
 			Vision.VisionInfo bestVisibleTarget = new Vision.VisionInfo();
@@ -185,10 +262,32 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				}
 			}
 
-			Debug.Log(bestVisibleTarget.distance);
-			Debug.Log(bestHearableTarget.decibel);
-			double distance = bestVisibleTarget.distance;
-			double decibel = bestHearableTarget.decibel;
+			//Debug.Log(bestVisibleTarget.distance);
+			//Debug.Log(bestHearableTarget.decibel);
+			if(tempDist == Mathf.Infinity)
+			{
+				bestVisibleTarget.distance = 0.0f;
+				//visionFunction();
+			}
+			else
+			{
+				visionFunction();
+				bestVisibleTarget.distance = visionFudge;
+			}
+			//
+			if(tempDeci == Mathf.NegativeInfinity)
+			{
+				bestHearableTarget.decibel = 0.0f;
+				//hearingFunction();
+			}
+			else
+			{
+				hearingFunction();
+				bestHearableTarget.decibel = hearingFudge;	
+			}
+
+			double distance = (double)bestVisibleTarget.distance;
+			double decibel = (double)bestHearableTarget.decibel;
 			sensors.Add(distance); //closest
 			sensors.Add(decibel); //loudest
 
@@ -200,7 +299,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			double tempChance = 0.0;
 			foreach (double stateChance in netChoice)
 			{
-				Debug.Log("net state chance:"+stateChance);
+				//Debug.Log("net state chance:"+index+" : "+stateChance);
 				double trackingVal = 0.0;
 				if(tracking)
 				{
@@ -210,9 +309,10 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				{
 					trackingVal = 0.0;
 				}
-				double delta = stateChance - trackingVal;
-				Debug.Log("\n net state delta:"+delta);
-				Debug.Log("\n");
+				double delta = trackingVal - stateChance;
+				//Debug.Log("<<|net state chance|>>"+index+" <<|>> "+stateChance+" <<|>> "+delta);
+				//Debug.Log("\n net state delta:"+delta);
+				//Debug.Log("\n");
 				if(delta > tempChance)
 				{
 					tempState = index;
@@ -220,7 +320,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				}
 				index++;
 			}
-			Debug.Log("\n\n\n");
+			//Debug.Log("|state swap|>"+tempState+"<|");
+			//Debug.Log("\n\n\n");
 			if(tracking)
 			{
 				manager.netTracking.Pop();
@@ -231,10 +332,19 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			{
 				case 0:
 					manager.state = DataManager.State.PATROL;
-					Debug.Log("NO MORE THINK, ONLY PATROL NOW");
+					//Debug.Log("NO MORE THINK, ONLY PATROL NOW");
 					break;
 				case 1:
 					manager.state = DataManager.State.CHASE;
+					//Debug.Log("NO MORE THINK, ONLY CHASE NOW");
+					break;
+				case 2:
+					manager.state = DataManager.State.SNEAK;
+					//Debug.Log("NO MORE THINK, ONLY SNEAK NOW");
+					break;
+				case 4:
+					manager.state = DataManager.State.TALK;
+					Debug.Log("NO MORE THINK, ONLY TALK NOW");
 					break;
 				case 5:
 					manager.state = DataManager.State.THINK;

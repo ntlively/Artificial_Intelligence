@@ -63,7 +63,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 						break;
 				}
 
-				manager.gameObject.GetComponent<SphereCollider>().radius = currentDecibel;
+				manager.gameObject.GetComponent<SphereCollider>().radius = currentDecibel/10;
 
 				yield return null;
 			}

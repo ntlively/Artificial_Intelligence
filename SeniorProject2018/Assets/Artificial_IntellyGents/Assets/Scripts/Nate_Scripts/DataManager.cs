@@ -13,9 +13,10 @@ public class DataManager : MonoBehaviour {
 	
 	// floats
 	public float patrolSpeed = 0.5f;
-	public float chaseSpeed = 0.1f;
+	public float chaseSpeed = 0.7f;
+	public float sneakSpeed = 0.1f;
 	// States
-	public State state;
+	public State state = DataManager.State.WAIT;
 
 	public enum State{
 		PATROL,
@@ -45,7 +46,7 @@ public class DataManager : MonoBehaviour {
 	// Use this for initialization
 	void Awake () {
 		alive = true;
-		state = DataManager.State.WAIT;
+//		state = DataManager.State.WAIT;
 		rewardTracking = new Stack<RewardTrackingInfo>();
 		netTracking = new  Stack<List<double>>();
 	}
