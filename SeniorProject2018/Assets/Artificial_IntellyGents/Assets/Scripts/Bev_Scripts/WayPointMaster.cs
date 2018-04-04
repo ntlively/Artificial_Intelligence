@@ -58,6 +58,7 @@ public class WayPointMaster : MonoBehaviour {
 
 		//Get an index
 		nextWaypoint = notVisited[waypointIndex];
+		//Debug.LogError("Waypoint Position:"+ nextWaypoint.transform.position);
 
 		return nextWaypoint;
 	}

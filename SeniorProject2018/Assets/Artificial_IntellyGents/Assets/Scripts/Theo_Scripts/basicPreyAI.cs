@@ -15,27 +15,32 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		public Hearing hearingScript;
 
 		public enum State{
-			PATROL,
+			SEARCH,
+			HIDE,
+			SNEAK,
 			FLEE
 		}
 
 		public State state;
 		private bool alive;
-		public OffMeshLinkMoveMethod method = OffMeshLinkMoveMethod.Parabola;
-		public float jumpHeight = 2.0f;
-		public float jumpDuration = 0.5f;
+
+		private WayPointClass currentWaypoint;
+
+		public PatrolGuide sn;
 
 		// Variables for PATROL
-		public GameObject[] waypoints;
 		private int waypointINDEX = 0;
 		public float patrolSpeed = 0.5f;
 
 
 		// Variables for FLEE
 		public float fleeSpeed = 1.0f;
-		private int fleepointINDEX = 0;
-		public GameObject[] fleepoints;
 		private float fleeAngle = 0.0f;
+		private Transform chaser;
+
+		public DecibelTracker noise;
+
+		public static Stack<MemoryNode> memory = new Stack<MemoryNode>();
 
 		void Awake(){
 			prey = GameObject.Find("Prey");
@@ -43,6 +48,13 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			character = prey.GetComponent<ThirdPersonCharacter>();
 			visionScript = prey.GetComponent<Vision>();
 			hearingScript = prey.GetComponent<Hearing>();
+
+			sn = this.GetComponent<PatrolGuide>();
+			sn.nextWaypoint = this.transform.position;
+			noise = this.GetComponent<DecibelTracker>();
+
+			
+			//sn.nextHidePosition();
 		}
 
 		// Use this for initialization
@@ -53,7 +65,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			agent.updatePosition = true;
 			agent.updateRotation = false;
 
-			state = basicPreyAI.State.PATROL;
+			state = basicPreyAI.State.SEARCH;
 			alive = true;
 
 
@@ -68,64 +80,68 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			{
 				switch(state)
 				{
-					case State.PATROL:
-						Patrol();
+					case State.SEARCH:
+						Search();
 						break;
 					case State.FLEE:
 						Flee();
 						break;
-				}
-				if (agent.isOnOffMeshLink)
-				{
-					character.Move(agent.desiredVelocity,false,true);
-					if (method == OffMeshLinkMoveMethod.NormalSpeed)
-						yield return StartCoroutine(NormalSpeed(agent));
-					else if (method == OffMeshLinkMoveMethod.Parabola)
-						yield return StartCoroutine(Parabola(agent, jumpHeight, jumpDuration));
-					agent.CompleteOffMeshLink();
+					case State.HIDE:
+						Hide();
+						break;
+					case State.SNEAK:
+						Sneak();
+						break;
 				}
 				yield return null;
 			}
 		}
 		
-		void Patrol()
+		void Search()
 		{
 			agent.speed = patrolSpeed;
-			if(Vector3.Distance(this.transform.position,waypoints[waypointINDEX].transform.position)>= 2)
+
+			if(Vector3.Distance(this.transform.position,sn.nextWaypoint)>= 1)
 			{
-				agent.SetDestination(waypoints[waypointINDEX].transform.position);
+				agent.SetDestination(sn.nextWaypoint);
 				character.Move(agent.desiredVelocity,false,false); //velocity, crouch, jump
 			}
-			else if (Vector3.Distance(this.transform.position,waypoints[waypointINDEX].transform.position)<=2)
+			else if (Vector3.Distance(this.transform.position,sn.nextWaypoint)<=1)
 			{
-				waypointINDEX += 1;
-				if(waypointINDEX>=waypoints.Length)
-				{
-					waypointINDEX = 0;
-				}
+				sn.nextHidePosition();
+				if(sn.nextWaypoint == sn.prevWaypoint)
+					state = basicPreyAI.State.HIDE;
 			}
 			else
 			{
-				character.Move(Vector3.zero,false,false);
+				character.Move(Vector3.zero, false, false);
 			}
+			/*if (visionScript.visibleTargets.Count >0)
+			{
+				foreach (Transform visibleTarget in visionScript.visibleTargets) {
+					if(visibleTarget.CompareTag("Predator")){
+						//Debug.Log("WE GOT ONE");
+						chaser = visibleTarget;
+						setFleeAngle(chaser);
+						state = basicPreyAI.State.FLEE;
+						sn.nextFleePosition(chaser.transform.position);
+					}
+				}
+			}*/
 		}
 
 		void Flee()
 		{
 			agent.speed = fleeSpeed;
 
-			if(Vector3.Distance(this.transform.position,fleepoints[fleepointINDEX].transform.position)> 5)
+			if(Vector3.Distance(this.transform.position,sn.nextWaypoint)>= 1)
 			{
-				agent.SetDestination(fleepoints[fleepointINDEX].transform.position);
+				agent.SetDestination(sn.nextWaypoint);
 				character.Move(agent.desiredVelocity,false,false); //velocity, crouch, jump
 			}
-			else if (Vector3.Distance(this.transform.position,fleepoints[fleepointINDEX].transform.position)<=5)
+			else if (Vector3.Distance(this.transform.position,sn.nextWaypoint)<=1)
 			{
-				fleepointINDEX += 1;
-				if(fleepointINDEX>=fleepoints.Length)
-				{
-					fleepointINDEX = 0;
-				}
+				sn.nextFleePosition(chaser.transform.position);
 			}
 			else
 			{
@@ -133,56 +149,52 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			}
 		}
 
-		void OnTriggerEnter (Collider coll)
+		void setFleeAngle(Transform chaser)
 		{
-			if(coll.tag == "Predator")
-			{
-				state = basicPreyAI.State.FLEE;
-				fleeAngle = Vector3.Angle(this.transform.position - coll.gameObject.transform.position, this.transform.forward);
-				for(int i = 0; i < fleepoints.Length; i++)
-				{
-					if((fleeAngle > (Vector3.Angle(fleepoints[i].transform.position - this.transform.position,this.transform.forward))) &&
-						Vector3.Distance(this.transform.position,fleepoints[i].transform.position) > 10)
-					{
-						fleepointINDEX = i;
-					}
-				}
-			}
-		}
-		public enum OffMeshLinkMoveMethod
-		{
-			Teleport,
-			NormalSpeed,
-			Parabola
+			fleeAngle = Vector3.Angle(this.transform.position - chaser.position, this.transform.forward);
 		}
 
-		IEnumerator NormalSpeed(UnityEngine.AI.NavMeshAgent agent)
+		void Hide()
 		{
-			UnityEngine.AI.OffMeshLinkData data = agent.currentOffMeshLinkData;
-			Vector3 endPos = data.endPos + Vector3.up * agent.baseOffset;
-			while (agent.transform.position != endPos)
+			//Hide function
+			transform.Rotate(0.0f,2.5f,0.0f);
+			character.Move(Vector3.zero,true,false);
+
+			/*if (visionScript.visibleTargets.Count >0)
 			{
-				agent.transform.position = Vector3.MoveTowards(agent.transform.position, endPos, agent.speed * Time.deltaTime);
-				yield return null;
-			}
+				foreach (Transform visibleTarget in visionScript.visibleTargets) {
+					if(visibleTarget.CompareTag("Predator")){
+						//Debug.Log("WE GOT ONE");
+						chaser = visibleTarget;
+						setFleeAngle(chaser);
+						state = basicPreyAI.State.FLEE;
+						sn.nextFleePosition(chaser.transform.position);
+					}
+				}
+			}*/
 		}
-		IEnumerator Parabola (UnityEngine.AI.NavMeshAgent agent, float jumpHeight, float jumpDuration)
+
+		void Sneak()
 		{
-			UnityEngine.AI.OffMeshLinkData data = agent.currentOffMeshLinkData;
-			Vector3 startPos = agent.transform.position;
-			Vector3 endPos = data.endPos + Vector3.up*agent.baseOffset;
-			float normalizedTime = 0.0f;
-			while (normalizedTime < 1.0f)
-			{
-				float yOffset = jumpHeight * 4.0f*(normalizedTime - normalizedTime*normalizedTime);
-				agent.transform.position = Vector3.Lerp (startPos, endPos, normalizedTime) + yOffset * Vector3.up;
-				normalizedTime += Time.deltaTime / jumpDuration;
-				yield return null;
-			}
+			//Sneak function
 		}
-		// Update is called once per frame
-		// void Update () {
-			
-		// }
+
+		public void caught(Vector3 catcherPos)
+		{
+			Vector3 hitDirection = (this.transform.position - catcherPos).normalized;
+			alive = false;
+			this.transform.GetChild(0).gameObject.SetActive(false);
+			this.transform.GetChild(1).gameObject.SetActive(false);
+			this.transform.GetChild(6).gameObject.SetActive(true);
+			this.transform.GetChild(6).GetComponent<Rigidbody>().AddForce(hitDirection,ForceMode.Impulse);
+			this.transform.GetChild(6).tag = "Dead";
+			this.GetComponent<Rigidbody>().isKinematic = true;
+			agent.SetDestination(this.transform.position);
+		}
+
+		public bool isAlive()
+		{
+			return alive;
+		}
 	}	
 }

@@ -26,8 +26,8 @@ public class FOV_Editor : Editor {
 		Handles.color = Color.red;
 		Vector3 modify = fov.transform.position + new Vector3(-1.0f,0,0);
 		//fov.transform.position
-		foreach (Transform visibleTarget in fov.visibleTargets) {
-			Handles.DrawLine (modify, visibleTarget.position);
+		foreach (Vision.VisionInfo visibleTarget in fov.visibleTargets) {
+			Handles.DrawLine (modify, visibleTarget.target.position);
 		}
 	}
 

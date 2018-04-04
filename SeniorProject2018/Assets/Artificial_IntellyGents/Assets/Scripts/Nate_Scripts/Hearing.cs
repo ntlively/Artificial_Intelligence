@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityStandardAssets.Characters.ThirdPerson;
 
 // BUG REPORT
 // 1) NEED TO STANDARDIZE UNITS FOR DECAY MEASUREMENTS AND DB LEVELS
@@ -30,20 +31,23 @@ public class Hearing : MonoBehaviour {
 	public LayerMask obstacleMask;
 	public float refreshDelay;
 
-	public List<Transform> hearableTargets = new List<Transform>();
+	public List<SoundInfo> hearableTargets = new List<SoundInfo>();
 	public RaycastHit[] walls;
 	public float meshResolution;
 
 	public MeshFilter soundMeshFilter;
 	Mesh soundMesh;
 
-	//private GameObject visual;
-
+	public GameObject actor;
+	public DecibelTracker decibelScript;
 	void Start(){
 		soundMesh = new Mesh();
 		soundMesh.name = "Sound Mesh";
 		soundMeshFilter.mesh = soundMesh;
-		//visual = GameObject.Find("SoundVisualization");
+		
+
+		actor = this.gameObject;
+		decibelScript = actor.GetComponent<DecibelTracker>();
 
 		StartCoroutine ("FindSoundTargetsWithDelay",refreshDelay);
 	}
@@ -69,18 +73,29 @@ public class Hearing : MonoBehaviour {
 		walls = new RaycastHit[0];
 
 		// Targets update their sphere colliders to be larger based of their own decibel level
-		Collider[] targetsInSoundRadius = Physics.OverlapSphere (transform.position, soundRadius, targetMask);
+		// Collider[] targetsInSoundRadius = Physics.OverlapSphere (transform.position, soundRadius, targetMask);
+		List<Collider> targetsInSoundRadius = new List<Collider>(Physics.OverlapSphere (transform.position, soundRadius, targetMask));
+		List<Collider> temp = new List<Collider>();
+		foreach (Collider coll in targetsInSoundRadius) 
+		{
+			if(coll.GetType() == typeof(SphereCollider))
+			{
+				temp.Add(coll);
+			}
+		}
 
+		targetsInSoundRadius = temp;
 
-		for(int i=0;i<targetsInSoundRadius.Length;i++){
-			Transform target = targetsInSoundRadius [i].transform;
+		for(int i=0;i<targetsInSoundRadius.Count;i++){
+			Transform target = targetsInSoundRadius[i].transform;
 
+			float decibel = targetsInSoundRadius[i].gameObject.GetComponent<DecibelTracker>().getCurrentDecibel();
 			Vector3 dirToTarget = (target.position - transform.position).normalized;
 			float distToTarget = Vector3.Distance (transform.position, target.position);
 
 			// Decay sound based of distance (Initial)/4pi R^2 technically.  This needs to be refined/fudged
 			//float sourceDB = target.GetComponent<Hearing>().decibel;
-			float sourceDB = 10;
+			float sourceDB = decibel;
 			sourceDB = sourceDB *(1/distToTarget);
 			//Debug.Log("dist"+distToTarget);
 
@@ -102,7 +117,7 @@ public class Hearing : MonoBehaviour {
 			// Might want to store the calculated decibel to decide between options?
 			if(sourceDB >= hearingLimit){
 				//target.GetComponent<Hearing>().calcDB = sourceDB;
-				hearableTargets.Add (target);
+				hearableTargets.Add (new SoundInfo(target,sourceDB));
 			}
 
 		}
@@ -165,6 +180,17 @@ public class Hearing : MonoBehaviour {
 		}	
 	}
 
+	//make serializable so it shows up in unity editor
+	[System.Serializable]
+	public struct SoundInfo{
+		public Transform target;
+		public float decibel;
+
+		public SoundInfo(Transform _target, float _decibel){
+			target = _target;
+			decibel = _decibel;
+		}
+	}
 
 
 	public struct SoundCastInfo{
