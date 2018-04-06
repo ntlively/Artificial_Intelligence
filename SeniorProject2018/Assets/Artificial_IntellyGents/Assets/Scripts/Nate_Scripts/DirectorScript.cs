@@ -72,46 +72,46 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				}
 			}
 
-			// Switch to TALK when hear but don't see a friendly
-			for(int i=0;i<100;i++)
-			{
-				ins.Clear();
-				double soundTemp = 995.0 + ((double)i)/10.0;
-				ins.Add((double)0.0);
-				ins.Add(soundTemp);
+			// // Switch to TALK when hear but don't see a friendly
+			// for(int i=0;i<100;i++)
+			// {
+			// 	ins.Clear();
+			// 	double soundTemp = 995.0 + ((double)i)/10.0;
+			// 	ins.Add((double)0.0);
+			// 	ins.Add(soundTemp);
 
-				ots.Clear();
-				ots.Add((double)0.0);
-				ots.Add((double)0.0);
-				ots.Add((double)0.0);
-				ots.Add((double)0.0);
-				ots.Add((double)0.99);
-				ots.Add((double)0.0);
+			// 	ots.Clear();
+			// 	ots.Add((double)0.0);
+			// 	ots.Add((double)0.0);
+			// 	ots.Add((double)0.0);
+			// 	ots.Add((double)0.0);
+			// 	ots.Add((double)0.99);
+			// 	ots.Add((double)0.0);
 
-				for(int j = 0; j < 100; j++){
-					neuralNet.Train(ins, ots);
-				}
-			}
-			// Switch to TALK when you see a friendly
-			for(int i=0;i<100;i++)
-			{
-				ins.Clear();
-				double visTemp = 995.0 + ((double)i)/10.0;
-				ins.Add(visTemp);
-				ins.Add((double)0.0);
+			// 	for(int j = 0; j < 100; j++){
+			// 		neuralNet.Train(ins, ots);
+			// 	}
+			// }
+			// // Switch to TALK when you see a friendly
+			// for(int i=0;i<100;i++)
+			// {
+			// 	ins.Clear();
+			// 	double visTemp = 995.0 + ((double)i)/10.0;
+			// 	ins.Add(visTemp);
+			// 	ins.Add((double)0.0);
 
-				ots.Clear();
-				ots.Add((double)0.0);
-				ots.Add((double)0.0);
-				ots.Add((double)0.0);
-				ots.Add((double)0.0);
-				ots.Add((double)0.99);
-				ots.Add((double)0.0);
+			// 	ots.Clear();
+			// 	ots.Add((double)0.0);
+			// 	ots.Add((double)0.0);
+			// 	ots.Add((double)0.0);
+			// 	ots.Add((double)0.0);
+			// 	ots.Add((double)0.99);
+			// 	ots.Add((double)0.0);
 
-				for(int j = 0; j < 100; j++){
-					neuralNet.Train(ins, ots);
-				}
-			}
+			// 	for(int j = 0; j < 100; j++){
+			// 		neuralNet.Train(ins, ots);
+			// 	}
+			// }
 			// Switch to PATROL
 			ins.Clear();
             ins.Add((double)0.0);

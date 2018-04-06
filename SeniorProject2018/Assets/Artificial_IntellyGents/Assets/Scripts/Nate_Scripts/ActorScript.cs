@@ -263,27 +263,27 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 			//Debug.Log(bestVisibleTarget.distance);
 			//Debug.Log(bestHearableTarget.decibel);
-			if(tempDist == Mathf.Infinity)
-			{
-				bestVisibleTarget.distance = 0.0f;
-				//visionFunction();
-			}
-			else
-			{
-				visionFunction();
-				bestVisibleTarget.distance = visionFudge;
-			}
-			//
-			if(tempDeci == Mathf.NegativeInfinity)
-			{
-				bestHearableTarget.decibel = 0.0f;
-				//hearingFunction();
-			}
-			else
-			{
-				hearingFunction();
-				bestHearableTarget.decibel = hearingFudge;	
-			}
+			// if(tempDist == Mathf.Infinity)
+			// {
+			// 	bestVisibleTarget.distance = 0.0f;
+
+			// }
+			// else
+			// {
+			// 	visionFunction();
+			// 	bestVisibleTarget.distance = visionFudge;
+			// }
+			// //
+			// if(tempDeci == Mathf.NegativeInfinity)
+			// {
+			// 	bestHearableTarget.decibel = 0.0f;
+
+			// }
+			// else
+			// {
+			// 	hearingFunction();
+			// 	bestHearableTarget.decibel = hearingFudge;	
+			// }
 
 			double distance = (double)bestVisibleTarget.distance;
 			double decibel = (double)bestHearableTarget.decibel;
