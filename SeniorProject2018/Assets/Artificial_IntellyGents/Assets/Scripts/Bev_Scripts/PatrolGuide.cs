@@ -15,6 +15,7 @@ using UnityEngine.AI;
 			public Vector3 nextWaypoint = new Vector3 (0.0f, 0.0f, 0.0f); 
 			public Vector3 prevWaypoint = new Vector3 (0.0f, 0.0f, 0.0f); 
 			public List<WeightPoint> reachablePoints = new List<WeightPoint>();
+			public bool show = false;
 
 	//Awake
 	void Awake()
@@ -93,43 +94,46 @@ using UnityEngine.AI;
 	public virtual void OnDrawGizmos () 
 	{
 
-		Vector3 fillPoints = new Vector3 (-21.0f, 1.0f, 20.0f);
-		Vector3 reachPoint = new Vector3 (0.0f, 0.0f, 0.0f);
-		int row = 0;	
-	
-		//Display entire influence map using cubes
-		/*for(int k = 0; k < weightedList.Count; k++)
+		if(show)
 		{
-			//If the point is on the second level display as blue
-			/*if (weightedList[k].position[1] == 4.5f)
-			{
-				Gizmos.color = Color.blue;
-				//Adjust cubes so that the top right corner of the cube is the center of the cube.	
-				fillPoints[0] = weightedList[k].position[0];
-				fillPoints[1] = weightedList[k].position[1];
-				fillPoints[2] = weightedList[k].position[2];
-			} 
-			else
-			{
-				//Lower level of influence map.
-				Gizmos.color = Color.green;
-			}
-
-			
-			Gizmos.DrawCube(fillPoints, new Vector3(1.0f, 1.0f, 1.0f));
-		}*/
-
-
-		//Displays the current reachable waypoints from pervious waypoint.
-		for(int i = 0; i < reachablePoints.Count; i++)
-		{
-			Gizmos.color = Color.white;
-			reachPoint[0] = reachablePoints[i].position[0];
-			reachPoint[1] = reachablePoints[i].position[1];
-			reachPoint[2] = reachablePoints[i].position[2];
-			Gizmos.DrawCube(reachPoint, new Vector3(1.0f, 1.0f, 1.0f));
-		}
+			Vector3 fillPoints = new Vector3 (-21.0f, 1.0f, 20.0f);
+			Vector3 reachPoint = new Vector3 (0.0f, 0.0f, 0.0f);
+			int row = 0;	
 		
+			//Display entire influence map using cubes
+			/*for(int k = 0; k < weightedList.Count; k++)
+			{
+				//If the point is on the second level display as blue
+				/*if (weightedList[k].position[1] == 4.5f)
+				{
+					Gizmos.color = Color.blue;
+					//Adjust cubes so that the top right corner of the cube is the center of the cube.	
+					fillPoints[0] = weightedList[k].position[0];
+					fillPoints[1] = weightedList[k].position[1];
+					fillPoints[2] = weightedList[k].position[2];
+				} 
+				else
+				{
+					//Lower level of influence map.
+					Gizmos.color = Color.green;
+				}
+
+				
+				Gizmos.DrawCube(fillPoints, new Vector3(1.0f, 1.0f, 1.0f));
+			}*/
+
+
+			//Displays the current reachable waypoints from pervious waypoint.
+			for(int i = 0; i < reachablePoints.Count; i++)
+			{
+				Gizmos.color = Color.white;
+				reachPoint[0] = reachablePoints[i].position[0];
+				reachPoint[1] = reachablePoints[i].position[1];
+				reachPoint[2] = reachablePoints[i].position[2];
+				Gizmos.DrawCube(reachPoint, new Vector3(1.0f, 1.0f, 1.0f));
+			}
+		}
+			
 		//Displays the selected waypoint the AI is headed to.
 		Gizmos.color = Color.red;
 		Gizmos.DrawWireSphere(nextWaypoint, 0.5f);
@@ -162,5 +166,8 @@ using UnityEngine.AI;
 	//Pick a number between the high and low weights.
 	//From the point, with distance 9.5, randomly select a new point
 	//At some point update the weight at this point. 
-
+	public List<WeightPoint> getInfluence()
+	{
+		return weightedList;
+	}
 }

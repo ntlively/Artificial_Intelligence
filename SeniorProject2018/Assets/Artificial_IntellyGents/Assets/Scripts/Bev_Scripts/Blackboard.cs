@@ -8,7 +8,9 @@ public class Blackboard : MonoBehaviour {
 
 	public List<WeightPoint> blackboardWeights = new List<WeightPoint>();
 	public List<WeightPoint> predatorLocations = new List<WeightPoint>();	
+	public List<WeightPoint> tempWeightChange = new List<WeightPoint>();	
 	public GameObject[] predators; 
+	public float updatePredPosTimer = 2.0f;
 
 
 	//Set up board
@@ -28,17 +30,17 @@ public class Blackboard : MonoBehaviour {
 			if(NavMesh.SamplePosition(fillPoint, out hit , 0.2f, NavMesh.AllAreas))
 			{
 				//create object
-				WeightPoint temp = new WeightPoint(6.25f, fillPoint);
+				WeightPoint temp = new WeightPoint(0.5f, fillPoint);
 				//add to list
 				blackboardWeights.Add(temp);
+				tempWeightChange.Add(temp);
 			}
 			//Add in percentage 
 			if(row == 40)
 			{
-			fillPoint[0] = -21.0f;
-			fillPoint[2] = fillPoint[2]-1.0f;
-			row = 0;
-
+				fillPoint[0] = -21.0f;
+				fillPoint[2] = fillPoint[2]-1.0f;
+				row = 0;
 			}
 
 		}
@@ -47,13 +49,20 @@ public class Blackboard : MonoBehaviour {
 	// Use this for initialization
 	void Start () 
 	{
-		
+		updateCurPosition();
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
+		//updateCurPosition();
+		updatePredPosTimer = updatePredPosTimer-Time.deltaTime;
+		if(updatePredPosTimer <= 0.0)
+		{
+			updatePredPosTimer = 2.0f;
+			updateCurPosition();
 		
+		}
 	}
 
 	void updateBlackBoard()
@@ -63,23 +72,46 @@ public class Blackboard : MonoBehaviour {
 
 	}
 
-	//Called by predator to update current location on blackboard
-	void updateCurPosition(Vector3 position)
+	public void updateInfluence (List<WeightPoint> pred1, List<WeightPoint> pred2)
 	{
-		//Set closest points to false
+		//Take in the two predators 
+		//Update influence map between the two
+		for(int influ = 0; influ < pred1.Count; influ++ )
+		{
+			//lets do an average
+			tempWeightChange[influ].weight = (pred1[influ].weight + pred2[influ].weight)/2; 
+
+		}
+
+	}
+
+	//Called by predator to update current location on blackboard
+	void updateCurPosition()
+	{
+		//Change current predator positions to false
+		for(int k = 0; k < predatorLocations.Count; k++ )
+		{
+			int index = blackboardWeights.IndexOf(predatorLocations[k]);
+			blackboardWeights[index].active = false;
+		}
 		//predatorLocations = blackboardWeights.Where( x => && Vector3.Distance(position, x.position) < 1.0f )).ToList();
-		
-
-
+		Debug.Log("UPDATE");
 		predators = GameObject.FindGameObjectsWithTag("Predator");
 		for (int i = 0; i < predators.Length; i++)
 		{
-			predatorLocations = blackboardWeights.Where( x => Vector3.Distance(predators[i].transform.position, x.position) < 1.0f ).ToList();
+			List<WeightPoint> predLocat = blackboardWeights.Where( x => Vector3.Distance(predators[i].transform.position, x.position) < 1.0f ).ToList();
 			//change found set
-			/*for(int j = )
+			for(int j = 0; j < predLocat.Count; j++ )
 			{
+				int index = blackboardWeights.IndexOf(predLocat[j]);
+				blackboardWeights[index].active = true;
+			}	
 
-			}*/
+			//add to predator location list
+			for(int an = 0; an < predLocat.Count; an++)
+			{
+				predatorLocations.Add(predLocat[an]);
+			}
 		}
 	
 
@@ -94,25 +126,21 @@ public class Blackboard : MonoBehaviour {
 	}
 
 
-
-
 	public virtual void OnDrawGizmos () 
 	{
 
-		Vector3 fillPoints = new Vector3 (-21.0f, 1.0f, 20.0f);
+		Vector3 fillPoints = new Vector3 (0.0f, 0.0f, 0.0f);
 	
 		//Display entire influence map using cubes
 		for(int k = 0; k < blackboardWeights.Count; k++)
 		{
-			//If the point is on the second level display as blue
 			if (blackboardWeights[k].active)
 			{
 				Gizmos.color = Color.red;
 			} 
 			else
 			{
-				//Lower level of influence map.
-				Gizmos.color = Color.green;
+				Gizmos.color = new Color(0.0F, 0.0F, 1.0F, 0.2F);
 			}
 
 			//Adjust cubes so that the top right corner of the cube is the center of the cube.	
@@ -120,7 +148,12 @@ public class Blackboard : MonoBehaviour {
 			fillPoints[1] = blackboardWeights[k].position[1];
 			fillPoints[2] = blackboardWeights[k].position[2];
 		
-			Gizmos.DrawCube(fillPoints, new Vector3(1.0f, 1.0f, 1.0f));
+			//Gizmos.DrawCube(fillPoints, new Vector3(1.0f, 1.0f, 1.0f));
+
+			Gizmos.color = new Color(1.0F * tempWeightChange[k].weight, 0.0F, 0.0F, 0.2F);
+			Gizmos.DrawCube(tempWeightChange[k].position, new Vector3(1.0f, 1.0f, 1.0f));
+
+			
 		}
 		
 	}

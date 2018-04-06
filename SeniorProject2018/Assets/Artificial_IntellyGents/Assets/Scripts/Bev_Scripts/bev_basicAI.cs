@@ -141,7 +141,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 				obstacle = false;
 			}*/
 
-			if(Vector3.Distance(this.transform.position, patroler.nextWaypoint )>= 2)
+			/*if(Vector3.Distance(this.transform.position, patroler.nextWaypoint )>= 2)
 			{
 				agent.SetDestination(patroler.nextWaypoint);
 				character.Move(agent.desiredVelocity, false, false);
@@ -156,7 +156,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 			else
 			{
 				character.Move(Vector3.zero, false, false);
-			}
+			}*/
 			//character.Move(agent.desiredVelocity, false, false);
 			//agent.SetDestination(new Vector3(0,0,0));
 
@@ -265,6 +265,9 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 					{
 						talkTimer = 10.0f;
 						state = bev_basicAI.State.PATROL;
+						//exchange information
+						GameObject globalGame =  GameObject.Find("PredatorSpawn");
+						globalGame.GetComponent<Blackboard>().updateInfluence(patroler.getInfluence(), target.GetComponent<PatrolGuide>().getInfluence());
 					}
 
 				}
@@ -293,7 +296,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 							state = bev_basicAI.State.CHASE;
 						}
 
-						if(visibleTarget.target.CompareTag("Predator") && needUpdate){
+						if(visibleTarget.target.CompareTag("Predator")){
 							Debug.Log("Vision");
 							target = visibleTarget.target;
 							state = bev_basicAI.State.TALK;
