@@ -195,15 +195,14 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 					foreach (Vision.VisionInfo visibleTarget in visionScript.visibleTargets) 
 					{
 						if(visibleTarget.target.CompareTag("Player")){
-							//Debug.Log("SAW A BITCH");
 							target = visibleTarget.target;
 							manager.state = DataManager.State.THINK;
 						}
 
 						if(visibleTarget.target.CompareTag("Predator") && manager.needUpdate){
-							//Debug.Log("Vision");
 							target = visibleTarget.target;
-							manager.state = DataManager.State.TALK;
+							Debug.Log("found a fellow predator");
+							manager.state = DataManager.State.THINK;
 							manager.shout = true;
 							visionFudge = 1000.0f;
 							hearingFudge = 0.0f;
@@ -310,8 +309,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 					trackingVal = 0.0;
 				}
 				double delta = trackingVal - stateChance;
-				//Debug.Log("<<|net state chance|>>"+index+" <<|>> "+stateChance+" <<|>> "+delta);
-				//Debug.Log("\n net state delta:"+delta);
+				Debug.Log("<<|net state chance|>>"+index+" <<|>> "+stateChance+" <<|>> "+delta);
+				Debug.Log("\n net state delta:"+delta);
 				//Debug.Log("\n");
 				if(delta > tempChance)
 				{
