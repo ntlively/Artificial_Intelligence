@@ -37,7 +37,7 @@ using UnityEngine.AI;
 			if(NavMesh.SamplePosition(fillPoint, out hit , 0.2f, NavMesh.AllAreas))
 			{
 				//create object
-				WeightPoint temp = new WeightPoint(6.25f, fillPoint);
+				WeightPoint temp = new WeightPoint(0.5f, fillPoint);
 				//add to list
 				weightedList.Add(temp);
 			}
@@ -65,7 +65,7 @@ using UnityEngine.AI;
 			if(NavMesh.SamplePosition(fillPoint2, out hit , 0.09f, NavMesh.AllAreas))
 			{
 				//create object
-				WeightPoint temp = new WeightPoint(6.25f, fillPoint2);
+				WeightPoint temp = new WeightPoint(0.5f, fillPoint2);
 				//add to list
 				weightedList.Add(temp);
 			}
@@ -76,19 +76,12 @@ using UnityEngine.AI;
 				fillPoint2[0] = -17.5f;
 				fillPoint2[2] = fillPoint2[2]-1.0f;
 				row = 0;
-
 			}
 		}
 		
 		//Set the beginning waypoint for the agent.
 		nextPatrolPosition ();
 		
-	}
-	// Use this for initialization
-	void Start () 
-	{
-
-
 	}
 
 	public virtual void OnDrawGizmos () 
@@ -144,8 +137,8 @@ using UnityEngine.AI;
 	public Vector3 nextPatrolPosition () 
 	{
 		//Filter reachable points
-		reachablePoints = weightedList.Where( x => (Vector3.Distance(nextWaypoint, x.position) > 8 
-									&& Vector3.Distance(nextWaypoint, x.position) < 14 )).ToList();
+		reachablePoints = weightedList.Where( x => (Vector3.Distance(nextWaypoint, x.position) > 2 
+									&& Vector3.Distance(nextWaypoint, x.position) < 5 )).ToList();
 
 		//Vector3 position = new Vector3 (0.0f, 1.0f, 0.0f);
 		//Choose a random number

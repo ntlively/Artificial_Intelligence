@@ -37,7 +37,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 
 		public float waitTimer = 5.0f; 
 		public float patrolTimer = 10.0f;
-		public float talkTimer = 10.0f; 
+		public float talkTimer = 5.0f; 
+		public float updateTimer = 5.0f; 
 
 		public static Stack<MemoryNode> memory = new Stack<MemoryNode>();
 
@@ -109,8 +110,15 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 					case State.TALK:
 						Talk();
 						break;
-
 				}
+
+				//update talk timer
+				updateTimer = updateTimer-Time.deltaTime;
+				if(updateTimer <= 0)
+				{
+ 					needUpdate = true;
+				}
+						
 
 				yield return null;
 			}
@@ -141,7 +149,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 				obstacle = false;
 			}*/
 
-			/*if(Vector3.Distance(this.transform.position, patroler.nextWaypoint )>= 2)
+			if(Vector3.Distance(this.transform.position, patroler.nextWaypoint )>= 2)
 			{
 				agent.SetDestination(patroler.nextWaypoint);
 				character.Move(agent.desiredVelocity, false, false);
@@ -156,7 +164,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 			else
 			{
 				character.Move(Vector3.zero, false, false);
-			}*/
+			}
 			//character.Move(agent.desiredVelocity, false, false);
 			//agent.SetDestination(new Vector3(0,0,0));
 
@@ -250,6 +258,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 			}
 			else
 			{
+				Debug.Log("Data Exchange");
 				character.Move(Vector3.zero, false, false);
 				agent.SetDestination(this.transform.position);
 				transform.LookAt(target);
@@ -258,18 +267,16 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 					shout = false;
 				}
 
-				if(Vector3.Distance(this.transform.position, target.transform.position) <= 2.0)
+				updateTimer = 5.0f;
+				needUpdate = false;
+				talkTimer = talkTimer-Time.deltaTime;
+				if(talkTimer <= 0.0)
 				{
-					talkTimer = talkTimer-Time.deltaTime;
-					if(talkTimer <= 0.0)
-					{
-						talkTimer = 10.0f;
-						state = bev_basicAI.State.PATROL;
-						//exchange information
-						GameObject globalGame =  GameObject.Find("PredatorSpawn");
-						globalGame.GetComponent<Blackboard>().updateInfluence(patroler.getInfluence(), target.GetComponent<PatrolGuide>().getInfluence());
-					}
-
+					talkTimer = 10.0f;
+					state = bev_basicAI.State.PATROL;
+					//exchange information
+					GameObject globalGame =  GameObject.Find("PredatorSpawn");
+					globalGame.GetComponent<Blackboard>().updateInfluence(patroler.getInfluence(), target.GetComponent<PatrolGuide>().getInfluence());
 				}
 	
 				
@@ -286,6 +293,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 
 		void visionFunction()
 		{
+
 			if (visionScript.visibleTargets.Count >0)
 				{
 					foreach (Vision.VisionInfo visibleTarget in visionScript.visibleTargets) 
@@ -296,7 +304,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 							state = bev_basicAI.State.CHASE;
 						}
 
-						if(visibleTarget.target.CompareTag("Predator")){
+						if(visibleTarget.target.CompareTag("Predator") && needUpdate)
+						{
 							Debug.Log("Vision");
 							target = visibleTarget.target;
 							state = bev_basicAI.State.TALK;

@@ -11,6 +11,7 @@ public class Blackboard : MonoBehaviour {
 	public List<WeightPoint> tempWeightChange = new List<WeightPoint>();	
 	public GameObject[] predators; 
 	public float updatePredPosTimer = 2.0f;
+	public float learningWeight = 0.5f;
 
 
 	//Set up board
@@ -21,7 +22,6 @@ public class Blackboard : MonoBehaviour {
 		int row = 0;
 		for(int i = 0; i < 1600; i++)
 		{
-
 			fillPoint [0] = fillPoint[0] + 1.0f;
 			row++;
 
@@ -44,6 +44,36 @@ public class Blackboard : MonoBehaviour {
 			}
 
 		}
+
+		//Map on the second level of the map.
+		Vector3 fillPoint2 = new Vector3 (-17.5f, 4.5f, -2.5f);
+		row = 0;
+		for(int a = 0; a < 255; a++)
+		{
+			fillPoint2 [0] = fillPoint2[0] + 1.0f;
+			row++;
+
+			NavMeshHit hit;
+			//Check if point is on navmesh
+			if(NavMesh.SamplePosition(fillPoint2, out hit , 0.09f, NavMesh.AllAreas))
+			{
+				//create object
+				WeightPoint temp = new WeightPoint(0.5f, fillPoint2);
+				//add to list
+				blackboardWeights.Add(temp);
+				tempWeightChange.Add(temp);
+			}
+
+			//Add in percentage 
+			if(row == 15)
+			{
+				fillPoint2[0] = -17.5f;
+				fillPoint2[2] = fillPoint2[2]-1.0f;
+				row = 0;
+
+			}
+		}
+		
 	}
 	
 	// Use this for initialization
@@ -79,8 +109,8 @@ public class Blackboard : MonoBehaviour {
 		for(int influ = 0; influ < pred1.Count; influ++ )
 		{
 			//lets do an average
-			tempWeightChange[influ].weight = (pred1[influ].weight + pred2[influ].weight)/2; 
-
+			//tempWeightChange[influ].weight = (pred1[influ].weight + pred2[influ].weight)/2; 
+			tempWeightChange[influ].weight = 1.0f;
 		}
 
 	}
@@ -150,7 +180,7 @@ public class Blackboard : MonoBehaviour {
 		
 			//Gizmos.DrawCube(fillPoints, new Vector3(1.0f, 1.0f, 1.0f));
 
-			Gizmos.color = new Color(1.0F * tempWeightChange[k].weight, 0.0F, 0.0F, 0.2F);
+			Gizmos.color = new Color(1.0F * tempWeightChange[k].weight, 0.0F, 0.0F, 1.0F);
 			Gizmos.DrawCube(tempWeightChange[k].position, new Vector3(1.0f, 1.0f, 1.0f));
 
 			
