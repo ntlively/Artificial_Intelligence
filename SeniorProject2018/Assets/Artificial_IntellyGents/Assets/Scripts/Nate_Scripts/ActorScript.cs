@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 // BUG REPORT
 
@@ -25,6 +26,13 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 		// Variables for CHASE
 		public Transform target;
+		public Vector3 chasePos;
+		public Vector3 chaseDir;
+		public float predictionMod = 1.0f;
+		public float predictionTime = 5.0f;
+		private float predictionTimer = 0.0f;
+
+		// Variables for SEARCH
 		public float sampleTime = 1.0f;
 		private float sampleTimer;
 
@@ -38,6 +46,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			hearingScript	= actor.GetComponent<Hearing>();
 			director		= actor.GetComponent<DirectorScript>();
 			patroller		= actor.GetComponent<PatrolGuide>();
+
 			patroller.nextWaypoint = this.transform.position;
 			patroller.prevWaypoint = this.transform.position;
 
@@ -107,7 +116,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			patroller.setVisited(this.transform.position);
 			
 			visionFunction();
-			//hearingFunction();
+			hearingFunction();
 
 			/*patroller.patrolTimer = patroller.patrolTimer-Time.deltaTime;
 			if(patroller.patrolTimer <= 0.0)
@@ -119,18 +128,60 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		void Chase()
 		{
 			agent.speed = manager.chaseSpeed;
-			agent.SetDestination(target.position);
-			character.Move(agent.desiredVelocity,false,false);
+			visionFunction();
 
-			float dstToTarget = Vector3.Distance (transform.position, target.position);
-			if(dstToTarget<0.8f)
+			if(target != null)
 			{
-				target.gameObject.GetComponent<DataManager>().alive = false;
+				chaseDir = new Vector3(target.rotation[0],target.rotation[1],target.rotation[2]).normalized;
+				//agent.SetDestination(target.position);
+				chasePos = target.position + predictionMod * chaseDir;
+
+				
+				NavMeshHit hit;
+				//check if point is on navmesh
+				if(NavMesh.SamplePosition(chasePos, out hit, predictionMod, NavMesh.AllAreas))
+				{
+					chasePos = hit.position;
+					chasePos[1] += 0.5f;
+				}
+
+				agent.SetDestination(chasePos);
+				character.Move(agent.desiredVelocity,false,false);
+
+				float dstToTarget = Vector3.Distance (transform.position, chasePos);
+				if(dstToTarget < 1.5f)
+				{
+					target.gameObject.GetComponent<basicPreyAI>().caught(this.transform.position);
+				}
+
+				if(!target.gameObject.GetComponent<DataManager>().alive)
+				{
+					manager.state = DataManager.State.PATROL;
+				}
 			}
-
-			if(!target.gameObject.GetComponent<DataManager>().alive)
+			else
 			{
-				manager.state = DataManager.State.THINK;
+				predictionTimer += Time.deltaTime;
+
+				agent.SetDestination(chasePos);
+				character.Move(agent.desiredVelocity,false,false);
+
+				if(predictionTimer < predictionTime && Vector3.Distance(this.transform.position,chasePos) <= 1.5f)
+				{
+					chasePos = chasePos + predictionMod * chaseDir;
+					
+					NavMeshHit hit;
+					//check if point is on navmesh
+					if(NavMesh.SamplePosition(chasePos, out hit, predictionMod, NavMesh.AllAreas))
+					{
+						chasePos = hit.position;
+						chasePos[1] += 0.5f;
+					}
+				}
+				else if(predictionTimer >= predictionTime)
+				{
+					manager.state = DataManager.State.PATROL;
+				}
 			}
 		}
 		
@@ -146,23 +197,50 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			}	
 
 		}
+
 		void visionFunction()
 		{
 			if (visionScript.visibleTargets.Count >0)
 				{
 					foreach (Vision.VisionInfo visibleTarget in visionScript.visibleTargets) 
 					{
-						if(visibleTarget.target.CompareTag("Player")){
+						if(visibleTarget.target.CompareTag("Player") || visibleTarget.target.CompareTag("Prey")){
 							//Debug.Log("WE GOT ONE");
 							target = visibleTarget.target;
-							manager.state = DataManager.State.THINK;
+							manager.state = DataManager.State.CHASE;
+							chasePos = target.position;
 						}
-
-						if(visibleTarget.target.CompareTag("Predator") && manager.needUpdate){
+						else if(visibleTarget.target.CompareTag("Predator") && manager.needUpdate){
 							Debug.Log("Vision");
 							target = visibleTarget.target;
 							manager.state = DataManager.State.TALK;
 							manager.shout = true;
+						}
+						else
+						{
+							target = null;
+						}
+					}
+				}
+		}
+
+		void hearingFunction()
+		{
+			if (hearingScript.hearableTargets.Count >0)
+				{
+					foreach (Hearing.SoundInfo hearableTarget in hearingScript.hearableTargets) 
+					{
+						if(hearableTarget.target.CompareTag("Player") || hearableTarget.target.CompareTag("Prey")){
+							//Debug.Log("WE GOT ONE");
+							target = hearableTarget.target;
+							manager.state = DataManager.State.CHASE;
+							chasePos = target.position;
+						}
+
+						if(hearableTarget.target.CompareTag("Predator") && hearableTarget.target != this && hearableTarget.target.GetComponent<DataManager>().shout){
+							Debug.Log("Hearing");
+							target = hearableTarget.target;
+							manager.state = DataManager.State.TALK;
 						}
 					}
 				}

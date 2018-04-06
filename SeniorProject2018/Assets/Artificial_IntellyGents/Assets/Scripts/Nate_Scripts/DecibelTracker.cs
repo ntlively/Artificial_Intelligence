@@ -21,6 +21,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 		public  float PatrolDecibel = 5.0f;
 		public  float IdleDecibel = 3.0f;
 		public  float SneakDecibel = 1.0f;
+		public  float HideDecibel = 1.0f;
+		public  float DeadDecibel = 0.01f;
 
 
 		void Awake () 
@@ -60,6 +62,12 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 						break;
 					case DataManager.State.WAIT:
 						currentDecibel = IdleDecibel;
+						break;
+					case DataManager.State.DEAD:
+						currentDecibel = DeadDecibel;
+						break;
+					case DataManager.State.HIDE:
+						currentDecibel = HideDecibel;
 						break;
 				}
 

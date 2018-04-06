@@ -40,14 +40,19 @@ public class Hearing : MonoBehaviour {
 
 	public GameObject actor;
 	public DecibelTracker decibelScript;
+	void Awake(){
+		actor = this.gameObject;
+		decibelScript = actor.GetComponent<DecibelTracker>();
+	}
+
 	void Start(){
 		soundMesh = new Mesh();
 		soundMesh.name = "Sound Mesh";
 		soundMeshFilter.mesh = soundMesh;
 		
 
-		actor = this.gameObject;
-		decibelScript = actor.GetComponent<DecibelTracker>();
+		// actor = this.gameObject;
+		// decibelScript = actor.GetComponent<DecibelTracker>();
 
 		StartCoroutine ("FindSoundTargetsWithDelay",refreshDelay);
 	}

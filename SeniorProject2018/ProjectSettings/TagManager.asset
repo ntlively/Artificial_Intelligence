@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Predator
+  - Prey
+  - Dead
   layers:
   - Default
   - TransparentFX

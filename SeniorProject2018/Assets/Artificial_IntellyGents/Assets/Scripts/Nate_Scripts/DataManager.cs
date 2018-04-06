@@ -14,6 +14,7 @@ public class DataManager : MonoBehaviour {
 	// floats
 	public float patrolSpeed = 0.5f;
 	public float chaseSpeed = 0.1f;
+	public float fleeSpeed = 1.0f;
 	// States
 	public State state;
 
@@ -23,7 +24,11 @@ public class DataManager : MonoBehaviour {
 		SNEAK,
 		WAIT,
 		TALK,
-		THINK
+		THINK,
+		SEARCH,
+		HIDE,
+		FLEE,
+		DEAD
 	}
 
 	// Stacks
@@ -49,4 +54,5 @@ public class DataManager : MonoBehaviour {
 		rewardTracking = new Stack<RewardTrackingInfo>();
 		netTracking = new  Stack<List<double>>();
 	}
+	
 }

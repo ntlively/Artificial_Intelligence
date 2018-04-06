@@ -8,89 +8,74 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 	public class basicPreyAI : MonoBehaviour {
 
 		// Variable Declarations
-		public GameObject prey;
-		public UnityEngine.AI.NavMeshAgent agent;
-		public ThirdPersonCharacter character;
+		public GameObject 					prey;
+		public UnityEngine.AI.NavMeshAgent 	agent;
+		public ThirdPersonCharacter 		character;
+
+		public DataManager					manager;
+		public DirectorScript				director;
+		public PatrolGuide 					sn;
+
 		public Vision visionScript;
 		public Hearing hearingScript;
 
-		public enum State{
-			SEARCH,
-			HIDE,
-			SNEAK,
-			FLEE
-		}
-
-		public State state;
-		private bool alive;
-
-		private WayPointClass currentWaypoint;
-
-		public PatrolGuide sn;
-
-		// Variables for PATROL
-		private int waypointINDEX = 0;
-		public float patrolSpeed = 0.5f;
-
-
 		// Variables for FLEE
-		public float fleeSpeed = 1.0f;
-		private float fleeAngle = 0.0f;
 		private Transform chaser;
 
-		public DecibelTracker noise;
+		public float sampleTime = 1.0f;
+		private float sampleTimer;
 
-		public static Stack<MemoryNode> memory = new Stack<MemoryNode>();
 
 		void Awake(){
-			prey = GameObject.Find("Prey");
+			prey = this.gameObject;
 			agent = prey.GetComponent<UnityEngine.AI.NavMeshAgent>();
 			character = prey.GetComponent<ThirdPersonCharacter>();
+			manager 		= prey.GetComponent<DataManager>();
 			visionScript = prey.GetComponent<Vision>();
 			hearingScript = prey.GetComponent<Hearing>();
+			director		= prey.GetComponent<DirectorScript>();
 
 			sn = this.GetComponent<PatrolGuide>();
-			sn.nextWaypoint = this.transform.position;
-			noise = this.GetComponent<DecibelTracker>();
 
-			
-			//sn.nextHidePosition();
+			sn.nextWaypoint = this.transform.position;
+
 		}
 
 		// Use this for initialization
 		void Start () {
-			//agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
-			//character = GetComponent<ThirdPersonCharacter>();
 
 			agent.updatePosition = true;
 			agent.updateRotation = false;
 
-			state = basicPreyAI.State.SEARCH;
-			alive = true;
+			manager.state = DataManager.State.SEARCH;
+			manager.alive = true;
 
 
 			//start finite state machine (FSM)
-			StartCoroutine("FSM");
+			StartCoroutine("Prey");
 			
 		}
 
-		IEnumerator FSM()
+		IEnumerator Prey()
 		{
-			while(alive)
+			while(manager.alive)
 			{
-				switch(state)
+				switch(manager.state)
 				{
-					case State.SEARCH:
+					case DataManager.State.SEARCH:
 						Search();
 						break;
-					case State.FLEE:
+					case DataManager.State.FLEE:
 						Flee();
 						break;
-					case State.HIDE:
+					case DataManager.State.HIDE:
 						Hide();
 						break;
-					case State.SNEAK:
+					case DataManager.State.SNEAK:
 						Sneak();
+						break;
+					case DataManager.State.THINK:
+						Think();
 						break;
 				}
 				yield return null;
@@ -99,47 +84,46 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		
 		void Search()
 		{
-			agent.speed = patrolSpeed;
+			agent.speed = manager.patrolSpeed;
+			sampleTimer += Time.deltaTime;
 
-			if(Vector3.Distance(this.transform.position,sn.nextWaypoint)>= 1)
+			if(Vector3.Distance(this.transform.position,sn.nextWaypoint)>= 1.5 && sampleTimer < sampleTime)
 			{
 				agent.SetDestination(sn.nextWaypoint);
 				character.Move(agent.desiredVelocity,false,false); //velocity, crouch, jump
 			}
-			else if (Vector3.Distance(this.transform.position,sn.nextWaypoint)<=1)
+			else if (Vector3.Distance(this.transform.position,sn.nextWaypoint)<= 1.5 || sampleTimer >= sampleTime)
 			{
 				sn.nextHidePosition();
-				if(sn.nextWaypoint == sn.prevWaypoint)
-					state = basicPreyAI.State.HIDE;
+				sampleTimer = 0.0f;
 			}
 			else
 			{
 				character.Move(Vector3.zero, false, false);
 			}
-			/*if (visionScript.visibleTargets.Count >0)
+			
+			if(sn.nextWaypoint == sn.prevWaypoint)
 			{
-				foreach (Transform visibleTarget in visionScript.visibleTargets) {
-					if(visibleTarget.CompareTag("Predator")){
-						//Debug.Log("WE GOT ONE");
-						chaser = visibleTarget;
-						setFleeAngle(chaser);
-						state = basicPreyAI.State.FLEE;
-						sn.nextFleePosition(chaser.transform.position);
-					}
-				}
-			}*/
+				if(Vector3.Distance(this.transform.position,sn.nextWaypoint)<= 1.5)
+						manager.state = DataManager.State.HIDE;
+			}
+			
+			sn.setVisited(this.transform.position);
+
+			visionFunction();
+			hearingFunction();
 		}
 
 		void Flee()
 		{
-			agent.speed = fleeSpeed;
+			agent.speed = manager.fleeSpeed;
 
-			if(Vector3.Distance(this.transform.position,sn.nextWaypoint)>= 1)
+			if(Vector3.Distance(this.transform.position,sn.nextWaypoint)>= 1.5 && sampleTimer < (sampleTime/2.0))
 			{
 				agent.SetDestination(sn.nextWaypoint);
 				character.Move(agent.desiredVelocity,false,false); //velocity, crouch, jump
 			}
-			else if (Vector3.Distance(this.transform.position,sn.nextWaypoint)<=1)
+			else if (Vector3.Distance(this.transform.position,sn.nextWaypoint)<= 1.5 || sampleTimer >= (sampleTime/2.0))
 			{
 				sn.nextFleePosition(chaser.transform.position);
 			}
@@ -147,31 +131,21 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			{
 				character.Move(Vector3.zero,false,false);
 			}
-		}
 
-		void setFleeAngle(Transform chaser)
-		{
-			fleeAngle = Vector3.Angle(this.transform.position - chaser.position, this.transform.forward);
+			sn.setVisited(this.transform.position);
+
+			visionFunction();
+			hearingFunction();
 		}
 
 		void Hide()
 		{
 			//Hide function
-			transform.Rotate(0.0f,2.5f,0.0f);
+			transform.Rotate(0.0f,5.0f,0.0f);
 			character.Move(Vector3.zero,true,false);
 
-			/*if (visionScript.visibleTargets.Count >0)
-			{
-				foreach (Transform visibleTarget in visionScript.visibleTargets) {
-					if(visibleTarget.CompareTag("Predator")){
-						//Debug.Log("WE GOT ONE");
-						chaser = visibleTarget;
-						setFleeAngle(chaser);
-						state = basicPreyAI.State.FLEE;
-						sn.nextFleePosition(chaser.transform.position);
-					}
-				}
-			}*/
+			visionFunction();
+			hearingFunction();
 		}
 
 		void Sneak()
@@ -179,22 +153,65 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			//Sneak function
 		}
 
+		void Think()
+		{
+
+		}
+
+		
+		void visionFunction()
+		{
+			if (visionScript.visibleTargets.Count >0)
+			{
+				foreach (Vision.VisionInfo visibleTarget in visionScript.visibleTargets) 
+				{
+					if(visibleTarget.target.CompareTag("Predator")){
+						//Debug.Log("WE GOT ONE");
+						chaser = visibleTarget.target;
+						manager.state = DataManager.State.FLEE;
+					}
+				}
+			}
+		}
+
+		void hearingFunction()
+		{
+			if (hearingScript.hearableTargets.Count >0)
+				{
+					foreach (Hearing.SoundInfo hearableTarget in hearingScript.hearableTargets) 
+					{
+						if(hearableTarget.target.CompareTag("Predator")){
+							//Debug.Log("WE GOT ONE");
+							chaser = hearableTarget.target;
+							manager.state = DataManager.State.FLEE;
+						}
+					}
+				}
+		}
+
 		public void caught(Vector3 catcherPos)
 		{
 			Vector3 hitDirection = (this.transform.position - catcherPos).normalized;
-			alive = false;
+			manager.alive = false;
 			this.transform.GetChild(0).gameObject.SetActive(false);
 			this.transform.GetChild(1).gameObject.SetActive(false);
-			this.transform.GetChild(6).gameObject.SetActive(true);
-			this.transform.GetChild(6).GetComponent<Rigidbody>().AddForce(hitDirection,ForceMode.Impulse);
-			this.transform.GetChild(6).tag = "Dead";
-			this.GetComponent<Rigidbody>().isKinematic = true;
-			agent.SetDestination(this.transform.position);
+			this.transform.GetChild(2).gameObject.SetActive(false);
+			this.transform.GetChild(3).gameObject.SetActive(false);
+			this.transform.GetChild(4).gameObject.SetActive(false);
+			this.transform.GetChild(5).gameObject.SetActive(true);
+			this.transform.GetChild(5).GetComponent<Rigidbody>().AddForce(hitDirection,ForceMode.Impulse);
+			this.transform.GetChild(5).tag = "Dead";
+			//this.GetComponent<Rigidbody>().isKinematic = true;
+			//agent.SetDestination(this.transform.position);
+			agent.enabled = false;
+			// this.hearingScript.enabled = false;
+			// this.visionScript.enabled = false;
+			manager.state = DataManager.State.DEAD;
 		}
 
 		public bool isAlive()
 		{
-			return alive;
+			return manager.alive;
 		}
 	}	
 }
