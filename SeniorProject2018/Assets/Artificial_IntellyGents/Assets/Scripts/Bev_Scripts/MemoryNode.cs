@@ -15,15 +15,6 @@ public class MemoryNode {
 		predPositon = predPos;
 	}
 	
-	// Use this for initialization
-	/*void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}*/
 }
 
 
@@ -44,6 +35,8 @@ public class WeightPoint {
 	public float preyCaught;
 	public float predatorSpotted;
 
+	public bool active;
+
 	
 	
 	public WeightPoint ( float dist, int walls, Vector3 pos, Vector3 navPos)
@@ -57,6 +50,7 @@ public class WeightPoint {
 		predatorSpotted = 0.0f;
 
 		visitTime = 0.0f;
+		active = false;
 	}
 	
 	// Use this for initialization
