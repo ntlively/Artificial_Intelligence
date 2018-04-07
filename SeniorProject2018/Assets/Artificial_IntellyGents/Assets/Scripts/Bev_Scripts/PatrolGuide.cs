@@ -113,39 +113,39 @@ public class PatrolGuide : MonoBehaviour {
 		}
 		
 		// //Map on the second level of the map.
-		Vector3 fillPoint2 = new Vector3 (-17.5f, 4.5f, -2.5f);
-		row = 0;
-		for(int a = 0; a < 255; a++)
-		{
-			fillPoint2 [0] = fillPoint2[0] + 1.0f;
-			row++;
+		// Vector3 fillPoint2 = new Vector3 (-17.5f, 4.5f, -2.5f);
+		// row = 0;
+		// for(int a = 0; a < 255; a++)
+		// {
+		// 	fillPoint2 [0] = fillPoint2[0] + 1.0f;
+		// 	row++;
 
-			NavMeshHit hit;
-			//Check if point is on navmesh
-			if(NavMesh.SamplePosition(fillPoint2, out hit , 1.42f, NavMesh.AllAreas))
-			{
-				//Generate weight for position
-				float wallDistance = wallWeight(fillPoint2);
-				shortestDist = Mathf.Min(shortestDist,wallDistance);
-				longestDist = Mathf.Max(longestDist,wallDistance);
-				int numberWalls = wallCount(fillPoint2);
+		// 	NavMeshHit hit;
+		// 	//Check if point is on navmesh
+		// 	if(NavMesh.SamplePosition(fillPoint2, out hit , 1.42f, NavMesh.AllAreas))
+		// 	{
+		// 		//Generate weight for position
+		// 		float wallDistance = wallWeight(fillPoint2);
+		// 		shortestDist = Mathf.Min(shortestDist,wallDistance);
+		// 		longestDist = Mathf.Max(longestDist,wallDistance);
+		// 		int numberWalls = wallCount(fillPoint2);
 
-				//create object
-				WeightPoint temp = new WeightPoint(wallDistance, numberWalls, fillPoint2, hit.position);
-				temp.navPosition[1] += 0.5f;
-				//add to list
-				weightedList.Add(temp);
-			}
+		// 		//create object
+		// 		WeightPoint temp = new WeightPoint(wallDistance, numberWalls, fillPoint2, hit.position);
+		// 		temp.navPosition[1] += 0.5f;
+		// 		//add to list
+		// 		weightedList.Add(temp);
+		// 	}
 
-			//Add in percentage 
-			if(row == 15)
-			{
-			fillPoint2[0] = -17.5f;
-			fillPoint2[2] = fillPoint2[2]-1.0f;
-			row = 0;
+		// 	//Add in percentage 
+		// 	if(row == 15)
+		// 	{
+		// 	fillPoint2[0] = -17.5f;
+		// 	fillPoint2[2] = fillPoint2[2]-1.0f;
+		// 	row = 0;
 
-			}
-		}
+		// 	}
+		// }
 		
 		//Set the beginning waypoint for the agent.
 		//nextRandomPosition ();
