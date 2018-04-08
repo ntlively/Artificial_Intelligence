@@ -35,11 +35,11 @@ public class GlobalGame : MonoBehaviour {
 		minutes =  Mathf.Floor(currentTime / 60).ToString("00");
 		seconds = Mathf.Floor(currentTime % 60).ToString("00");
 		canvas =  GameObject.Find("Canvas");
-		timer = canvas.transform.FindChild("Text").GetComponent<Text>();
+		timer = canvas.transform.Find("Text").GetComponent<Text>();
 
 		//Predator functions
 		preyCaught = 0;
-		preyCaughtDisplay = canvas.transform.FindChild("Text (1)").GetComponent<Text>();
+		preyCaughtDisplay = canvas.transform.Find("Text (1)").GetComponent<Text>();
 
 		//Prey Functions
 	}

@@ -25,6 +25,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 		public  float DeadDecibel = 0.01f;
 
 
+
+
 		void Awake () 
 		{	
 
@@ -55,7 +57,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 						currentDecibel = SneakDecibel;
 						break;
 					case DataManager.State.THINK:
-						currentDecibel = IdleDecibel;
+						currentDecibel = currentDecibel;
 						break;
 					case DataManager.State.TALK:
 						currentDecibel = IdleDecibel;
@@ -66,12 +68,15 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 					case DataManager.State.DEAD:
 						currentDecibel = DeadDecibel;
 						break;
+					case DataManager.State.FLEE:
+						currentDecibel = RunningDecibel;
+						break;
 					case DataManager.State.HIDE:
 						currentDecibel = HideDecibel;
 						break;
 				}
 
-				manager.gameObject.GetComponent<SphereCollider>().radius = currentDecibel;
+				manager.gameObject.GetComponent<SphereCollider>().radius = currentDecibel/10;
 
 				yield return null;
 			}

@@ -40,19 +40,14 @@ public class Hearing : MonoBehaviour {
 
 	public GameObject actor;
 	public DecibelTracker decibelScript;
-	void Awake(){
-		actor = this.gameObject;
-		decibelScript = actor.GetComponent<DecibelTracker>();
-	}
-
 	void Start(){
 		soundMesh = new Mesh();
 		soundMesh.name = "Sound Mesh";
 		soundMeshFilter.mesh = soundMesh;
 		
 
-		// actor = this.gameObject;
-		// decibelScript = actor.GetComponent<DecibelTracker>();
+		actor = this.gameObject;
+		decibelScript = actor.GetComponent<DecibelTracker>();
 
 		StartCoroutine ("FindSoundTargetsWithDelay",refreshDelay);
 	}
@@ -79,13 +74,13 @@ public class Hearing : MonoBehaviour {
 
 		// Targets update their sphere colliders to be larger based of their own decibel level
 		// Collider[] targetsInSoundRadius = Physics.OverlapSphere (transform.position, soundRadius, targetMask);
-		List<Collider> targetsInSoundRadius = new List<Collider>(Physics.OverlapSphere (transform.position, soundRadius, targetMask));
+		List<Collider> targetsInSoundRadius = new List<Collider>(Physics.OverlapSphere (this.gameObject.transform.position, soundRadius, targetMask));
 		List<Collider> temp = new List<Collider>();
 		foreach (Collider coll in targetsInSoundRadius) 
 		{
-			if(coll.GetType() == typeof(SphereCollider) 
-			&& !GameObject.ReferenceEquals( coll.gameObject, this.gameObject)
-			&& coll.gameObject.GetComponent<DataManager>().alive)
+			if(coll.GetType() == typeof(SphereCollider) && 
+			coll.gameObject.GetComponent<DataManager>().alive && 
+			!GameObject.ReferenceEquals( coll.gameObject, this.gameObject))
 			{
 				temp.Add(coll);
 			}

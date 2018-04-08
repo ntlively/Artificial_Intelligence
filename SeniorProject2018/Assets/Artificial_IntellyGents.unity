@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311918, g: 0.3807398, b: 0.35872716, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311947, g: 0.38074005, b: 0.35872722, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -449,7 +449,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 20649826}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanSkeleton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -677,7 +677,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 27873187}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanLeftHandThumb4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -799,7 +799,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 42821456}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanRightHandPinky2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -952,7 +952,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 66495396}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanRightLeg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1534,7 +1534,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 111337752}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanRightHandMiddle4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1673,7 +1673,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 118251149}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanLeftHandMiddle1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1704,7 +1704,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 119199569}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanLeftHandIndex4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1794,7 +1794,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 123018435}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanJaw
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2092,7 +2092,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 154916541}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanLeftBlink
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2391,7 +2391,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 181393143}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanLeftHandThumb2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2591,7 +2591,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 201059220}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanLeftHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2748,7 +2748,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 215357657}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanLeftHandRing3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2963,7 +2963,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 248966475}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanHead1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3751,7 +3751,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 312810523}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanRightToe1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3983,7 +3983,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 320129629}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanLeftLeg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4018,11 +4018,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4469120777024560, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 0.5
+      value: 1.44
       objectReference: {fileID: 0}
     - target: {fileID: 4469120777024560, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 7.06
+      value: 8.29
       objectReference: {fileID: 0}
     - target: {fileID: 4469120777024560, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_LocalRotation.x
@@ -4066,7 +4066,7 @@ Prefab:
     - target: {fileID: 114589954978134070, guid: 6f4f56f72d9c92e4cb07a96270e994cb,
         type: 2}
       propertyPath: hearingLimit
-      value: 1
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 114312084136615624, guid: 6f4f56f72d9c92e4cb07a96270e994cb,
         type: 2}
@@ -4100,35 +4100,35 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1543943818085822, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1558960793707534, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1623377554838882, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1303214781803684, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1086767762977494, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1182640410204522, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1098626801581060, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1717038121559622, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1695347847600252, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
@@ -4136,311 +4136,336 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1961170886539618, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1383611775592202, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1000595266697592, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1938484265067480, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1182442456477446, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1604396642218350, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1055333510449064, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1477060702220286, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1641013266569838, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1633112003190378, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1764779830864016, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1562426160986364, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1660412272091370, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1243875804180130, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1608632454569438, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1410924192554096, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1905255735490040, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1203260288313390, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1338023720468206, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1434184280239808, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1662082014888244, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1316103523132404, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1351376472770514, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1962871698758570, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1656575031636436, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1752214447148446, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1664003951682804, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1595127926365240, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1127781596736754, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1526104315742402, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1715934867455726, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1047890593008354, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1656995626195838, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1561679925374188, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1769979068562344, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1569883714164174, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1130952216673186, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1857714203403782, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1722917260799242, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1240039269139808, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1640616466707146, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1760972846648154, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1596435424317966, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1558687349410078, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1372002990422980, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1844720850519442, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1249998415331238, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1378053815326334, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1641889598908994, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1271495856374126, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1424108517368788, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1440060966946548, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1995741931475046, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1935078884920716, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1099934493305502, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1313751615241520, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1732096652880472, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1831318703537844, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1234065699401810, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1671831525636378, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1238349525595566, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1530280434558820, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1698624436052380, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1278167955217008, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1487346066949192, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1965524580100164, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1442046288440916, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1850248366193040, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1736774049862880, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1593177518318996, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1075862387336566, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1109929261336520, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1827839513238076, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1403815955348894, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1932216936888004, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1983484926849444, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1560175739608996, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
       propertyPath: m_Layer
-      value: 9
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114051232439652022, guid: 6f4f56f72d9c92e4cb07a96270e994cb,
+        type: 2}
+      propertyPath: RunningDecibel
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 114051232439652022, guid: 6f4f56f72d9c92e4cb07a96270e994cb,
+        type: 2}
+      propertyPath: PatrolDecibel
+      value: 75
+      objectReference: {fileID: 0}
+    - target: {fileID: 114051232439652022, guid: 6f4f56f72d9c92e4cb07a96270e994cb,
+        type: 2}
+      propertyPath: IdleDecibel
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 114051232439652022, guid: 6f4f56f72d9c92e4cb07a96270e994cb,
+        type: 2}
+      propertyPath: SneakDecibel
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 114051232439652022, guid: 6f4f56f72d9c92e4cb07a96270e994cb,
+        type: 2}
+      propertyPath: HideDecibel
+      value: 25
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 2}
@@ -4515,7 +4540,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 330404540}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanRightHandRing2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4883,7 +4908,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 382168032}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanRightHandPinky4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5035,7 +5060,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 398681487}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanLeftHandThumb1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5193,7 +5218,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 411689218}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanLeftToe1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5316,7 +5341,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 429467364}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanRightArm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6107,7 +6132,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 493721367}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanRightHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6204,7 +6229,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 498469385}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanRightHandPinky3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6827,7 +6852,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 590529608}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanLeftHandIndex3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7890,7 +7915,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 730732972}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanRightForeArm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7921,7 +7946,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 731311658}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanRightHandPinky1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7952,7 +7977,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 736714114}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanRightHandMiddle3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8169,7 +8194,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 772999385}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanRightHandIndex3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8321,7 +8346,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 785691145}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanLeftFoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8382,7 +8407,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 798219366}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanRightBrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8649,10 +8674,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   soundRadius: 10
-  soundAngle: 360
+  soundAngle: 270
   wallDecay: 0.81
   hearingAngleDecay: 0.87
-  hearingLimit: 1
+  hearingLimit: 10
   targetMask:
     serializedVersion: 2
     m_Bits: 512
@@ -8831,11 +8856,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   manager: {fileID: 0}
   currentDecibel: 1
-  RunningDecibel: 7
-  PatrolDecibel: 5
-  IdleDecibel: 3
-  SneakDecibel: 1
-  HideDecibel: 1
+  RunningDecibel: 100
+  PatrolDecibel: 75
+  IdleDecibel: 50
+  SneakDecibel: 25
+  HideDecibel: 5
   DeadDecibel: 0
 --- !u!135 &816114796
 SphereCollider:
@@ -9203,7 +9228,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 885554575}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanHips
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9390,7 +9415,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 901923043}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanLeftShoulder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9520,7 +9545,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 914355190}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanRightHandRing4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9641,7 +9666,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 923101068}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanLeftHandMiddle2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9672,7 +9697,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 923249313}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanHead
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9967,7 +9992,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 947537187}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanLeftBrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10183,7 +10208,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 984864764}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanLeftHandMiddle3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10214,7 +10239,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 984985465}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanLowerLip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10525,7 +10550,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1043773831}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanRightHandRing3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10587,7 +10612,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1054738008}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanLeftForeArm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10831,7 +10856,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1065114728}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanLeftArm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10862,7 +10887,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1065864325}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanSpine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10895,7 +10920,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1066915478}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanLeftHandIndex2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10957,7 +10982,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1071505495}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanRightFoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11358,7 +11383,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1110962349}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanRightHandMiddle2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11419,7 +11444,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1113452286}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanRightHandThumb2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11662,7 +11687,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1141226246}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanNeck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12624,7 +12649,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1208379144}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanLeftToe2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12714,7 +12739,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1212986164}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanSpine2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13409,7 +13434,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1322508268}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanRightUpperLip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13439,7 +13464,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1333219811}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanRightHandIndex4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13500,7 +13525,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1337647339}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanLeftHandPinky4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13709,7 +13734,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1351396954}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanLeftLowerLip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14053,7 +14078,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1398550311}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanRightHandIndex2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14115,7 +14140,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1409613476}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanLeftUpperLip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14271,7 +14296,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1429453165}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanLeftEye
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14776,7 +14801,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1502242254}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanUpperLip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14836,7 +14861,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1510610902}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanLeftHandIndex1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15041,7 +15066,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1521573246}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanLeftHandThumb3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15164,7 +15189,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1541065787}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanLeftHandPinky2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15288,7 +15313,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1557982348}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanLeftHandRing4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15444,7 +15469,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1579830756}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanLeftCorner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15536,7 +15561,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1582086502}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanRightHandMiddle1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15569,7 +15594,7 @@ GameObject:
   - component: {fileID: 1582143138}
   - component: {fileID: 1582143140}
   - component: {fileID: 1582143139}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: SoundVisualization
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15870,7 +15895,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1601387454}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanRightHandThumb4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15993,7 +16018,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1609489293}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanRightHandRing1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16024,7 +16049,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1615470194}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanLeftHandPinky1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16190,7 +16215,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1639023291}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanRightEye
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16628,7 +16653,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1690600634}
   - component: {fileID: 1690600635}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanGlasses
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16793,7 +16818,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1697023818}
   - component: {fileID: 1697023819}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17220,7 +17245,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1750182247}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanLeftUpLeg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17251,7 +17276,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1751131066}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanRightHandIndex1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17560,7 +17585,7 @@ MonoBehaviour:
   nextWaypoint: {x: 0, y: 0, z: 0}
   prevWaypoint: {x: 0, y: 0, z: 0}
   reachablePoints: []
-  visitedRadius: 3
+  visitedRadius: 5
   searchRadius: 10
   spottedRadius: 3
   caughtRadius: 3
@@ -17577,13 +17602,27 @@ MonoBehaviour:
   huntWallDistance: 1
   huntWallNumber: 1
   huntVisitTime: -10
-  huntPreySpotted: 1
-  huntPreyCaught: 1
+  huntPreySpotted: 0.05
+  huntPreyCaught: 0.05
   gridOpacity: 0.5
   displayTimesCaught: 1
   displayWallDist: 1
   displayNumWalls: 1
   displayVisited: 1
+--- !u!114 &1797256183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1797256167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 758563307edd8fc4fbf4f60fb05e881a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  actor: {fileID: 0}
+  visionScript: {fileID: 0}
+  hearingScript: {fileID: 0}
 --- !u!1 &1799639480
 GameObject:
   m_ObjectHideFlags: 0
@@ -17811,7 +17850,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1819051442}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanRightHandThumb3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18371,7 +18410,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1888334723}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanRightShoulder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18402,7 +18441,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1888977034}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanRightHandThumb1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18631,7 +18670,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1909042126}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanSpine1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18693,7 +18732,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1917923989}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanRightBlink
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18723,7 +18762,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1920589983}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanRightUpLeg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18754,7 +18793,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1921355934}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanRightLowerLip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18846,7 +18885,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1939222814}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanLeftHandPinky3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18908,7 +18947,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1949954643}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanLeftHandRing1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19839,7 +19878,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 2027558867}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanLeftHandRing2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19870,7 +19909,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 2028932899}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanLeftHandMiddle4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19933,7 +19972,7 @@ GameObject:
   - component: {fileID: 2030498218}
   - component: {fileID: 2030498216}
   - component: {fileID: 2030498217}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: ViewVisualization
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20253,7 +20292,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 2065190415}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanRightCorner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20283,7 +20322,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 2073120255}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: EthanRightToe2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20598,6 +20637,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 758563307edd8fc4fbf4f60fb05e881a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  actor: {fileID: 0}
+  visionScript: {fileID: 0}
+  hearingScript: {fileID: 0}
 --- !u!114 &2111901462
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -16,27 +16,32 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 	public class DirectorScript : MonoBehaviour {
 		
 		//variables
-		public NeuralNetwork neuralNet;
-
+		public NeuralNetwork 				neuralNet;
+		public GameObject 					actor;
+		public Vision 						visionScript;
+		public Hearing 						hearingScript;
 		void Awake(){
 			// init neural net
 			neuralNet = new NeuralNetwork(0.9, new int[] { 2, 4, 6 });
+			actor 			= this.gameObject;
+			visionScript	= actor.GetComponent<Vision>();
+			hearingScript	= actor.GetComponent<Hearing>();
 
 			// train neural net
 			List<double> ins = new List<double>();
 			List<double> ots = new List<double>();
-			
-			// Switch to CHASE
-			for(int i=0;i<20;i++)
+
+			// Switch to CHASE when see but don't hear
+			for(int i=0;i<visionScript.viewRadius*10;i++)
 			{
 				ins.Clear();
-				double visTemp = 4.0 + ((double)i)/10.0;
+				double visTemp = 0.0 + ((double)i)/10.0;
 				ins.Add(visTemp);
 				ins.Add((double)0.0);
 
 				ots.Clear();
 				ots.Add((double)0.0);
-				ots.Add((double)0.9);
+				ots.Add((double)0.99);
 				ots.Add((double)0.0);
 				ots.Add((double)0.0);
 				ots.Add((double)0.0);
@@ -46,19 +51,18 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 					neuralNet.Train(ins, ots);
 				}
 			}
-
-			// Switch to SNEAK
-			for(int i=0;i<20;i++)
+			// Switch to SNEAK when hear but don't see
+			for(int i=0;i<100;i++)
 			{
 				ins.Clear();
-				double soundTemp = 4.0 + ((double)i)/10.0;
+				double soundTemp = 1.5 + ((double)i)/10.0;
 				ins.Add((double)0.0);
 				ins.Add(soundTemp);
 
 				ots.Clear();
 				ots.Add((double)0.0);
 				ots.Add((double)0.0);
-				ots.Add((double)0.9);
+				ots.Add((double)0.99);
 				ots.Add((double)0.0);
 				ots.Add((double)0.0);
 				ots.Add((double)0.0);
@@ -74,7 +78,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             ins.Add((double)0.0);
 
 			ots.Clear();
-			ots.Add((double)0.9);
+			ots.Add((double)0.99);
 			ots.Add((double)0.0);
 			ots.Add((double)0.0);
 			ots.Add((double)0.0);
@@ -85,6 +89,48 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         		neuralNet.Train(ins, ots);
 			}
 
+
+
+			// 			// Switch to TALK when hear but don't see a friendly
+			// for(int i=0;i<100;i++)
+			// {
+			// 	ins.Clear();
+			// 	double soundTemp = 995.0 + ((double)i)/10.0;
+			// 	ins.Add((double)0.0);
+			// 	ins.Add(soundTemp);
+
+			// 	ots.Clear();
+			// 	ots.Add((double)0.0);
+			// 	ots.Add((double)0.0);
+			// 	ots.Add((double)0.0);
+			// 	ots.Add((double)0.0);
+			// 	ots.Add((double)0.99);
+			// 	ots.Add((double)0.0);
+
+			// 	for(int j = 0; j < 100; j++){
+			// 		neuralNet.Train(ins, ots);
+			// 	}
+			// }
+			// // Switch to TALK when you see a friendly
+			// for(int i=0;i<100;i++)
+			// {
+			// 	ins.Clear();
+			// 	double visTemp = 995.0 + ((double)i)/10.0;
+			// 	ins.Add(visTemp);
+			// 	ins.Add((double)0.0);
+
+			// 	ots.Clear();
+			// 	ots.Add((double)0.0);
+			// 	ots.Add((double)0.0);
+			// 	ots.Add((double)0.0);
+			// 	ots.Add((double)0.0);
+			// 	ots.Add((double)0.99);
+			// 	ots.Add((double)0.0);
+
+			// 	for(int j = 0; j < 100; j++){
+			// 		neuralNet.Train(ins, ots);
+			// 	}
+			// }
 		//
 		}
 	}	

@@ -49,7 +49,7 @@ public class Vision : MonoBehaviour {
 	IEnumerator FindViewTargetsWithDelay(float delay){
 		while (true) {
 			yield return new WaitForSeconds (delay);
-			FindVisibleTargets ();
+			FindVisibleTargets();
 		}
 	}
 
@@ -63,9 +63,7 @@ public class Vision : MonoBehaviour {
 		List<Collider> temp = new List<Collider>();
 		foreach (Collider coll in targetsInViewRadius) 
 		{
-			if(coll.GetType() == typeof(CapsuleCollider) 
-				&& !GameObject.ReferenceEquals( coll.gameObject, this.gameObject)
-				 && coll.gameObject.GetComponent<DataManager>().alive)
+			if(coll.GetType() == typeof(CapsuleCollider) && coll.gameObject.GetComponent<DataManager>().alive && !GameObject.ReferenceEquals( coll.gameObject, this.gameObject))
 			{
 				temp.Add(coll);
 			}

@@ -97,7 +97,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				yield return null;
 			}
 		}
-		
+		// keep this version
 		void Patrol()
 		{
 			//Have the character move to a random way point based on errors.
@@ -127,10 +127,9 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			hearingFunction();
 
 		}
-
+		//keep this version
 		void Chase()
 		{
-			bool deadSwitch = false;
 			agent.speed = manager.chaseSpeed;
 			visionFunction();
 			hearingFunction();
@@ -162,7 +161,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 				if(!target.gameObject.GetComponent<DataManager>().alive)
 				{
-					manager.state = DataManager.State.PATROL;
+					manager.state = DataManager.State.THINK;
 				}
 			}
 			else
@@ -186,7 +185,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				}
 				else if(predictionTimer >= predictionTime)
 				{
-					manager.state = DataManager.State.PATROL;
+					manager.state = DataManager.State.THINK;
 					//Debug.Log("I LOST HIM");
 					predictionTimer = 0.0f;
 				}
@@ -195,7 +194,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			patroller.setVisited(this.transform.position);
 			
 		}
-
+		// keep this version
 		void Sneak()
 		{
 			agent.speed = manager.sneakSpeed;
@@ -210,17 +209,20 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 			if(!target.gameObject.GetComponent<DataManager>().alive)
 			{
-				manager.state = DataManager.State.PATROL;
+				manager.state = DataManager.State.THINK;
 			}
 
 			if(visionScript.visibleTargets.Count>0)
 			{
-				manager.state = DataManager.State.PATROL;
+				Debug.Log("Lost vision, think again");
+				manager.state = DataManager.State.THINK;
 			}
-			
+			visionFunction();
+			hearingFunction();
 			patroller.setVisited(this.transform.position);
 		}
 
+		// use bev's finite state talk function
 		void Talk()
 		{
 			Debug.Log("Now Talking...");
@@ -246,7 +248,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			}	
 
 		}
-
+		// neural net state changes
 		void visionFunction()
 		{
 			target = null;
@@ -256,14 +258,12 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 					foreach (Vision.VisionInfo visibleTarget in visionScript.visibleTargets) 
 					{
 						if(visibleTarget.target.CompareTag("Player") || visibleTarget.target.CompareTag("Prey")){
-							//Debug.Log("SAW A BITCH");
 							target = visibleTarget.target;
-							manager.state = DataManager.State.CHASE;
+							manager.state = DataManager.State.THINK;
 							chasePos = target.position;
 							patroller.preySpotted(target.transform.position);
 						}
-						else if(visibleTarget.target.CompareTag("Predator") && manager.needUpdate){
-							//Debug.Log("Vision");
+						else if(visibleTarget.target.gameObject.CompareTag("Predator") &&(visibleTarget.target.gameObject.GetComponent<DataManager>().shout||manager.needUpdate)){
 							target = visibleTarget.target;
 							manager.state = DataManager.State.TALK;
 							manager.shout = true;
@@ -277,7 +277,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 					}
 				}
 		}
-
+		// neural net state changes
 		void hearingFunction()
 		{
 			target = null;
@@ -287,16 +287,16 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 					foreach (Hearing.SoundInfo hearableTarget in hearingScript.hearableTargets) 
 					{
 						if(hearableTarget.target.CompareTag("Player") || hearableTarget.target.CompareTag("Prey")){
-							//Debug.Log("HEARD A BITCH");
 							target = hearableTarget.target;
-							manager.state = DataManager.State.CHASE;
+							manager.state = DataManager.State.THINK;
 							chasePos = target.position;
 						}
 
-						if(hearableTarget.target.CompareTag("Predator") && hearableTarget.target != this && hearableTarget.target.GetComponent<DataManager>().shout){
-							//Debug.Log("Hearing");
+						if(hearableTarget.target.gameObject.CompareTag("Predator") && (hearableTarget.target.gameObject.GetComponent<DataManager>().shout||manager.needUpdate)){
+
 							target = hearableTarget.target;
 							manager.state = DataManager.State.TALK;
+							manager.shout = true;
 							hearingFudge = 1000.0f;
 						}
 					}
@@ -315,6 +315,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				{
 					bestVisibleTarget = visibleTarget;
 					tempDist = visibleTarget.distance;
+					visionFudge = visibleTarget.distance;
 				}
 			}
 
@@ -327,15 +328,15 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				{
 					bestHearableTarget = hearableTarget;
 					tempDeci = hearableTarget.decibel;
+					hearingFudge = hearableTarget.decibel;
 				}
 			}
 
-			//Debug.Log(bestVisibleTarget.distance);
-			//Debug.Log(bestHearableTarget.decibel);
+
 			if(tempDist == Mathf.Infinity)
 			{
 				bestVisibleTarget.distance = 0.0f;
-				//visionFunction();
+
 			}
 			else
 			{
@@ -346,7 +347,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			if(tempDeci == Mathf.NegativeInfinity)
 			{
 				bestHearableTarget.decibel = 0.0f;
-				//hearingFunction();
+
 			}
 			else
 			{
@@ -412,7 +413,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 					break;
 				case 4:
 					manager.state = DataManager.State.TALK;
-					Debug.Log("NO MORE THINK, ONLY TALK NOW");
+					//Debug.Log("NO MORE THINK, ONLY TALK NOW");
 					break;
 				case 5:
 					manager.state = DataManager.State.THINK;
