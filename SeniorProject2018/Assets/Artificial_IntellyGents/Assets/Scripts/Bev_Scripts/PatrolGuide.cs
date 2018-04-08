@@ -347,7 +347,7 @@ public class PatrolGuide : MonoBehaviour {
 		}
 		else
 		{
-			nextWaypoint = prevWaypoint;
+			prevWaypoint = nextWaypoint;
 		}
 	}
 
@@ -394,14 +394,6 @@ public class PatrolGuide : MonoBehaviour {
 			nextWaypoint[1] = reachablePoints[index].navPosition[1];
 			nextWaypoint[2] = reachablePoints[index].navPosition[2];
 
-
-
-			//wallDistRatio = (1.0f - ((reachablePoints[index].wallDist - shortestDist)/(longestDist - shortestDist)));
-			//timeRatio = (1.0f - ((Time.time - reachablePoints[index].visitTime)/(Time.time)));
-
-			//searchRadius = 5.0f + wallDistRatio * 5.0f;
-
-			//Debug.Log("Position: " + nextWaypoint + " Weight: " + bestWeight + "\nWall Distance: " + reachablePoints[index].wallDist + " Wall Ratio: " + wallDistRatio + "\nNumber of Walls: " + reachablePoints[index].numWalls + "\nVisit Time: " + reachablePoints[index].visitTime + " Visit Ratio: " + timeRatio);
 		}
 		else
 		{

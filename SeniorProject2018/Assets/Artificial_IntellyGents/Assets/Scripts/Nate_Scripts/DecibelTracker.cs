@@ -69,6 +69,9 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 					case DataManager.State.HIDE:
 						currentDecibel = HideDecibel;
 						break;
+					case DataManager.State.FLEE:
+						currentDecibel = RunningDecibel;
+						break;
 				}
 
 				manager.gameObject.GetComponent<SphereCollider>().radius = currentDecibel;

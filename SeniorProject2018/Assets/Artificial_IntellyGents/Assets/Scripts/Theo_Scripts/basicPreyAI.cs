@@ -21,9 +21,13 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 		// Variables for FLEE
 		private Transform chaser;
+		public Vector3 chasePos;
 
 		public float sampleTime = 1.0f;
 		private float sampleTimer;
+
+		public float fleeTime = 5.0f;
+		private float fleeTimer = 0.0f;
 
 
 		void Awake(){
@@ -116,28 +120,55 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 		void Flee()
 		{
+			hearingFunction();
 			agent.speed = manager.fleeSpeed;
 			sampleTimer += Time.deltaTime;
 
-			if(Vector3.Distance(this.transform.position,sn.nextWaypoint)>= 1.5 && sampleTimer < (sampleTime*0.75))
+			if(chaser != null)
 			{
-				agent.SetDestination(sn.nextWaypoint);
-				character.Move(agent.desiredVelocity,false,false); //velocity, crouch, jump
-			}
-			else if (Vector3.Distance(this.transform.position,sn.nextWaypoint)<= 1.5 || sampleTimer >= (sampleTime*0.75))
-			{
-				sn.nextFleePosition(chaser.transform.position);
-				sampleTimer = 0.0f;
+				chasePos = chaser.position;
+				
+				if(Vector3.Distance(this.transform.position,sn.nextWaypoint)>= 1.5 && sampleTimer < (sampleTime*0.75))
+				{
+					agent.SetDestination(sn.nextWaypoint);
+					character.Move(agent.desiredVelocity,false,false); //velocity, crouch, jump
+				}
+				else if (Vector3.Distance(this.transform.position,sn.nextWaypoint)<= 1.5 || sampleTimer >= (sampleTime*0.75))
+				{
+					sn.nextFleePosition(chasePos);
+					sampleTimer = 0.0f;
+				}
+				else
+				{
+					character.Move(Vector3.zero,false,false);
+				}
 			}
 			else
 			{
-				character.Move(Vector3.zero,false,false);
+				fleeTimer += Time.deltaTime;
+
+				if(fleeTimer < fleeTime && Vector3.Distance(this.transform.position,sn.nextWaypoint)>= 1.5 && sampleTimer < (sampleTime*0.75))
+				{
+					agent.SetDestination(sn.nextWaypoint);
+					character.Move(agent.desiredVelocity,false,false); //velocity, crouch, jump
+				}
+				else if (fleeTimer < fleeTime && Vector3.Distance(this.transform.position,sn.nextWaypoint)<= 1.5 || sampleTimer >= (sampleTime*0.75))
+				{
+					sn.nextFleePosition(chasePos);
+					sampleTimer = 0.0f;
+				}
+				else if(fleeTimer >= fleeTime)
+				{
+					manager.state = DataManager.State.SEARCH;
+					//Debug.Log("I HIDE NOW");
+					fleeTimer = 0.0f;
+				}
+
 			}
+			
 
 			sn.setVisited(this.transform.position);
 
-			visionFunction();
-			hearingFunction();
 		}
 
 		void Hide()
@@ -152,7 +183,54 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 		void Sneak()
 		{
-			//Sneak function
+			hearingFunction();
+			agent.speed = manager.sneakSpeed;
+			sampleTimer += Time.deltaTime;
+
+			if(chaser != null)
+			{
+				chasePos = chaser.position;
+				
+				if(Vector3.Distance(this.transform.position,sn.nextWaypoint)>= 1.5 && sampleTimer < (sampleTime*0.75))
+				{
+					agent.SetDestination(sn.nextWaypoint);
+					character.Move(agent.desiredVelocity,true,false); //velocity, crouch, jump
+				}
+				else if (Vector3.Distance(this.transform.position,sn.nextWaypoint)<= 1.5 || sampleTimer >= (sampleTime*0.75))
+				{
+					sn.nextFleePosition(chasePos);
+					sampleTimer = 0.0f;
+				}
+				else
+				{
+					character.Move(Vector3.zero,true,false);
+				}
+			}
+			else
+			{
+				fleeTimer += Time.deltaTime;
+
+				if(fleeTimer < fleeTime && Vector3.Distance(this.transform.position,sn.nextWaypoint)>= 1.5 && sampleTimer < (sampleTime*0.75))
+				{
+					agent.SetDestination(sn.nextWaypoint);
+					character.Move(agent.desiredVelocity,false,false); //velocity, crouch, jump
+				}
+				else if (fleeTimer < fleeTime && Vector3.Distance(this.transform.position,sn.nextWaypoint)<= 1.5 || sampleTimer >= (sampleTime*0.75))
+				{
+					sn.nextFleePosition(chasePos);
+					sampleTimer = 0.0f;
+				}
+				else if(fleeTimer >= fleeTime)
+				{
+					manager.state = DataManager.State.SEARCH;
+					Debug.Log("I HIDE NOW");
+					fleeTimer = 0.0f;
+				}
+
+			}
+			
+
+			sn.setVisited(this.transform.position);
 		}
 
 		void Think()
@@ -163,6 +241,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		
 		void visionFunction()
 		{
+			chaser = null;
+
 			if (visionScript.visibleTargets.Count >0)
 			{
 				foreach (Vision.VisionInfo visibleTarget in visionScript.visibleTargets) 
@@ -179,6 +259,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 		void hearingFunction()
 		{
+			chaser = null;
+
 			if (hearingScript.hearableTargets.Count >0)
 				{
 					foreach (Hearing.SoundInfo hearableTarget in hearingScript.hearableTargets) 

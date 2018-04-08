@@ -187,8 +187,13 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				else if(predictionTimer >= predictionTime)
 				{
 					manager.state = DataManager.State.PATROL;
+					//Debug.Log("I LOST HIM");
+					predictionTimer = 0.0f;
 				}
 			}
+
+			patroller.setVisited(this.transform.position);
+			
 		}
 
 		void Sneak()
@@ -212,6 +217,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			{
 				manager.state = DataManager.State.PATROL;
 			}
+			
+			patroller.setVisited(this.transform.position);
 		}
 
 		void Talk()
@@ -242,6 +249,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 		void visionFunction()
 		{
+			target = null;
+
 			if (visionScript.visibleTargets.Count >0)
 				{
 					foreach (Vision.VisionInfo visibleTarget in visionScript.visibleTargets) 
@@ -271,6 +280,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 		void hearingFunction()
 		{
+			target = null;
+
 			if (hearingScript.hearableTargets.Count >0)
 				{
 					foreach (Hearing.SoundInfo hearableTarget in hearingScript.hearableTargets) 
