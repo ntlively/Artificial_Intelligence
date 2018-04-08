@@ -63,7 +63,7 @@ public class Vision : MonoBehaviour {
 		List<Collider> temp = new List<Collider>();
 		foreach (Collider coll in targetsInViewRadius) 
 		{
-			if(coll.GetType() == typeof(CapsuleCollider))
+			if(coll.GetType() == typeof(CapsuleCollider) && !GameObject.ReferenceEquals( coll.gameObject, this.gameObject))
 			{
 				temp.Add(coll);
 			}

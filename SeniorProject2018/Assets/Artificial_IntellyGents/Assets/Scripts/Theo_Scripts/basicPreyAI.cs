@@ -201,6 +201,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			this.transform.GetChild(5).gameObject.SetActive(true);
 			this.transform.GetChild(5).GetComponent<Rigidbody>().AddForce(hitDirection,ForceMode.Impulse);
 			this.transform.GetChild(5).tag = "Dead";
+			this.transform.tag = "Dead";
 			//this.GetComponent<Rigidbody>().isKinematic = true;
 			//agent.SetDestination(this.transform.position);
 			agent.enabled = false;

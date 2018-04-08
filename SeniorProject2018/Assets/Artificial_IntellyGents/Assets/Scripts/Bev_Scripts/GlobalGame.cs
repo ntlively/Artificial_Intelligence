@@ -6,6 +6,9 @@ using UnityEngine.UI;
 public class GlobalGame : MonoBehaviour {
 
 
+	//UI links
+	public GameObject canvas;
+
 	//Rounds - 3
 	public int maxRounds = 3;
 	public int currentRound;
@@ -20,6 +23,8 @@ public class GlobalGame : MonoBehaviour {
 
 	//Tracking game info
 	public int preyCaught;
+	public Text preyCaughtDisplay;
+	public string preyCaughtString;
 
 	// Use this for initialization
 	void Start () 
@@ -29,7 +34,14 @@ public class GlobalGame : MonoBehaviour {
 		currentRound = 1;
 		minutes =  Mathf.Floor(currentTime / 60).ToString("00");
 		seconds = Mathf.Floor(currentTime % 60).ToString("00");
-		timer = GetComponent<Text>();
+		canvas =  GameObject.Find("Canvas");
+		timer = canvas.transform.FindChild("Text").GetComponent<Text>();
+
+		//Predator functions
+		preyCaught = 0;
+		preyCaughtDisplay = canvas.transform.FindChild("Text (1)").GetComponent<Text>();
+
+		//Prey Functions
 	}
 	
 	// Update is called once per frame
@@ -43,9 +55,13 @@ public class GlobalGame : MonoBehaviour {
 			seconds = Mathf.Floor(currentTime % 60).ToString("00");
 			timer.text = "Round "+ currentRound +"\n" + minutes +" : "+seconds;
 			currentTime -= Time.deltaTime;
+
+			//Prey caught info
+			preyCaughtString = preyCaught.ToString();
+			preyCaughtDisplay.text = "Prey Caught: \n"+ preyCaught.ToString();
+
 			if(currentTime < 0)
 			{
-				
 				startRound = false;
 				currentTime = maxTime;
 				currentRound++;
@@ -56,6 +72,11 @@ public class GlobalGame : MonoBehaviour {
 			}
 
 		}
+	}
+
+	public void preyCaughtUpdate()
+	{
+		preyCaught++;
 	}
 
 }

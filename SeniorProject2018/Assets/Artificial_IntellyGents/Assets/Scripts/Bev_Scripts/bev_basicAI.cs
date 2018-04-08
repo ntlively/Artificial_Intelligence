@@ -62,6 +62,9 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 		public float predictionTime = 5.0f;
 		private float predictionTimer = 0.0f;
 
+		//Global game counter
+		public bool preyCaught = true;
+
 		void Awake()
 		{
 			agent = GetComponent<NavMeshAgent>();
@@ -194,13 +197,20 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 				if(dstToTarget < 1.5f)
 				{
 					this.target.gameObject.GetComponent<basicPreyAI>().caught(this.transform.position);
-
+					state = State.PATROL;
 					//count prey caught
-
+					if(preyCaught)
+					{
+						preyCaught = false;
+						GameObject globalGame =  GameObject.Find("PredatorSpawn");
+						globalGame.GetComponent<GlobalGame>().preyCaughtUpdate();
+					}
+					
 				}
 
 				if(!target.gameObject.GetComponent<DataManager>().alive)
 				{
+					preyCaught = true;
 					state = State.PATROL;
 				}
 			}
@@ -274,8 +284,9 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 			//Predators will exchange information using Blackboard
 	
 			//Move to predator until 2 blocks away. 
-			if(Vector3.Distance(this.transform.position, this.target.transform.position) > 3.0 && this.shout)
+			if(Vector3.Distance(this.transform.position, this.target.transform.position) > 2.0f && this.shout)
 			{
+				Debug.Log("Moving Talk");
 				this.agent.speed = patrolSpeed;
 				this.character.Move(agent.desiredVelocity, false, false);
 				this.agent.SetDestination(target.transform.position);
@@ -296,11 +307,13 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 				this.talkTimer = this.talkTimer-Time.deltaTime;
 				if(this.talkTimer <= 0.0)
 				{
-					this.talkTimer = 10.0f;
+					this.talkTimer = 5.0f;
 					this.state = bev_basicAI.State.PATROL;
 					//exchange information
 					GameObject globalGame =  GameObject.Find("PredatorSpawn");
 					globalGame.GetComponent<Blackboard>().updateInfluence(patroller.getInfluence(), target.GetComponent<PatrolGuide>().getInfluence());
+					this.target = null;
+				
 				}
 	
 				
@@ -317,26 +330,30 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 
 		void visionFunction()
 		{
-
-			if (visionScript.visibleTargets.Count >0)
+			if(visionScript.visibleTargets != null)
 			{
-				foreach (Vision.VisionInfo visibleTarget in visionScript.visibleTargets) 
+					if (visionScript.visibleTargets.Count >0)
 				{
-					if(visibleTarget.target.CompareTag("Prey")){
-						//Debug.Log("WE GOT ONE");
-						target = visibleTarget.target;
-						state = bev_basicAI.State.CHASE;
-					}
-
-					if(visibleTarget.target.CompareTag("Predator") && needUpdate)
+					foreach (Vision.VisionInfo visibleTarget in visionScript.visibleTargets) 
 					{
-						Debug.Log("Vision");
-						target = visibleTarget.target;
-						state = bev_basicAI.State.TALK;
-						shout = true;
+						if(visibleTarget.target.CompareTag("Prey")){
+							//Debug.Log("WE GOT ONE");
+							this.target = visibleTarget.target;
+							this.state = bev_basicAI.State.CHASE;
+						}
+
+						if(visibleTarget.target.CompareTag("Predator") && needUpdate)
+						{
+							Debug.Log("Vision");
+							this.target = visibleTarget.target;
+							this.state = bev_basicAI.State.TALK;
+							this.shout = true;
+						}
 					}
 				}
 			}
+
+
 
 		}
 
@@ -344,20 +361,23 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 		void hearingFunction()
 		{
 
-			if (hearingScript.hearableTargets.Count >0)
+			if(hearingScript.hearableTargets != null)
 			{
-				foreach (Hearing.SoundInfo hearableTarget in hearingScript.hearableTargets) 
+				if (hearingScript.hearableTargets.Count >0)
 				{
-					if(hearableTarget.target.CompareTag("Prey")){
-						//Debug.Log("WE GOT ONE");
-						target = hearableTarget.target;
-						state = bev_basicAI.State.CHASE;
-					}
+					foreach (Hearing.SoundInfo hearableTarget in hearingScript.hearableTargets) 
+					{
+						if(hearableTarget.target.CompareTag("Prey")){
+							//Debug.Log("WE GOT ONE");
+							this.target = hearableTarget.target;
+							this.state = bev_basicAI.State.CHASE;
+						}
 
-					if(hearableTarget.target.CompareTag("Predator") && hearableTarget.target.GetComponent<bev_basicAI>().shout){
-						Debug.Log("Hearing");
-						target = hearableTarget.target;
-						state = bev_basicAI.State.TALK;
+						if(hearableTarget.target.CompareTag("Predator") && hearableTarget.target.GetComponent<bev_basicAI>().shout){
+							Debug.Log("Hearing");
+							this.target = hearableTarget.target;
+							this.state = bev_basicAI.State.TALK;
+						}
 					}
 				}
 			}
