@@ -163,21 +163,58 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			}
 		}
 
-		void Talk()
+		void Talk ()
 		{
-			Debug.Log("Now Talking...");
-			agent.speed = manager.sneakSpeed;
-			agent.SetDestination(target.position);
-			character.Move(agent.desiredVelocity,false,false);
+			//Trigger when one or more predators enter vision.
+			//AND Predator is currently not in chase state
+			
+			//Stop the guy who was spotted
 
-			if(visionScript.visibleTargets.Count>0)
-			{
+			//Predators will exchange information using Blackboard
+	
+			//Move to predator until 2 blocks away. 
+			if(target.gameObject.CompareTag("Player")){
+				target = null;
 				manager.state = DataManager.State.THINK;
+			}else{
+
+			Debug.Log("TALKING.........");
+			if(Vector3.Distance(this.transform.position, target.transform.position) > 3.0 && manager.shout)
+			{
+				agent.speed = manager.patrolSpeed;
+				character.Move(agent.desiredVelocity, false, false);
+				agent.SetDestination(target.transform.position);
 			}
+			else
+			{
+				character.Move(Vector3.zero, false, false);
+				agent.SetDestination(this.transform.position);
+				transform.LookAt(target);
+				if(manager.shout)
+				{
+					manager.shout = false;
+				}
+
+				if(Vector3.Distance(this.transform.position, target.transform.position) <= 2.0)
+				{
+					manager.talkTimer = manager.talkTimer-Time.deltaTime;
+					if(manager.talkTimer <= 0.0)
+					{
+						manager.talkTimer = 3.0f;
+						manager.state = DataManager.State.THINK;
+					}
+
+				}
+	
+				
+			}
+		}
+	
 		}
 		
 		void Think()
 		{
+			Debug.Log("<Think>");
 			if(manager.netTracking.Count == 0)
 			{
 				checkKnowledge(false);
@@ -194,15 +231,15 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				{
 					foreach (Vision.VisionInfo visibleTarget in visionScript.visibleTargets) 
 					{
-						if(visibleTarget.target.CompareTag("Player")){
+						if(visibleTarget.target.gameObject.CompareTag("Player")){
 							target = visibleTarget.target;
 							manager.state = DataManager.State.THINK;
 						}
 
-						if(visibleTarget.target.CompareTag("Predator") && manager.needUpdate){
+						if(visibleTarget.target.gameObject.CompareTag("Predator") &&(visibleTarget.target.gameObject.GetComponent<DataManager>().shout||manager.needUpdate)){
 							target = visibleTarget.target;
 							Debug.Log("found a fellow predator");
-							manager.state = DataManager.State.THINK;
+							manager.state = DataManager.State.TALK;
 							manager.shout = true;
 							visionFudge = 1000.0f;
 							hearingFudge = 0.0f;
@@ -217,17 +254,18 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				{
 					foreach (Hearing.SoundInfo hearableTarget in hearingScript.hearableTargets) 
 					{
-						if(hearableTarget.target.CompareTag("Player")){
+						if(hearableTarget.target.gameObject.CompareTag("Player")){
 							//Debug.Log("HEARD A BITCH");
 							target = hearableTarget.target;
 							manager.state = DataManager.State.THINK;
 						
 						}
 
-						if(hearableTarget.target.CompareTag("Predator") && hearableTarget.target.GetComponent<DataManager>().shout){
-							//Debug.Log("Hearing");
+						if(hearableTarget.target.gameObject.CompareTag("Predator") && (hearableTarget.target.gameObject.GetComponent<DataManager>().shout||manager.needUpdate)){
+							Debug.Log("STOP SHOUTING AT ME BICC");
 							target = hearableTarget.target;
 							manager.state = DataManager.State.TALK;
+							manager.shout = true;
 							hearingFudge = 1000.0f;
 						}
 					}
@@ -246,6 +284,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				{
 					bestVisibleTarget = visibleTarget;
 					tempDist = visibleTarget.distance;
+					visionFudge = visibleTarget.distance;
 				}
 			}
 
@@ -258,32 +297,32 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				{
 					bestHearableTarget = hearableTarget;
 					tempDeci = hearableTarget.decibel;
+					hearingFudge = hearableTarget.decibel;
 				}
 			}
 
-			//Debug.Log(bestVisibleTarget.distance);
-			//Debug.Log(bestHearableTarget.decibel);
-			// if(tempDist == Mathf.Infinity)
-			// {
-			// 	bestVisibleTarget.distance = 0.0f;
 
-			// }
-			// else
-			// {
-			// 	visionFunction();
-			// 	bestVisibleTarget.distance = visionFudge;
-			// }
-			// //
-			// if(tempDeci == Mathf.NegativeInfinity)
-			// {
-			// 	bestHearableTarget.decibel = 0.0f;
+			if(tempDist == Mathf.Infinity)
+			{
+				bestVisibleTarget.distance = 0.0f;
 
-			// }
-			// else
-			// {
-			// 	hearingFunction();
-			// 	bestHearableTarget.decibel = hearingFudge;	
-			// }
+			}
+			else
+			{
+				visionFunction();
+				bestVisibleTarget.distance = visionFudge;
+			}
+			//
+			if(tempDeci == Mathf.NegativeInfinity)
+			{
+				bestHearableTarget.decibel = 0.0f;
+
+			}
+			else
+			{
+				hearingFunction();
+				bestHearableTarget.decibel = hearingFudge;	
+			}
 
 			double distance = (double)bestVisibleTarget.distance;
 			double decibel = (double)bestHearableTarget.decibel;
@@ -309,8 +348,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 					trackingVal = 0.0;
 				}
 				double delta = trackingVal - stateChance;
-				Debug.Log("<<|net state chance|>>"+index+" <<|>> "+stateChance+" <<|>> "+delta);
-				Debug.Log("\n net state delta:"+delta);
+				//Debug.Log("<<|net state chance|>>"+index+" <<|>> "+stateChance+" <<|>> "+delta);
+				//Debug.Log("\n net state delta:"+delta);
 				//Debug.Log("\n");
 				if(delta > tempChance)
 				{
@@ -331,15 +370,15 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			{
 				case 0:
 					manager.state = DataManager.State.PATROL;
-					//Debug.Log("NO MORE THINK, ONLY PATROL NOW");
+					Debug.Log("NO MORE THINK, ONLY PATROL NOW");
 					break;
 				case 1:
 					manager.state = DataManager.State.CHASE;
-					//Debug.Log("NO MORE THINK, ONLY CHASE NOW");
+					Debug.Log("NO MORE THINK, ONLY CHASE NOW");
 					break;
 				case 2:
 					manager.state = DataManager.State.SNEAK;
-					//Debug.Log("NO MORE THINK, ONLY SNEAK NOW");
+					Debug.Log("NO MORE THINK, ONLY SNEAK NOW");
 					break;
 				case 4:
 					manager.state = DataManager.State.TALK;

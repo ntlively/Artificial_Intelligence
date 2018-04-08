@@ -15,9 +15,13 @@ public class DataManager : MonoBehaviour {
 	public float patrolSpeed = 0.5f;
 	public float chaseSpeed = 0.7f;
 	public float sneakSpeed = 0.1f;
+
 	// States
 	public State state = DataManager.State.WAIT;
 
+	// Timers
+	public float talkTimer = 10.0f;
+	
 	public enum State{
 		PATROL,
 		CHASE,

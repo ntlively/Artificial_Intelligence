@@ -74,11 +74,11 @@ public class Hearing : MonoBehaviour {
 
 		// Targets update their sphere colliders to be larger based of their own decibel level
 		// Collider[] targetsInSoundRadius = Physics.OverlapSphere (transform.position, soundRadius, targetMask);
-		List<Collider> targetsInSoundRadius = new List<Collider>(Physics.OverlapSphere (transform.position, soundRadius, targetMask));
+		List<Collider> targetsInSoundRadius = new List<Collider>(Physics.OverlapSphere (transform.position, soundRadius));
 		List<Collider> temp = new List<Collider>();
 		foreach (Collider coll in targetsInSoundRadius) 
 		{
-			if(coll.GetType() == typeof(SphereCollider) && coll.gameObject.GetComponent<DataManager>().alive)
+			if(coll.GetType() == typeof(SphereCollider) && coll.gameObject.GetComponent<DataManager>().alive && !GameObject.ReferenceEquals( coll.gameObject, this.gameObject))
 			{
 				temp.Add(coll);
 			}

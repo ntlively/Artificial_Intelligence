@@ -72,7 +72,26 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				}
 			}
 
-			// // Switch to TALK when hear but don't see a friendly
+			// Switch to PATROL
+			ins.Clear();
+            ins.Add((double)0.0);
+            ins.Add((double)0.0);
+
+			ots.Clear();
+			ots.Add((double)0.99);
+			ots.Add((double)0.0);
+			ots.Add((double)0.0);
+			ots.Add((double)0.0);
+			ots.Add((double)0.0);
+			ots.Add((double)0.0);
+
+            for(int i = 0; i < 100; i++){
+        		neuralNet.Train(ins, ots);
+			}
+
+
+
+			// 			// Switch to TALK when hear but don't see a friendly
 			// for(int i=0;i<100;i++)
 			// {
 			// 	ins.Clear();
@@ -112,22 +131,6 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			// 		neuralNet.Train(ins, ots);
 			// 	}
 			// }
-			// Switch to PATROL
-			ins.Clear();
-            ins.Add((double)0.0);
-            ins.Add((double)0.0);
-
-			ots.Clear();
-			ots.Add((double)0.99);
-			ots.Add((double)0.0);
-			ots.Add((double)0.0);
-			ots.Add((double)0.0);
-			ots.Add((double)0.0);
-			ots.Add((double)0.0);
-
-            for(int i = 0; i < 100; i++){
-        		neuralNet.Train(ins, ots);
-			}
 		//
 		}
 	}	

@@ -953,9 +953,10 @@ GameObject:
   - component: {fileID: 114051232439652022}
   - component: {fileID: 114037471259077288}
   - component: {fileID: 114838734724819758}
+  - component: {fileID: 114124821860578022}
   m_Layer: 0
   m_Name: Pred_3_28
-  m_TagString: Untagged
+  m_TagString: Predator
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1824,7 +1825,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1695347847600252}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -12.9, y: 4.637, z: -14.79}
+  m_LocalPosition: {x: -10.13, y: 5.22, z: -12.58}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4451374603710326}
@@ -1990,7 +1991,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1099934493305502}
-  m_LocalRotation: {x: 0.5326752, y: 0.070340455, z: 0.83613276, w: -0.110415146}
+  m_LocalRotation: {x: 0.53267515, y: 0.07034045, z: 0.83613265, w: -0.11041513}
   m_LocalPosition: {x: 0.000022271464, y: -0.00006150465, z: 0.026027026}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2532,6 +2533,7 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -2547,6 +2549,7 @@ MeshRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
@@ -2564,6 +2567,7 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -2579,6 +2583,7 @@ MeshRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
@@ -2645,7 +2650,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   alive: 1
-  state: 0
+  shout: 0
+  needUpdate: 1
+  patrolSpeed: 0.5
+  chaseSpeed: 0.9
+  sneakSpeed: 0.3
+  state: 3
+  talkTimer: 10
 --- !u!114 &114051232439652022
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2659,6 +2670,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   manager: {fileID: 0}
   currentDecibel: 0.5
+  RunningDecibel: 100
+  PatrolDecibel: 75
+  IdleDecibel: 50
+  SneakDecibel: 25
 --- !u!114 &114104158787836388
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2682,6 +2697,22 @@ MonoBehaviour:
   visibleTargets: []
   meshResolution: 1
   viewMeshFilter: {fileID: 33363973361356340}
+--- !u!114 &114124821860578022
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1695347847600252}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 527108099fc45b745a524a007a9f27db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  patrolTimer: 10
+  weightedList: []
+  nextWaypoint: {x: 0, y: 0, z: 0}
+  prevWaypoint: {x: 0, y: 0, z: 0}
+  reachablePoints: []
 --- !u!114 &114278156509271800
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2710,18 +2741,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a889e215efd798845864c2dfa66ccdfe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  actor: {fileID: 0}
   agent: {fileID: 0}
   character: {fileID: 0}
   manager: {fileID: 0}
   director: {fileID: 0}
+  patroller: {fileID: 0}
   visionScript: {fileID: 0}
   hearingScript: {fileID: 0}
-  waypoints:
-  - {fileID: 0}
-  patrolSpeed: 0.5
-  chaseSpeed: 0.8
   target: {fileID: 0}
-  actor: {fileID: 0}
+  visionFudge: 0
+  hearingFudge: 0
 --- !u!114 &114379566017038230
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2756,7 +2786,7 @@ MonoBehaviour:
   soundAngle: 270
   wallDecay: 0.85
   hearingAngleDecay: 0.87
-  hearingLimit: 1
+  hearingLimit: 0
   targetMask:
     serializedVersion: 2
     m_Bits: 512
@@ -2780,6 +2810,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 758563307edd8fc4fbf4f60fb05e881a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  actor: {fileID: 0}
+  visionScript: {fileID: 0}
+  hearingScript: {fileID: 0}
 --- !u!135 &135241510624597116
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -2814,6 +2847,7 @@ SkinnedMeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -2829,6 +2863,7 @@ SkinnedMeshRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
@@ -2870,6 +2905,7 @@ SkinnedMeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -2885,6 +2921,7 @@ SkinnedMeshRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
