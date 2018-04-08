@@ -59,7 +59,7 @@ public class Vision : MonoBehaviour {
 	void FindVisibleTargets(){
 		visibleTargets.Clear ();
 //		Collider[] targetsInViewRadius = Physics.OverlapSphere (transform.position, viewRadius, targetMask);
-		List<Collider> targetsInViewRadius = new List<Collider>(Physics.OverlapSphere (transform.position, viewRadius));
+		List<Collider> targetsInViewRadius = new List<Collider>(Physics.OverlapSphere (transform.position, viewRadius, targetMask));
 		List<Collider> temp = new List<Collider>();
 		foreach (Collider coll in targetsInViewRadius) 
 		{
