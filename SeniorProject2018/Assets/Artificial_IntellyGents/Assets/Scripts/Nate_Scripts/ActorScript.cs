@@ -29,6 +29,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		public Vector3 chaseDir;
 		public float predictionMod = 1.0f;
 		public float predictionTime = 5.0f;
+		public float sneakPredictionTime = 1.0f;
 		private float predictionTimer = 0.0f;
 
 		public float visionFudge = 0.0f;
@@ -238,6 +239,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			}
 			else
 			{
+				//manager.state = DataManager.State.THINK;
+				
 				predictionTimer += Time.deltaTime;
 
 				agent.SetDestination(chasePos);
@@ -255,7 +258,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 						chasePos[1] += 0.5f;
 					}
 				}
-				else if(predictionTimer >= predictionTime)
+				else if(predictionTimer >= sneakPredictionTime)
 				{
 					manager.state = DataManager.State.THINK;
 					//Debug.Log("I LOST HIM");
@@ -321,7 +324,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 					{
 						if(visibleTarget.target.CompareTag("Player") || visibleTarget.target.CompareTag("Prey")){
 							target = visibleTarget.target;
-							//if(goToThink)
+							if(goToThink)
 								manager.state = DataManager.State.THINK;
 							chasePos = target.position;
 							patroller.preySpotted(target.transform.position);
@@ -351,7 +354,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 					{
 						if(hearableTarget.target.CompareTag("Player") || hearableTarget.target.CompareTag("Prey")){
 							target = hearableTarget.target;
-							//if(goToThink)
+							if(goToThink)
 								manager.state = DataManager.State.THINK;
 							chasePos = target.position;
 						}

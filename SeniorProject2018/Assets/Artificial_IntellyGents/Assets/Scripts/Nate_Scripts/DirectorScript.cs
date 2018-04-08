@@ -31,6 +31,27 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			List<double> ins = new List<double>();
 			List<double> ots = new List<double>();
 
+
+			// Switch to SNEAK when hear but don't see
+			for(int i=0;i<100;i++)
+			{
+				ins.Clear();
+				double soundTemp = 10 + ((double)i)/10.0;
+				ins.Add((double)0.0);
+				ins.Add(soundTemp);
+
+				ots.Clear();
+				ots.Add((double)0.0);
+				ots.Add((double)0.0);
+				ots.Add((double)0.99);
+				ots.Add((double)0.0);
+				ots.Add((double)0.0);
+				ots.Add((double)0.0);
+
+				for(int j = 0; j < 100; j++){
+					neuralNet.Train(ins, ots);
+				}
+			}
 			// Switch to CHASE when see but don't hear
 			for(int i=0;i<visionScript.viewRadius*10;i++)
 			{
@@ -51,27 +72,6 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 					neuralNet.Train(ins, ots);
 				}
 			}
-			// Switch to SNEAK when hear but don't see
-			for(int i=0;i<100;i++)
-			{
-				ins.Clear();
-				double soundTemp = 1.5 + ((double)i)/10.0;
-				ins.Add((double)0.0);
-				ins.Add(soundTemp);
-
-				ots.Clear();
-				ots.Add((double)0.0);
-				ots.Add((double)0.0);
-				ots.Add((double)0.99);
-				ots.Add((double)0.0);
-				ots.Add((double)0.0);
-				ots.Add((double)0.0);
-
-				for(int j = 0; j < 100; j++){
-					neuralNet.Train(ins, ots);
-				}
-			}
-
 			// Switch to PATROL
 			ins.Clear();
             ins.Add((double)0.0);
