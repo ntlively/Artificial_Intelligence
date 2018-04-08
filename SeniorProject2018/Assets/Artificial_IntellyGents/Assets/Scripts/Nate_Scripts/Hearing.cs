@@ -40,19 +40,14 @@ public class Hearing : MonoBehaviour {
 
 	public GameObject actor;
 	public DecibelTracker decibelScript;
-	void Awake(){
-		actor = this.gameObject;
-		decibelScript = actor.GetComponent<DecibelTracker>();
-	}
-
 	void Start(){
 		soundMesh = new Mesh();
 		soundMesh.name = "Sound Mesh";
 		soundMeshFilter.mesh = soundMesh;
 		
 
-		// actor = this.gameObject;
-		// decibelScript = actor.GetComponent<DecibelTracker>();
+		actor = this.gameObject;
+		decibelScript = actor.GetComponent<DecibelTracker>();
 
 		StartCoroutine ("FindSoundTargetsWithDelay",refreshDelay);
 	}
@@ -83,7 +78,7 @@ public class Hearing : MonoBehaviour {
 		List<Collider> temp = new List<Collider>();
 		foreach (Collider coll in targetsInSoundRadius) 
 		{
-			if(coll.GetType() == typeof(SphereCollider))
+			if(coll.GetType() == typeof(SphereCollider) && coll.gameObject.GetComponent<DataManager>().alive)
 			{
 				temp.Add(coll);
 			}
