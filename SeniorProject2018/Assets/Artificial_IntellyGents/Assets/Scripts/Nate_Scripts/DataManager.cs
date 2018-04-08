@@ -18,6 +18,7 @@ public class DataManager : MonoBehaviour {
 	public float fleeSpeed = 1.0f;
 	// States
 	public State state = DataManager.State.WAIT;
+	public State prevState = DataManager.State.WAIT;
 
 	public enum State{
 		PATROL,

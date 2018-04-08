@@ -103,6 +103,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			//Have the character move to a random way point based on errors.
 			agent.speed = manager.patrolSpeed;
 			sampleTimer += Time.deltaTime;
+			manager.prevState = DataManager.State.PATROL;
 
 			if(Vector3.Distance(this.transform.position, patroller.nextWaypoint )>= 1.5 && sampleTimer < sampleTime)
 			{
@@ -123,16 +124,18 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 			patroller.setVisited(this.transform.position);
 
-			visionFunction();
-			hearingFunction();
+			visionFunction(true);
+			hearingFunction(true);
 
 		}
 		//keep this version
 		void Chase()
 		{
 			agent.speed = manager.chaseSpeed;
-			visionFunction();
-			hearingFunction();
+			manager.prevState = DataManager.State.CHASE;
+
+			visionFunction(false);
+			hearingFunction(false);
 
 			if(target != null)
 			{
@@ -198,27 +201,68 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		void Sneak()
 		{
 			agent.speed = manager.sneakSpeed;
-			agent.SetDestination(target.position);
-			character.Move(agent.desiredVelocity,false,false);
+			manager.prevState = DataManager.State.SNEAK;
 
-			float dstToTarget = Vector3.Distance (transform.position, target.position);
-			if(dstToTarget<0.8f)
+			visionFunction(false);
+			hearingFunction(false);
+
+			if(target != null)
 			{
-				target.gameObject.GetComponent<DataManager>().alive = false;
+				chaseDir = new Vector3(target.rotation[0],target.rotation[1],target.rotation[2]).normalized;
+				//agent.SetDestination(target.position);
+				chasePos = target.position + predictionMod * chaseDir;
+
+				
+				NavMeshHit hit;
+				//check if point is on navmesh
+				if(NavMesh.SamplePosition(chasePos, out hit, predictionMod, NavMesh.AllAreas))
+				{
+					chasePos = hit.position;
+					chasePos[1] += 0.5f;
+				}
+
+				agent.SetDestination(chasePos);
+				character.Move(agent.desiredVelocity,true,false);
+
+				float dstToTarget = Vector3.Distance (transform.position, chasePos);
+				if(dstToTarget < 1.5f)
+				{
+					target.gameObject.GetComponent<basicPreyAI>().caught(this.transform.position);
+					patroller.preyCaught(target.transform.position);
+				}
+
+				if(!target.gameObject.GetComponent<DataManager>().alive)
+				{
+					manager.state = DataManager.State.THINK;
+				}
+			}
+			else
+			{
+				predictionTimer += Time.deltaTime;
+
+				agent.SetDestination(chasePos);
+				character.Move(agent.desiredVelocity,true,false);
+
+				if(predictionTimer < predictionTime && Vector3.Distance(this.transform.position,chasePos) <= 1.5f)
+				{
+					chasePos = chasePos + predictionMod * chaseDir;
+					
+					NavMeshHit hit;
+					//check if point is on navmesh
+					if(NavMesh.SamplePosition(chasePos, out hit, predictionMod, NavMesh.AllAreas))
+					{
+						chasePos = hit.position;
+						chasePos[1] += 0.5f;
+					}
+				}
+				else if(predictionTimer >= predictionTime)
+				{
+					manager.state = DataManager.State.THINK;
+					//Debug.Log("I LOST HIM");
+					predictionTimer = 0.0f;
+				}
 			}
 
-			if(!target.gameObject.GetComponent<DataManager>().alive)
-			{
-				manager.state = DataManager.State.THINK;
-			}
-
-			if(visionScript.visibleTargets.Count>0)
-			{
-				Debug.Log("Lost vision, think again");
-				manager.state = DataManager.State.THINK;
-			}
-			visionFunction();
-			hearingFunction();
 			patroller.setVisited(this.transform.position);
 		}
 
@@ -229,6 +273,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			agent.speed = manager.patrolSpeed;
 			agent.SetDestination(target.position);
 			character.Move(agent.desiredVelocity,false,false);
+			manager.prevState = DataManager.State.TALK;
 
 			if(visionScript.visibleTargets.Count>0)
 			{
@@ -238,6 +283,23 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		
 		void Think()
 		{
+			// if(manager.prevState == DataManager.State.SNEAK)
+			// {
+			// 	agent.SetDestination(chasePos);
+			// 	character.Move(agent.desiredVelocity,true,false);
+			// }
+			// else if(manager.prevState == DataManager.State.CHASE)
+			// {
+			// 	agent.SetDestination(chasePos);
+			// 	character.Move(agent.desiredVelocity,false,false);
+			// }
+			// else if(manager.prevState == DataManager.State.PATROL)
+			// {
+			// 	agent.SetDestination(patroller.nextWaypoint);
+			// 	character.Move(agent.desiredVelocity, false, false);
+			// }
+
+
 			if(manager.netTracking.Count == 0)
 			{
 				checkKnowledge(false);
@@ -249,7 +311,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 		}
 		// neural net state changes
-		void visionFunction()
+		void visionFunction(bool goToThink)
 		{
 			target = null;
 
@@ -259,7 +321,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 					{
 						if(visibleTarget.target.CompareTag("Player") || visibleTarget.target.CompareTag("Prey")){
 							target = visibleTarget.target;
-							manager.state = DataManager.State.THINK;
+							//if(goToThink)
+								manager.state = DataManager.State.THINK;
 							chasePos = target.position;
 							patroller.preySpotted(target.transform.position);
 						}
@@ -278,7 +341,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				}
 		}
 		// neural net state changes
-		void hearingFunction()
+		void hearingFunction(bool goToThink)
 		{
 			target = null;
 
@@ -288,7 +351,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 					{
 						if(hearableTarget.target.CompareTag("Player") || hearableTarget.target.CompareTag("Prey")){
 							target = hearableTarget.target;
-							manager.state = DataManager.State.THINK;
+							//if(goToThink)
+								manager.state = DataManager.State.THINK;
 							chasePos = target.position;
 						}
 
@@ -340,7 +404,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			}
 			else
 			{
-				visionFunction();
+				visionFunction(true);
 				bestVisibleTarget.distance = visionFudge;
 			}
 			//
@@ -351,7 +415,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			}
 			else
 			{
-				hearingFunction();
+				hearingFunction(true);
 				bestHearableTarget.decibel = hearingFudge;	
 			}
 
@@ -401,15 +465,15 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			{
 				case 0:
 					manager.state = DataManager.State.PATROL;
-					//Debug.Log("NO MORE THINK, ONLY PATROL NOW");
+					Debug.Log("NO MORE THINK, ONLY PATROL NOW");
 					break;
 				case 1:
 					manager.state = DataManager.State.CHASE;
-					//Debug.Log("NO MORE THINK, ONLY CHASE NOW");
+					Debug.Log("NO MORE THINK, ONLY CHASE NOW");
 					break;
 				case 2:
 					manager.state = DataManager.State.SNEAK;
-					//Debug.Log("NO MORE THINK, ONLY SNEAK NOW");
+					Debug.Log("NO MORE THINK, ONLY SNEAK NOW");
 					break;
 				case 4:
 					manager.state = DataManager.State.TALK;
