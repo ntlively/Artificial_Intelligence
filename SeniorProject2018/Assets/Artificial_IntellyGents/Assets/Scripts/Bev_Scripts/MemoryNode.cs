@@ -54,6 +54,7 @@ public class WeightPoint {
 		navPosition = navPos;
 		wallDist = dist;
 		numWalls = walls;
+		
 		preySpotted = 0.0f;
 		preyCaught = 0.0f;
 		predatorSpotted = 0.0f;

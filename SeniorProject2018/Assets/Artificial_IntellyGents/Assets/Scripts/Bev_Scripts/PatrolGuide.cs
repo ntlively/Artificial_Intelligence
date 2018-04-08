@@ -14,23 +14,28 @@ public class PatrolGuide : MonoBehaviour {
 			//List of percentage with top left corner of the score. 
 			public float patrolTimer = 10.0f;
 			public List<WeightPoint> weightedList = new List<WeightPoint>();
-			public Vector3 nextWaypoint; 
+			public Vector3 nextWaypoint;
 			private float nextWeight = Mathf.NegativeInfinity;
 			public Vector3 prevWaypoint; 
 			private float prevWeight = -1.0f;
 			public List<WeightPoint> reachablePoints = new List<WeightPoint>();
-			public List<WeightPoint> visitedPoints = new List<WeightPoint>();
 
 			private LayerMask obstacleMask;
 
 			private float shortestDist = Mathf.Infinity;
 			private float longestDist = Mathf.NegativeInfinity;
+			private float highestCaught = 1.0f;
 
 			[Header("Ranges")]
 			[Range(0.5f,40.0f)]
 			public float visitedRadius = 1.0f;
 			[Range(0.5f,40.0f)]
 			public float searchRadius = 5.0f;
+			[Range(0.5f,40.0f)]
+			public float spottedRadius = 3.0f;
+			[Range(0.5f,40.0f)]
+			public float caughtRadius = 3.0f;
+			public float wallCountRadius = 1.0f;
 
 			[Header("Prey Hide Weights")]
 			public float hideWallDistance = 1.0f;
@@ -55,6 +60,7 @@ public class PatrolGuide : MonoBehaviour {
 			[Header("Grid Display")]
 			[Range(0.0f,1.0f)]
 			public float gridOpacity = 0.5f;
+			public bool displayTimesCaught = true;
 			public bool displayWallDist = true;
 			public bool displayNumWalls = true;
 			public bool displayVisited = true;
@@ -112,40 +118,6 @@ public class PatrolGuide : MonoBehaviour {
 
 		}
 		
-		// //Map on the second level of the map.
-		// Vector3 fillPoint2 = new Vector3 (-17.5f, 4.5f, -2.5f);
-		// row = 0;
-		// for(int a = 0; a < 255; a++)
-		// {
-		// 	fillPoint2 [0] = fillPoint2[0] + 1.0f;
-		// 	row++;
-
-		// 	NavMeshHit hit;
-		// 	//Check if point is on navmesh
-		// 	if(NavMesh.SamplePosition(fillPoint2, out hit , 1.42f, NavMesh.AllAreas))
-		// 	{
-		// 		//Generate weight for position
-		// 		float wallDistance = wallWeight(fillPoint2);
-		// 		shortestDist = Mathf.Min(shortestDist,wallDistance);
-		// 		longestDist = Mathf.Max(longestDist,wallDistance);
-		// 		int numberWalls = wallCount(fillPoint2);
-
-		// 		//create object
-		// 		WeightPoint temp = new WeightPoint(wallDistance, numberWalls, fillPoint2, hit.position);
-		// 		temp.navPosition[1] += 0.5f;
-		// 		//add to list
-		// 		weightedList.Add(temp);
-		// 	}
-
-		// 	//Add in percentage 
-		// 	if(row == 15)
-		// 	{
-		// 	fillPoint2[0] = -17.5f;
-		// 	fillPoint2[2] = fillPoint2[2]-1.0f;
-		// 	row = 0;
-
-		// 	}
-		// }
 		
 		//Set the beginning waypoint for the agent.
 		//nextRandomPosition ();
@@ -180,13 +152,14 @@ public class PatrolGuide : MonoBehaviour {
 			// 	//Lower level of influence map.
 			// 	Gizmos.color = Color.green;
 			// }
-
-			//Red value is visit time ratio
+			
+			//Red value is # of walls
 			float redValue;
-			if(displayVisited)
-				redValue = 1.0f - (Time.time - weightedList[k].visitTime)/Time.time;
+			if(displayNumWalls)
+				redValue = (weightedList[k].preyCaught)/(highestCaught);
 			else
 				redValue = 0.0f;
+
 
 			//Green value is # of walls
 			float greenValue;
@@ -202,8 +175,15 @@ public class PatrolGuide : MonoBehaviour {
 			else
 				blueValue = 0.0f;
 
+			//Opacity value is visit time ratio
+			float opacityValue;
+			if(displayVisited)
+				opacityValue = (Time.time - weightedList[k].visitTime)/Time.time;
+			else
+				opacityValue = 1.0f;
+
 			//Full color
-			Gizmos.color = new Color(redValue,greenValue,blueValue,gridOpacity);
+			Gizmos.color = new Color(redValue,greenValue,blueValue,gridOpacity * opacityValue);
 
 			fillPoints = weightedList[k].position;
 			fillPoints[1] += 0.05f;
@@ -260,7 +240,7 @@ public class PatrolGuide : MonoBehaviour {
 		{
 			Vector3 angle = new Vector3(Mathf.Sin(i * Mathf.Deg2Rad),0,Mathf.Cos(i * Mathf.Deg2Rad));
 
-			if(Physics.Raycast(testPoint, angle, 1.0f, obstacleMask))
+			if(Physics.Raycast(testPoint, angle, wallCountRadius, obstacleMask))
 			{
 				hitCount++;
 			}
@@ -293,6 +273,9 @@ public class PatrolGuide : MonoBehaviour {
 	public void nextHidePosition () 
 	{
 		//Filter reachable points
+		nextWaypoint = this.transform.position;
+		nextWaypoint[1] += 0.5f;
+
 		reachablePoints = weightedList.Where( x => (Vector3.Distance(nextWaypoint, x.position) < searchRadius)).ToList();
 
 		float bestWeight = nextWeight;
@@ -330,7 +313,7 @@ public class PatrolGuide : MonoBehaviour {
 		}
 		else
 		{
-			nextWaypoint = prevWaypoint;
+			prevWaypoint = nextWaypoint;
 		}
 	}
 
@@ -377,14 +360,6 @@ public class PatrolGuide : MonoBehaviour {
 			nextWaypoint[1] = reachablePoints[index].navPosition[1];
 			nextWaypoint[2] = reachablePoints[index].navPosition[2];
 
-
-
-			//wallDistRatio = (1.0f - ((reachablePoints[index].wallDist - shortestDist)/(longestDist - shortestDist)));
-			//timeRatio = (1.0f - ((Time.time - reachablePoints[index].visitTime)/(Time.time)));
-
-			//searchRadius = 5.0f + wallDistRatio * 5.0f;
-
-			//Debug.Log("Position: " + nextWaypoint + " Weight: " + bestWeight + "\nWall Distance: " + reachablePoints[index].wallDist + " Wall Ratio: " + wallDistRatio + "\nNumber of Walls: " + reachablePoints[index].numWalls + "\nVisit Time: " + reachablePoints[index].visitTime + " Visit Ratio: " + timeRatio);
 		}
 		else
 		{
@@ -398,6 +373,8 @@ public class PatrolGuide : MonoBehaviour {
 	public void nextFleePosition(Vector3 chaserPos)
 	{
 		//Filter reachable points
+		nextWaypoint = this.transform.position;
+		nextWaypoint[1] += 0.5f;
 		reachablePoints = weightedList.Where( x => (Vector3.Distance(nextWaypoint, x.position) < searchRadius)).ToList();
 
 		float bestWeight = nextWeight;
@@ -464,6 +441,7 @@ public class PatrolGuide : MonoBehaviour {
 
 	public void setVisited(Vector3 position)
 	{
+		List<WeightPoint> visitedPoints = new List<WeightPoint>();
 		visitedPoints = weightedList.Where( x => (Vector3.Distance(position, x.position) < visitedRadius)).ToList();
 
 		for(int i = 0; i < visitedPoints.Count; i++)
@@ -478,11 +456,56 @@ public class PatrolGuide : MonoBehaviour {
 		}
 	}
 
-	public void setSearchRadius(Vector3 position)
+	public void preySpotted(Vector3 position)
 	{
+		List<WeightPoint> spottedPoints = new List<WeightPoint>();
+		spottedPoints = weightedList.Where( x => (Vector3.Distance(position, x.position) < spottedRadius)).ToList();
+		
+		for(int i = 0; i < spottedPoints.Count; i++)
+		{
+			Vector3 dirToTarget = (spottedPoints[i].navPosition - position).normalized;
+			float dstToTarget = Vector3.Distance(position, spottedPoints[i].navPosition);
 
+			if(!Physics.Raycast(position,dirToTarget,dstToTarget,obstacleMask))
+			{
+				spottedPoints[i].preySpotted += 1.0f;
+			}
+		}
 	}
+	
+	public void predatorSpotted(Vector3 position)
+	{
+		List<WeightPoint> spottedPoints = new List<WeightPoint>();
+		spottedPoints = weightedList.Where( x => (Vector3.Distance(position, x.position) < spottedRadius)).ToList();
+		
+		for(int i = 0; i < spottedPoints.Count; i++)
+		{
+			Vector3 dirToTarget = (spottedPoints[i].navPosition - position).normalized;
+			float dstToTarget = Vector3.Distance(position, spottedPoints[i].navPosition);
 
+			if(!Physics.Raycast(position,dirToTarget,dstToTarget,obstacleMask))
+			{
+				spottedPoints[i].predatorSpotted += 1.0f;
+			}
+		}
+	}
+	
+	public void preyCaught(Vector3 position)
+	{
+		List<WeightPoint> spottedPoints = new List<WeightPoint>();
+		spottedPoints = weightedList.Where( x => (Vector3.Distance(position, x.position) < caughtRadius)).ToList();
+		
+		for(int i = 0; i < spottedPoints.Count; i++)
+		{
+			Vector3 dirToTarget = (spottedPoints[i].navPosition - position).normalized;
+			float dstToTarget = Vector3.Distance(position, spottedPoints[i].navPosition);
+
+			if(!Physics.Raycast(position,dirToTarget,dstToTarget,obstacleMask))
+			{
+				spottedPoints[i].preyCaught += 1.0f;
+			}
+		}
+	}
 	public List<WeightPoint> getInfluence()
 	{
 		return weightedList;
