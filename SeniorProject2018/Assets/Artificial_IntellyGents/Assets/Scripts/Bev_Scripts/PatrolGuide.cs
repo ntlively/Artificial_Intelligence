@@ -482,6 +482,11 @@ public class PatrolGuide : MonoBehaviour {
 	{
 
 	}
+
+	public List<WeightPoint> getInfluence()
+	{
+		return weightedList;
+	}
 	//Points the ai in a certain direction
 	
 	//Move the AI - Patrol

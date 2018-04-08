@@ -44,6 +44,8 @@ public class WeightPoint {
 	public float preyCaught;
 	public float predatorSpotted;
 
+	public bool active;
+
 	
 	
 	public WeightPoint ( float dist, int walls, Vector3 pos, Vector3 navPos)
