@@ -3,57 +3,32 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 //using UnityEngine.SceneManagement;
+/*
+	//Predator Timers
+	public float waitTimer = 5.0f; 
+	public float patrolTimer = 10.0f;
+	public float talkTimer = 5.0f; 
+	public float updateTimer = 5.0f; 
+*/
 
 namespace UnityStandardAssets.Characters.ThirdPerson{
 
 	public class bev_basicAI : MonoBehaviour {
 
-		public NavMeshAgent agent;
-		public ThirdPersonCharacter character;
+		//public NavMeshAgent agent;
+		//public ThirdPersonCharacter character;
 
-		public enum State{
-			PATROL,
-			CHASE,
-			SNEAK,
-			WAIT,
-			TALK,
+		public GameObject 					actor;
+		public UnityEngine.AI.NavMeshAgent 	agent;
+		public ThirdPersonCharacter 		character;
 
-		}
+		public DataManager 					manager;
+		public DirectorScript 				director;
+		public PatrolGuide 					patroller;
 
-		public State state; //current state.
-		public bool alive; //whether the AI lives.
-		
-		//Variable patrolling
-		private WayPointClass currentWaypoint;
-		PatrolGuide patroller;
-		public float patrolSpeed = 0.7f;
-
-		//Variables for Chasing
-		public float chaseSpeed = 2.5f;
-		public Transform target;
-
-		//Sound object
-		public DecibelTracker noise;
-
-		public float waitTimer = 5.0f; 
-		public float patrolTimer = 10.0f;
-		public float talkTimer = 5.0f; 
-		public float updateTimer = 5.0f; 
-
-		public static Stack<MemoryNode> memory = new Stack<MemoryNode>();
-
-		public Vision visionScript;
-		public Hearing hearingScript;
-		public GameObject predator;
-
-		//Communcation
-		public bool shout = false;
-		public bool predatorHeard = false;
-		public bool needUpdate = false;
-
-		public float sampleTime = 1.0f;
-		public float sampleTimer;
-
+		public Vision 						visionScript;
+		public Hearing 						hearingScript;
+		public Transform 					target;
 
 		// Variables for CHASE
 		public Vector3 chasePos;
@@ -62,12 +37,15 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 		public float predictionTime = 5.0f;
 		private float predictionTimer = 0.0f;
 
+		public float sampleTime = 1.0f;
+		public float sampleTimer;
+
 		//Global game counter
 		public bool preyCaught = true;
 
 		void Awake()
 		{
-			agent = GetComponent<NavMeshAgent>();
+			/*agent = GetComponent<NavMeshAgent>();
 			character = GetComponent<ThirdPersonCharacter>();
 
 			agent.updatePosition = true;
@@ -87,44 +65,63 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 			patroller.nextWaypoint = this.transform.position;
 			patroller.prevWaypoint = this.transform.position;
 
+			sampleTimer = 0.0f;* */
+
+			actor 			= this.gameObject;
+			agent 			= actor.GetComponent<UnityEngine.AI.NavMeshAgent>();
+			character 		= actor.GetComponent<ThirdPersonCharacter>();
+			manager 		= actor.GetComponent<DataManager>();
+			visionScript	= actor.GetComponent<Vision>();
+			hearingScript	= actor.GetComponent<Hearing>();
+			director		= actor.GetComponent<DirectorScript>();
+			patroller		= actor.GetComponent<PatrolGuide>();
+
+			patroller.nextWaypoint = this.transform.position;
+			patroller.prevWaypoint = this.transform.position;
+
 			sampleTimer = 0.0f;
 
 		}
 		// Use this for initialization
 		void Start ()
 		{
+			agent.updatePosition = true;
+			agent.updateRotation = false;
+
+			manager.state = DataManager.State.PATROL;
+			manager.alive = true;
+
+			Physics.IgnoreLayerCollision(0,9);
+
 			//Start FSM Finite state machine
 			StartCoroutine("FSM");
 		}
 
 		IEnumerator FSM()
 		{
-			while (alive)
+			while (manager.alive)
 			{
-				switch(state)
+				switch(manager.state)
 				{
-					case State.PATROL:
-						Patrol ();
+					case DataManager.State.PATROL:
+						Patrol();
 						break;
-					case State.CHASE:
+					case DataManager.State.CHASE:
 						Chase();
 						break;
-					case State.SNEAK:
+					case DataManager.State.SNEAK:
 						Sneak();
 						break;
-					case State.WAIT:
-						Wait();
-						break;
-					case State.TALK:
+					case DataManager.State.TALK:
 						Talk();
 						break;
 				}
 
 				//update talk timer
-				updateTimer = updateTimer-Time.deltaTime;
-				if(updateTimer <= 0)
+				manager.updateTimer = manager.updateTimer-Time.deltaTime;
+				if(manager.updateTimer <= 0)
 				{
- 					needUpdate = true;
+ 					manager.needUpdate = true;
 				}
 						
 
@@ -135,30 +132,28 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 		void Patrol()
 		{
 			//Have the character move to a random way point based on errors.
-			this.agent.speed = patrolSpeed;
-			this.sampleTimer += Time.deltaTime;
+			agent.speed = manager.patrolSpeed;
+			sampleTimer += Time.deltaTime;
 
-			if(Vector3.Distance(this.transform.position, this.patroller.nextWaypoint )>= 1.5 && this.sampleTimer < this.sampleTime)
+			if(Vector3.Distance(this.transform.position, patroller.nextWaypoint )>= 1.5 && sampleTimer < sampleTime)
 			{
-				this.agent.SetDestination(this.patroller.nextWaypoint);
-				this.character.Move(this.agent.desiredVelocity, false, false);
+				agent.SetDestination(patroller.nextWaypoint);
+				character.Move(agent.desiredVelocity, false, false);
 			}
 			//If the player is close to way point, set the next way point.
-			else if (Vector3.Distance(this.transform.position, patroller.nextWaypoint) <= 1.5 || this.sampleTimer >= this.sampleTime)
+			else if (Vector3.Distance(this.transform.position, patroller.nextWaypoint) <= 1.5 || sampleTimer >= sampleTime)
 			{
-				this.patroller.nextHuntPosition(); 
-				this.sampleTimer = 0.0f;
-				//Debug.Log("WAYPOINT:"+ patroller.nextWaypoint);
-				//agent.SetDestination(patroller.nextWaypoint);
+				patroller.nextHuntPosition();
+				sampleTimer = 0.0f;
 			}
 			//If there are no way points close by.
 			else
 			{
-				this.character.Move(Vector3.zero, false, false);
+				character.Move(Vector3.zero, false, false);
 			}
 
-			this.patroller.setVisited(this.transform.position);
-			
+			patroller.setVisited(this.transform.position);
+
 			visionFunction();
 			hearingFunction();
 
@@ -172,14 +167,15 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 
 		void Chase()
 		{
-			this.agent.speed = chaseSpeed;
+			agent.speed = manager.chaseSpeed;
 			visionFunction();
+			hearingFunction();
 
 			if(target != null)
 			{
 				chaseDir = new Vector3(target.rotation[0],target.rotation[1],target.rotation[2]).normalized;
 				//agent.SetDestination(target.position);
-				chasePos = this.target.position + predictionMod * chaseDir;
+				chasePos = target.position + predictionMod * chaseDir;
 
 				
 				NavMeshHit hit;
@@ -196,22 +192,13 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 				float dstToTarget = Vector3.Distance (transform.position, chasePos);
 				if(dstToTarget < 1.5f)
 				{
-					this.target.gameObject.GetComponent<basicPreyAI>().caught(this.transform.position);
-					state = State.PATROL;
-					//count prey caught
-					if(preyCaught)
-					{
-						preyCaught = false;
-						GameObject globalGame =  GameObject.Find("PredatorSpawn");
-						globalGame.GetComponent<GlobalGame>().preyCaughtUpdate();
-					}
-					
+					target.gameObject.GetComponent<basicPreyAI>().caught(this.transform.position);
+					patroller.preyCaught(target.transform.position);
 				}
 
 				if(!target.gameObject.GetComponent<DataManager>().alive)
 				{
-					preyCaught = true;
-					state = State.PATROL;
+					manager.state = DataManager.State.PATROL;
 				}
 			}
 			else
@@ -235,9 +222,13 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 				}
 				else if(predictionTimer >= predictionTime)
 				{
-					state = State.PATROL;
+					manager.state = DataManager.State.PATROL;
+					//Debug.Log("I LOST HIM");
+					predictionTimer = 0.0f;
 				}
 			}
+
+			patroller.setVisited(this.transform.position);
 		}
 
 		void Sneak()
@@ -255,25 +246,6 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 					//Continuing sneaking.
 		}
 
-		void Wait()
-		{
-			agent.SetDestination(this.transform.position);
-			character.Move(Vector3.zero, false, false);
-			waitTimer = waitTimer-Time.deltaTime;
-
-			character.transform.Rotate(Vector3.up * Time.deltaTime);
-			//State in which is trigger depending on
-			if(waitTimer <= 0.0)
-			{
-				waitTimer = 10.0f;
-				state = bev_basicAI.State.PATROL;
-				// Patroling Time
-				// Prey seen in area
-				// etc...
-			}
-
-		}
-
 		void Talk ()
 		{
 			//Trigger when one or more predators enter vision.
@@ -284,10 +256,10 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 			//Predators will exchange information using Blackboard
 	
 			//Move to predator until 2 blocks away. 
-			if(Vector3.Distance(this.transform.position, this.target.transform.position) > 2.0f && this.shout)
+			if(Vector3.Distance(this.transform.position, this.target.transform.position) > 2.0f && manager.shout)
 			{
 				Debug.Log("Moving Talk");
-				this.agent.speed = patrolSpeed;
+				this.agent.speed = manager.patrolSpeed;
 				this.character.Move(agent.desiredVelocity, false, false);
 				this.agent.SetDestination(target.transform.position);
 			}
@@ -297,23 +269,28 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 				this.character.Move(Vector3.zero, false, false);
 				this.agent.SetDestination(this.transform.position);
 				this.transform.LookAt(target);
-				if(shout)
+				if(manager.shout)
 				{
-					this.shout = false;
+					manager.shout = false;
 				}
 
-				this.updateTimer = 5.0f;
-				this.needUpdate = false;
-				this.talkTimer = this.talkTimer-Time.deltaTime;
-				if(this.talkTimer <= 0.0)
+
+				if(Vector3.Distance(this.transform.position, this.target.transform.position) <= 2.0f)
 				{
-					this.talkTimer = 5.0f;
-					this.state = bev_basicAI.State.PATROL;
-					//exchange information
-					GameObject globalGame =  GameObject.Find("PredatorSpawn");
-					globalGame.GetComponent<Blackboard>().updateInfluence(patroller.getInfluence(), target.GetComponent<PatrolGuide>().getInfluence());
-					this.target = null;
-				
+					
+					manager.talkTimer = manager.talkTimer-Time.deltaTime;
+					if(manager.talkTimer <= 0.0)
+					{
+						manager.updateTimer = 15.0f;
+						manager.needUpdate = false;
+						manager.talkTimer = 5.0f;
+						manager.state = DataManager.State.PATROL;
+						//exchange information
+						GameObject globalGame =  GameObject.Find("PredatorSpawn");
+						patroller.weightedList = globalGame.GetComponent<Blackboard>().updateInfluence(patroller.getInfluence(), target.GetComponent<PatrolGuide>().getInfluence());
+						this.target = null;
+					
+					}
 				}
 	
 				
@@ -330,28 +307,29 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 
 		void visionFunction()
 		{
-			if(visionScript.visibleTargets != null)
-			{
-					if (visionScript.visibleTargets.Count >0)
+			target = null;
+
+			if (visionScript.visibleTargets.Count >0)
 				{
 					foreach (Vision.VisionInfo visibleTarget in visionScript.visibleTargets) 
 					{
-						if(visibleTarget.target.CompareTag("Prey")){
-							//Debug.Log("WE GOT ONE");
-							this.target = visibleTarget.target;
-							this.state = bev_basicAI.State.CHASE;
+						if(visibleTarget.target.CompareTag("Player") || visibleTarget.target.CompareTag("Prey")){
+							target = visibleTarget.target;
+							manager.state = DataManager.State.THINK;
+							chasePos = target.position;
+							patroller.preySpotted(target.transform.position);
 						}
-
-						if(visibleTarget.target.CompareTag("Predator") && needUpdate)
+						else if(visibleTarget.target.gameObject.CompareTag("Predator") &&(visibleTarget.target.gameObject.GetComponent<DataManager>().shout||manager.needUpdate)){
+							target = visibleTarget.target;
+							manager.state = DataManager.State.TALK;
+							manager.shout = true;
+						}
+						else
 						{
-							Debug.Log("Vision");
-							this.target = visibleTarget.target;
-							this.state = bev_basicAI.State.TALK;
-							this.shout = true;
+							target = null;
 						}
 					}
 				}
-			}
 
 
 
@@ -361,27 +339,26 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 		void hearingFunction()
 		{
 
-			if(hearingScript.hearableTargets != null)
-			{
-				if (hearingScript.hearableTargets.Count >0)
+			target = null;
+
+			if (hearingScript.hearableTargets.Count >0)
 				{
 					foreach (Hearing.SoundInfo hearableTarget in hearingScript.hearableTargets) 
 					{
-						if(hearableTarget.target.CompareTag("Prey")){
-							//Debug.Log("WE GOT ONE");
-							this.target = hearableTarget.target;
-							this.state = bev_basicAI.State.CHASE;
+						if(hearableTarget.target.CompareTag("Player") || hearableTarget.target.CompareTag("Prey")){
+							target = hearableTarget.target;
+							manager.state = DataManager.State.THINK;
+							chasePos = target.position;
 						}
 
-						if(hearableTarget.target.CompareTag("Predator") && hearableTarget.target.GetComponent<bev_basicAI>().shout){
-							Debug.Log("Hearing");
-							this.target = hearableTarget.target;
-							this.state = bev_basicAI.State.TALK;
+						if(hearableTarget.target.gameObject.CompareTag("Predator") && (hearableTarget.target.gameObject.GetComponent<DataManager>().shout||manager.needUpdate)){
+
+							target = hearableTarget.target;
+							manager.state = DataManager.State.TALK;
+							manager.shout = true;
 						}
 					}
 				}
-			}
-
 		}
 		
 	}

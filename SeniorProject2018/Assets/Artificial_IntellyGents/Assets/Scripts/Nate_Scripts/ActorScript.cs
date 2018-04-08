@@ -94,6 +94,14 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 						Think();
 						break;
 				}
+
+				//update talk timer
+				manager.updateTimer = manager.updateTimer-Time.deltaTime;
+				if(manager.updateTimer <= 0)
+				{
+ 					manager.needUpdate = true;
+				}
+						
 				yield return null;
 			}
 		}
@@ -225,15 +233,55 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		// use bev's finite state talk function
 		void Talk()
 		{
-			Debug.Log("Now Talking...");
+			/*Debug.Log("Now Talking...");
 			agent.speed = manager.patrolSpeed;
 			agent.SetDestination(target.position);
-			character.Move(agent.desiredVelocity,false,false);
+			character.Move(agent.desiredVelocity,false,false);*/
 
-			if(visionScript.visibleTargets.Count>0)
+			if(Vector3.Distance(this.transform.position, this.target.transform.position) > 2.0f && manager.shout)
+			{
+				Debug.Log("Moving Talk");
+				this.agent.speed = manager.patrolSpeed;
+				this.character.Move(agent.desiredVelocity, false, false);
+				this.agent.SetDestination(target.transform.position);
+			}
+			else
+			{
+				Debug.Log("Data Exchange");
+				this.character.Move(Vector3.zero, false, false);
+				this.agent.SetDestination(this.transform.position);
+				this.transform.LookAt(target);
+				if(manager.shout)
+				{
+					manager.shout = false;
+				}
+
+				
+				if(Vector3.Distance(this.transform.position, this.target.transform.position) <= 2.0f)
+				{
+					
+					manager.talkTimer = manager.talkTimer-Time.deltaTime;
+					if(manager.talkTimer <= 0.0)
+					{
+						manager.updateTimer = 15.0f;
+						manager.needUpdate = false;
+						manager.talkTimer = 5.0f;
+						manager.state = DataManager.State.PATROL;
+						//exchange information
+						GameObject globalGame =  GameObject.Find("PredatorSpawn");
+						patroller.weightedList = globalGame.GetComponent<Blackboard>().updateInfluence(patroller.getInfluence(), target.GetComponent<PatrolGuide>().getInfluence());
+						this.target = null;
+					
+					}
+				}
+	
+				
+			}
+
+			/*if(visionScript.visibleTargets.Count>0)
 			{
 				manager.state = DataManager.State.PATROL;
-			}
+			}*/
 		}
 		
 		void Think()
