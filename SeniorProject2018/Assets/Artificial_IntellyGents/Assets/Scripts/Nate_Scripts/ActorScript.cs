@@ -232,6 +232,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				{
 					target.gameObject.GetComponent<basicPreyAI>().caught(this.transform.position);
 					patroller.preyCaught(target.transform.position);
+					manager.globalGame.GetComponent<GlobalGame>().preyCaughtUpdate();
 				}
 
 				if(!target.gameObject.GetComponent<DataManager>().alive)
@@ -274,7 +275,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		// use bev's finite state talk function
 		void Talk()
 		{
-			Debug.Log("Now Talking...");
+			/*Debug.Log("Now Talking...");
 			agent.speed = manager.patrolSpeed;
 			agent.SetDestination(target.position);
 			character.Move(agent.desiredVelocity,false,false);
@@ -283,7 +284,59 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			if(visionScript.visibleTargets.Count>0)
 			{
 				manager.state = DataManager.State.PATROL;
+			}*/
+
+			//visionFunction();
+			//hearingFunction();
+			if(this.target != null)
+			{
+				if(Vector3.Distance(this.transform.position, this.target.transform.position) > 2.0f && manager.shout)
+				{
+					Debug.Log("Moving Talk");
+					this.agent.speed = manager.patrolSpeed;
+					this.character.Move(agent.desiredVelocity, false, false);
+					this.agent.SetDestination(target.transform.position);
+				}
+				else
+				{
+					Debug.Log("Data Exchange");
+					this.character.Move(Vector3.zero, false, false);
+					this.agent.SetDestination(this.transform.position);
+					this.transform.LookAt(target);
+
+					if(Vector3.Distance(this.transform.position, this.target.transform.position) <= 2.0f)
+					{
+						/*if(manager.shout)
+						{
+							manager.shout = false;
+						}*/
+						manager.talkTimer = manager.talkTimer-Time.deltaTime;
+						if(manager.talkTimer <= 0.0)
+						{
+							manager.updateTimer = 30.0f;
+							manager.needUpdate = false;
+							manager.talkTimer = 2.0f;
+							manager.shout = false;
+							manager.state = DataManager.State.THINK;
+							//exchange information
+							//patroller.weightedList = manager.globalGame.GetComponent<Blackboard>().updateInfluence(patroller.getInfluence(), target.GetComponent<PatrolGuide>().getInfluence());
+							this.target = null;
+						
+						}
+					}
+					
+				}
 			}
+			else
+			{
+				manager.updateTimer = 30.0f;
+				manager.needUpdate = false;
+				manager.talkTimer = 5.0f;
+				manager.shout = false;
+				manager.state = DataManager.State.THINK;
+			}
+
+
 		}
 		
 		void Think()
@@ -298,11 +351,11 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				agent.SetDestination(chasePos);
 				character.Move(agent.desiredVelocity,false,false);
 			}
-			else if(manager.prevState == DataManager.State.PATROL)
+			/*else if(manager.prevState == DataManager.State.PATROL)
 			{
 				agent.SetDestination(patroller.nextWaypoint);
 				character.Move(agent.desiredVelocity, false, false);
-			}
+			}*/
 
 
 			if(manager.netTracking.Count == 0)
@@ -331,7 +384,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 							chasePos = target.position;
 							patroller.preySpotted(target.transform.position);
 						}
-						else if(visibleTarget.target.gameObject.CompareTag("Predator") &&(visibleTarget.target.gameObject.GetComponent<DataManager>().shout||manager.needUpdate)){
+						else if(visibleTarget.target.gameObject.CompareTag("Predator") 
+						&&(manager.needUpdate) && (manager.state != DataManager.State.CHASE ||visibleTarget.target.gameObject.GetComponent<DataManager>().state != DataManager.State.TALK)){
 							target = visibleTarget.target;
 							manager.state = DataManager.State.TALK;
 							manager.shout = true;
@@ -361,7 +415,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 							chasePos = target.position;
 						}
 
-						if(hearableTarget.target.gameObject.CompareTag("Predator") && (hearableTarget.target.gameObject.GetComponent<DataManager>().shout||manager.needUpdate)){
+						if(hearableTarget.target.gameObject.CompareTag("Predator") && (hearableTarget.target.gameObject.GetComponent<DataManager>().shout)
+						&& (manager.state != DataManager.State.CHASE || hearableTarget.target.gameObject.GetComponent<DataManager>().state != DataManager.State.TALK)){
 
 							target = hearableTarget.target;
 							manager.state = DataManager.State.TALK;

@@ -160,6 +160,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				else if(fleeTimer >= fleeTime)
 				{
 					manager.state = DataManager.State.SEARCH;
+					manager.globalGame.GetComponent<GlobalGame>().preyCaughtUpdate();
 					//Debug.Log("I HIDE NOW");
 					fleeTimer = 0.0f;
 				}
