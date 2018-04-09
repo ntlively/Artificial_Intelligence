@@ -384,14 +384,14 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 							chasePos = target.position;
 							patroller.preySpotted(target.transform.position);
 						}
-						else if(visibleTarget.target.gameObject.CompareTag("Predator") 
+						/*else if(visibleTarget.target.gameObject.CompareTag("Predator") 
 						&&(manager.needUpdate) && (manager.state != DataManager.State.CHASE ||visibleTarget.target.gameObject.GetComponent<DataManager>().state != DataManager.State.TALK)){
 							target = visibleTarget.target;
 							manager.state = DataManager.State.TALK;
 							manager.shout = true;
 							visionFudge = 1000.0f;
 							hearingFudge = 0.0f;
-						}
+						}*/
 						else
 						{
 							target = null;
@@ -415,14 +415,14 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 							chasePos = target.position;
 						}
 
-						if(hearableTarget.target.gameObject.CompareTag("Predator") && (hearableTarget.target.gameObject.GetComponent<DataManager>().shout)
+						/*if(hearableTarget.target.gameObject.CompareTag("Predator") && (hearableTarget.target.gameObject.GetComponent<DataManager>().shout)
 						&& (manager.state != DataManager.State.CHASE || hearableTarget.target.gameObject.GetComponent<DataManager>().state != DataManager.State.TALK)){
 
 							target = hearableTarget.target;
 							manager.state = DataManager.State.TALK;
 							manager.shout = true;
 							hearingFudge = 1000.0f;
-						}
+						}*/
 					}
 				}
 		}

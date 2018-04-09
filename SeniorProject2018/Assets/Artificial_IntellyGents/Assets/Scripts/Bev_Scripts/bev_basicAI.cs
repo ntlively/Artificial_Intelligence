@@ -317,7 +317,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 							chasePos = target.position;
 							patroller.preySpotted(target.transform.position);
 						}
-						else if(visibleTarget.target.gameObject.CompareTag("Predator") &&(manager.needUpdate) 
+						else if( (visibleTarget.target.gameObject.name == "FMS_Pred (1)" || visibleTarget.target.gameObject.name == "FMS_Pred")
+								 &&(manager.needUpdate) 
 								 && (manager.state != DataManager.State.CHASE ||visibleTarget.target.gameObject.GetComponent<DataManager>().state != DataManager.State.TALK)){
 							target = visibleTarget.target;
 							manager.state = DataManager.State.TALK;
@@ -346,7 +347,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 							chasePos = target.position;
 						}
 
-						if(hearableTarget.target.gameObject.CompareTag("Predator") && (hearableTarget.target.gameObject.GetComponent<DataManager>().shout) 
+						if( (hearableTarget.target.gameObject.name == "FMS_Pred (1)" || hearableTarget.target.gameObject.name == "FMS_Pred" )
+						&& (hearableTarget.target.gameObject.GetComponent<DataManager>().shout) 
 						&& (manager.state != DataManager.State.CHASE || hearableTarget.target.gameObject.GetComponent<DataManager>().state != DataManager.State.TALK)){
 
 							target = hearableTarget.target;

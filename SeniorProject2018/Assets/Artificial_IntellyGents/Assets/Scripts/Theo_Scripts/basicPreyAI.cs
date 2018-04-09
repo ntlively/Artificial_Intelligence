@@ -160,7 +160,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				else if(fleeTimer >= fleeTime)
 				{
 					manager.state = DataManager.State.SEARCH;
-					manager.globalGame.GetComponent<GlobalGame>().preyCaughtUpdate();
+					manager.globalGame.GetComponent<GlobalGame>().predatorEvadedUpdate();
 					//Debug.Log("I HIDE NOW");
 					fleeTimer = 0.0f;
 				}
@@ -298,6 +298,31 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			// this.hearingScript.enabled = false;
 			// this.visionScript.enabled = false;
 			manager.state = DataManager.State.DEAD;
+		}
+
+		public void reset()
+		{
+			//sn.preyCaught(this.transform.position);
+			//Vector3 hitDirection = (this.transform.position - catcherPos).normalized;
+			manager.alive = true;
+			this.transform.GetChild(0).gameObject.SetActive(true);
+			this.transform.GetChild(1).gameObject.SetActive(true);
+			this.transform.GetChild(2).gameObject.SetActive(true);
+			this.transform.GetChild(3).gameObject.SetActive(true);
+			this.transform.GetChild(4).gameObject.SetActive(true);
+			this.transform.GetChild(5).gameObject.SetActive(false);
+			//this.transform.GetChild(5).GetComponent<Rigidbody>().AddForce(hitDirection,ForceMode.Impulse);
+			this.transform.GetChild(5).tag = "Prey";
+			//this.transform.tag = "Dead";
+			//this.GetComponent<Rigidbody>().isKinematic = true;
+			//agent.SetDestination(this.transform.position);
+			agent.updatePosition = true;
+			this.GetComponent<Rigidbody>().constraints =RigidbodyConstraints.None;
+			this.transform.GetChild(5).gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+			agent.enabled = true;
+			// this.hearingScript.enabled = false;
+			// this.visionScript.enabled = false;
+			manager.state = DataManager.State.HIDE;
 		}
 
 		public bool isAlive()

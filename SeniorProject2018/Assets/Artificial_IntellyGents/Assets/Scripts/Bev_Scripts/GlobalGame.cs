@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using UnityEngine.AI;
 
 public class GlobalGame : MonoBehaviour {
 
@@ -21,6 +22,9 @@ public class GlobalGame : MonoBehaviour {
 	public string minutes;
 	public string seconds;
 	public Text timer;
+	public Text countDown;
+	public GameObject panel;
+	public GameObject panelText;
 
 	//Tracking game info
 	GameObject[] respawnPoints;
@@ -68,6 +72,14 @@ public class GlobalGame : MonoBehaviour {
 		predatorEvaded = 0;
 		predatorEvadedDisplay = canvas.transform.Find("Text (2)").GetComponent<Text>();
 
+		countDown = canvas.transform.Find("Text (3)").GetComponent<Text>();
+
+		//Hide loading 
+		panel = GameObject.Find("Panel");
+		panelText = GameObject.Find("Text (3)");
+		panel.SetActive(false);
+		panelText.SetActive(false);
+
 	}
 	
 	// Update is called once per frame
@@ -88,8 +100,12 @@ public class GlobalGame : MonoBehaviour {
 
 			if(currentTime < 0 || preyTracker == 0)
 			{
+				panel.SetActive(true);
+				panelText.SetActive(true);
 				Debug.Log("Round End");
-				reset();
+				currentRound++;
+				startRound = false;
+
 
 				//Save all game data for 
 				//GameOver();
@@ -99,10 +115,16 @@ public class GlobalGame : MonoBehaviour {
 		{
 			Debug.Log("Timer");
 			resetTimer = resetTimer-Time.deltaTime;
+			countDown.text = "Next Round In \n" + resetTimer;
+
 			if(resetTimer <= 0.0)
 			{
+				reset();
+				panel.SetActive(false);
+				panelText.SetActive(false);
 				resetTimer = 5.0f;
-				startRound = false;
+				startRound = true;
+
 			}
 		}
 	}
@@ -121,9 +143,9 @@ public class GlobalGame : MonoBehaviour {
 	//Reset Objects
 	public void reset()
 	{
-		startRound = false;
 		currentTime = maxTime;
-		currentRound++;
+		preyCaught = 0;
+		predatorEvaded = 0;
 		resetObjects();
 
 	}
@@ -135,7 +157,20 @@ public class GlobalGame : MonoBehaviour {
 		{
 			waypointIndex =  UnityEngine.Random.Range(0, respawnPoints.Length);
 			predList[i].transform.position = respawnPoints[waypointIndex].transform.position;
+			preyList[i].GetComponent<DataManager>().reset();
 		}
+
+		//Prey reset
+		waypointIndex =  UnityEngine.Random.Range(0, respawnPoints.Length);
+		for( int i = 0; i <preyList.Length; i++)
+		{
+			//make sure everyhting is reset
+			
+			waypointIndex =  UnityEngine.Random.Range(0, respawnPoints.Length);
+			preyList[i].transform.position = respawnPoints[waypointIndex].transform.position;
+			preyList[i].gameObject.GetComponent<UnityStandardAssets.Characters.ThirdPerson.basicPreyAI>().reset();
+		}
+
 
 	}
 

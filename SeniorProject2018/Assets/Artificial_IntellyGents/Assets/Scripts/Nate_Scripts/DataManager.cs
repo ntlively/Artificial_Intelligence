@@ -66,4 +66,9 @@ public class DataManager : MonoBehaviour {
 		globalGame = globalGame = GameObject.Find("Spawner");
 
 	}
+
+	public void reset()
+	{
+		state = State.PATROL;
+	}
 }
