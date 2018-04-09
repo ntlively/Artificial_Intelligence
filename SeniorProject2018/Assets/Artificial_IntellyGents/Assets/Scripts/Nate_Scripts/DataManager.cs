@@ -22,6 +22,8 @@ public class DataManager : MonoBehaviour {
 	public float patrolTimer = 10.0f;
 	public float talkTimer = 5.0f; 
 	public float updateTimer = 5.0f; 
+
+	public GameObject globalGame;
 	
 	// States
 	public State state = DataManager.State.WAIT;
@@ -61,5 +63,7 @@ public class DataManager : MonoBehaviour {
 		//state = DataManager.State.WAIT;
 		rewardTracking = new Stack<RewardTrackingInfo>();
 		netTracking = new  Stack<List<double>>();
+
+		globalGame = GameObject.Find("PredatorSpawn");
 	}
 }

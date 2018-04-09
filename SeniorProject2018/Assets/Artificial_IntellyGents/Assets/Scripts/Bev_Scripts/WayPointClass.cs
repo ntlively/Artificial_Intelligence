@@ -42,30 +42,13 @@ public class WayPointClass : MonoBehaviour {
 	//Displays waypoints
 	public virtual void OnDrawGizmos () 
 	{
-		if(this.tag == "Waypoint")
-		{
-			//Visited by the predator
-			if(visited == true)
-			{
-				Gizmos.color = Color.red;
-			}
-			else 
-			{
-				Gizmos.color = Color.yellow;
-			}
-		}
-		else if (this.tag == "Finish")
+		
+		if (this.tag == "Respawn")
 		{
 			Gizmos.color = Color.blue;
 		}
 
 		Gizmos.DrawWireSphere(transform.position,debugDrawRadius);
-
-		if(preyEvidence)
-		{
-			Gizmos.color = Color.green;
-			Gizmos.DrawWireSphere(transform.position,1.0f);
-		}
 	}
 
 // -----------------------------------------------------------------------------------------

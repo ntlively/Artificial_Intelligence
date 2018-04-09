@@ -28,7 +28,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		public Vector3 chasePos;
 		public Vector3 chaseDir;
 		public float predictionMod = 1.0f;
-		public float predictionTime = 5.0f;
+		public float predictionTime = 0.0f;
 		private float predictionTimer = 0.0f;
 
 		public float visionFudge = 0.0f;
@@ -165,6 +165,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				{
 					target.gameObject.GetComponent<basicPreyAI>().caught(this.transform.position);
 					patroller.preyCaught(target.transform.position);
+					manager.globalGame.GetComponent<GlobalGame>().preyCaughtUpdate();
 				}
 
 				if(!target.gameObject.GetComponent<DataManager>().alive)
@@ -174,7 +175,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			}
 			else
 			{
-				predictionTimer += Time.deltaTime;
+				manager.state = DataManager.State.THINK;
+				/*predictionTimer += Time.deltaTime;
 
 				agent.SetDestination(chasePos);
 				character.Move(agent.desiredVelocity,false,false);
@@ -196,7 +198,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 					manager.state = DataManager.State.THINK;
 					//Debug.Log("I LOST HIM");
 					predictionTimer = 0.0f;
-				}
+				}*/
 			}
 
 			patroller.setVisited(this.transform.position);
@@ -238,45 +240,58 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			agent.SetDestination(target.position);
 			character.Move(agent.desiredVelocity,false,false);*/
 
-			if(Vector3.Distance(this.transform.position, this.target.transform.position) > 2.0f && manager.shout)
+			//Move to predator until 2 blocks away. 
+			visionFunction();
+			hearingFunction();
+			if(this.target != null)
 			{
-				Debug.Log("Moving Talk");
-				this.agent.speed = manager.patrolSpeed;
-				this.character.Move(agent.desiredVelocity, false, false);
-				this.agent.SetDestination(target.transform.position);
+				if(Vector3.Distance(this.transform.position, this.target.transform.position) > 2.0f && manager.shout)
+				{
+					Debug.Log("Moving Talk");
+					this.agent.speed = manager.patrolSpeed;
+					this.character.Move(agent.desiredVelocity, false, false);
+					this.agent.SetDestination(target.transform.position);
+				}
+				else
+				{
+					Debug.Log("Data Exchange");
+					this.character.Move(Vector3.zero, false, false);
+					this.agent.SetDestination(this.transform.position);
+					this.transform.LookAt(target);
+				
+					if(Vector3.Distance(this.transform.position, this.target.transform.position) <= 2.0f)
+					{
+						/*if(manager.shout)
+						{
+							manager.shout = false;
+						}*/
+						
+						manager.talkTimer = manager.talkTimer-Time.deltaTime;
+						if(manager.talkTimer <= 0.0)
+						{
+							manager.updateTimer = 30.0f;
+							manager.needUpdate = false;
+							manager.talkTimer = 5.0f;
+							manager.state = DataManager.State.PATROL;
+							manager.shout = false;
+							//exchange information
+							//patroller.weightedList = manager.globalGame.GetComponent<Blackboard>().updateInfluence(patroller.getInfluence(), target.GetComponent<PatrolGuide>().getInfluence());
+							this.target = null;
+						
+						}
+					}
+					
+				}
 			}
 			else
 			{
-				Debug.Log("Data Exchange");
-				this.character.Move(Vector3.zero, false, false);
-				this.agent.SetDestination(this.transform.position);
-				this.transform.LookAt(target);
-				if(manager.shout)
-				{
-					manager.shout = false;
-				}
-
-				
-				if(Vector3.Distance(this.transform.position, this.target.transform.position) <= 2.0f)
-				{
-					
-					manager.talkTimer = manager.talkTimer-Time.deltaTime;
-					if(manager.talkTimer <= 0.0)
-					{
-						manager.updateTimer = 15.0f;
-						manager.needUpdate = false;
-						manager.talkTimer = 5.0f;
-						manager.state = DataManager.State.PATROL;
-						//exchange information
-						GameObject globalGame =  GameObject.Find("PredatorSpawn");
-						patroller.weightedList = globalGame.GetComponent<Blackboard>().updateInfluence(patroller.getInfluence(), target.GetComponent<PatrolGuide>().getInfluence());
-						this.target = null;
-					
-					}
-				}
-	
-				
+				manager.updateTimer = 30.0f;
+				manager.needUpdate = false;
+				manager.talkTimer = 5.0f;
+				manager.shout = false;
+				manager.state = DataManager.State.PATROL;
 			}
+
 
 			/*if(visionScript.visibleTargets.Count>0)
 			{
@@ -299,7 +314,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		// neural net state changes
 		void visionFunction()
 		{
-			target = null;
+			//target = null;
 
 			if (visionScript.visibleTargets.Count >0)
 				{
@@ -311,16 +326,12 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 							chasePos = target.position;
 							patroller.preySpotted(target.transform.position);
 						}
-						else if(visibleTarget.target.gameObject.CompareTag("Predator") &&(visibleTarget.target.gameObject.GetComponent<DataManager>().shout||manager.needUpdate)){
+						else if(visibleTarget.target.gameObject.CompareTag("Predator") &&(visibleTarget.target.gameObject.GetComponent<DataManager>().shout||manager.needUpdate) && manager.state != DataManager.State.CHASE){
 							target = visibleTarget.target;
 							manager.state = DataManager.State.TALK;
 							manager.shout = true;
 							visionFudge = 1000.0f;
 							hearingFudge = 0.0f;
-						}
-						else
-						{
-							target = null;
 						}
 					}
 				}
@@ -328,7 +339,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		// neural net state changes
 		void hearingFunction()
 		{
-			target = null;
+			//target = null;
 
 			if (hearingScript.hearableTargets.Count >0)
 				{
@@ -340,7 +351,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 							chasePos = target.position;
 						}
 
-						if(hearableTarget.target.gameObject.CompareTag("Predator") && (hearableTarget.target.gameObject.GetComponent<DataManager>().shout||manager.needUpdate)){
+						else if(hearableTarget.target.gameObject.CompareTag("Predator") && (hearableTarget.target.gameObject.GetComponent<DataManager>().shout||manager.needUpdate) && manager.state != DataManager.State.CHASE){
 
 							target = hearableTarget.target;
 							manager.state = DataManager.State.TALK;

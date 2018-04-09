@@ -131,7 +131,7 @@ public class PatrolGuide : MonoBehaviour {
 		
 	}
 
-	public virtual void OnDrawGizmos () 
+	public virtual void  OnDrawGizmosSelected () 
 	{
 
 		Vector3 fillPoints = new Vector3 (-21.0f, 1.0f, 20.0f);
@@ -253,7 +253,7 @@ public class PatrolGuide : MonoBehaviour {
 	public void nextRandomPosition () 
 	{
 		//Filter reachable points
-		reachablePoints = weightedList.Where( x => (Vector3.Distance(nextWaypoint, x.position) < searchRadius)).ToList();
+		reachablePoints = weightedList.Where( x => (Vector3.Distance(nextWaypoint, x.position) < 10.0f) && (Vector3.Distance(nextWaypoint, x.position) > 5.0f)).ToList();
 
      //(Vector3.Distance(nextWaypoint, point.position) > 10 && Vector3.Distance(nextWaypoint, point.position) < 13)
 
