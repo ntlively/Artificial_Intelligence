@@ -28,7 +28,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		public Vector3 chasePos;
 		public Vector3 chaseDir;
 		public float predictionMod = 1.0f;
-		public float predictionTime = 5.0f;
+		public float predictionTime = 0.0f;
 		public float sneakPredictionTime = 1.0f;
 		private float predictionTimer = 0.0f;
 
@@ -104,7 +104,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			//Have the character move to a random way point based on errors.
 			agent.speed = manager.patrolSpeed;
 			sampleTimer += Time.deltaTime;
-			manager.prevState = DataManager.State.PATROL;
+			//manager.prevState = DataManager.State.PATROL;
 
 			if(Vector3.Distance(this.transform.position, patroller.nextWaypoint )>= 1.5 && sampleTimer < sampleTime)
 			{
@@ -170,29 +170,30 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			}
 			else
 			{
-				predictionTimer += Time.deltaTime;
+				manager.state = DataManager.State.THINK;
+				// predictionTimer += Time.deltaTime;
 
-				agent.SetDestination(chasePos);
-				character.Move(agent.desiredVelocity,false,false);
+				// agent.SetDestination(chasePos);
+				// character.Move(agent.desiredVelocity,false,false);
 
-				if(predictionTimer < predictionTime && Vector3.Distance(this.transform.position,chasePos) <= 1.5f)
-				{
-					chasePos = chasePos + predictionMod * chaseDir;
+				// if(predictionTimer < predictionTime && Vector3.Distance(this.transform.position,chasePos) <= 1.5f)
+				// {
+				// 	chasePos = chasePos + predictionMod * chaseDir;
 					
-					NavMeshHit hit;
-					//check if point is on navmesh
-					if(NavMesh.SamplePosition(chasePos, out hit, predictionMod, NavMesh.AllAreas))
-					{
-						chasePos = hit.position;
-						chasePos[1] += 0.5f;
-					}
-				}
-				else if(predictionTimer >= predictionTime)
-				{
-					manager.state = DataManager.State.THINK;
-					//Debug.Log("I LOST HIM");
-					predictionTimer = 0.0f;
-				}
+				// 	NavMeshHit hit;
+				// 	//check if point is on navmesh
+				// 	if(NavMesh.SamplePosition(chasePos, out hit, predictionMod, NavMesh.AllAreas))
+				// 	{
+				// 		chasePos = hit.position;
+				// 		chasePos[1] += 0.5f;
+				// 	}
+				// }
+				// else if(predictionTimer >= predictionTime)
+				// {
+				// 	manager.state = DataManager.State.THINK;
+				// 	Debug.Log("I LOST HIM");
+				// 	predictionTimer = 0.0f;
+				// }
 			}
 
 			patroller.setVisited(this.transform.position);
@@ -237,10 +238,6 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				{
 					manager.state = DataManager.State.THINK;
 				}
-			}
-			else if(target.gameObject.GetComponent<DataManager>().state == DataManager.State.FLEE)
-			{
-				manager.state = DataManager.State.CHASE;
 			}
 			else
 			{
@@ -291,21 +288,21 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		
 		void Think()
 		{
-			// if(manager.prevState == DataManager.State.SNEAK)
-			// {
-			// 	agent.SetDestination(chasePos);
-			// 	character.Move(agent.desiredVelocity,true,false);
-			// }
-			// else if(manager.prevState == DataManager.State.CHASE)
-			// {
-			// 	agent.SetDestination(chasePos);
-			// 	character.Move(agent.desiredVelocity,false,false);
-			// }
-			// else if(manager.prevState == DataManager.State.PATROL)
-			// {
-			// 	agent.SetDestination(patroller.nextWaypoint);
-			// 	character.Move(agent.desiredVelocity, false, false);
-			// }
+			if(manager.prevState == DataManager.State.SNEAK)
+			{
+				agent.SetDestination(chasePos);
+				character.Move(agent.desiredVelocity,true,false);
+			}
+			else if(manager.prevState == DataManager.State.CHASE)
+			{
+				agent.SetDestination(chasePos);
+				character.Move(agent.desiredVelocity,false,false);
+			}
+			else if(manager.prevState == DataManager.State.PATROL)
+			{
+				agent.SetDestination(patroller.nextWaypoint);
+				character.Move(agent.desiredVelocity, false, false);
+			}
 
 
 			if(manager.netTracking.Count == 0)

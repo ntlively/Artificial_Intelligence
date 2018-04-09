@@ -55,7 +55,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			for(int i=0;i<100;i++)
 			{
 				ins.Clear();
-				double soundTemp = 10 + ((double)i)/10.0;
+				double soundTemp = 1.0 + ((double)i)/10.0;
 				ins.Add((double)0.0);
 				ins.Add(soundTemp);
 
