@@ -201,13 +201,14 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		// keep this version
 		void Sneak()
 		{
+			
 			agent.speed = manager.sneakSpeed;
 			manager.prevState = DataManager.State.SNEAK;
 
 			visionFunction(false);
 			hearingFunction(false);
 
-			if(target != null)
+			if(target != null && target.gameObject.GetComponent<DataManager>().state != DataManager.State.FLEE)
 			{
 				chaseDir = new Vector3(target.rotation[0],target.rotation[1],target.rotation[2]).normalized;
 				//agent.SetDestination(target.position);
@@ -236,6 +237,10 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				{
 					manager.state = DataManager.State.THINK;
 				}
+			}
+			else if(target.gameObject.GetComponent<DataManager>().state == DataManager.State.FLEE)
+			{
+				manager.state = DataManager.State.CHASE;
 			}
 			else
 			{
