@@ -25,12 +25,13 @@ public class GlobalGame : MonoBehaviour {
 	public Text countDown;
 	public GameObject panel;
 	public GameObject panelText;
+	public bool gameStart = false;
 
 	//Tracking game info
 	GameObject[] respawnPoints;
 	GameObject[] predList;
 	GameObject[] preyList;
-	public float resetTimer = 5.0f; 
+	public float resetTimer = 6.0f; 
 	public int preyCount;
 	public int preyTracker;
 
@@ -41,12 +42,13 @@ public class GlobalGame : MonoBehaviour {
 	//prey
 	public int predatorEvaded;
 	public Text predatorEvadedDisplay;
+	public Button startButton;
 
 
 	// Use this for initialization
 	void Start () 
 	{
-		startRound = true;
+		startRound = false;
 		currentTime = maxTime;
 		currentRound = 1;
 		minutes =  Mathf.Floor(currentTime / 60).ToString("00");
@@ -77,14 +79,35 @@ public class GlobalGame : MonoBehaviour {
 		//Hide loading 
 		panel = GameObject.Find("Panel");
 		panelText = GameObject.Find("Text (3)");
-		panel.SetActive(false);
 		panelText.SetActive(false);
 
+		Button btn = startButton.GetComponent<Button>();
+        btn.onClick.AddListener(TaskOnClick);
+
+		 //startObjects(false);
+
+
+	}
+
+		
+	void TaskOnClick()
+	{
+		Debug.Log("StarGame");
+		gameStart = true;
+		GameObject.Find("Button").SetActive(false);
+		
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
+		if(gameStart)
+		{
+			startObjects(true);
+			panel.SetActive(false);
+			startRound  = true;
+			gameStart  = false;
+		}
 		if(startRound)
 		{
 			//Timing info
@@ -115,14 +138,15 @@ public class GlobalGame : MonoBehaviour {
 		{
 			Debug.Log("Timer");
 			resetTimer = resetTimer-Time.deltaTime;
-			countDown.text = "Next Round In \n" + resetTimer;
+			seconds = Mathf.Floor(resetTimer % 60).ToString("00");
+			countDown.text = "Next Round \n" + seconds;
 
 			if(resetTimer <= 0.0)
 			{
 				reset();
 				panel.SetActive(false);
 				panelText.SetActive(false);
-				resetTimer = 5.0f;
+				resetTimer = 6.0f;
 				startRound = true;
 
 			}
@@ -157,7 +181,7 @@ public class GlobalGame : MonoBehaviour {
 		{
 			waypointIndex =  UnityEngine.Random.Range(0, respawnPoints.Length);
 			predList[i].transform.position = respawnPoints[waypointIndex].transform.position;
-			preyList[i].GetComponent<DataManager>().reset();
+			predList[i].GetComponent<DataManager>().reset();
 		}
 
 		//Prey reset
@@ -165,13 +189,48 @@ public class GlobalGame : MonoBehaviour {
 		for( int i = 0; i <preyList.Length; i++)
 		{
 			//make sure everyhting is reset
-			
+			Debug.Log(preyList.Length);
 			waypointIndex =  UnityEngine.Random.Range(0, respawnPoints.Length);
 			preyList[i].transform.position = respawnPoints[waypointIndex].transform.position;
 			preyList[i].gameObject.GetComponent<UnityStandardAssets.Characters.ThirdPerson.basicPreyAI>().reset();
 		}
+		preyCount = preyList.Where(c => c.activeSelf == true).ToArray().Length;
+
+	}
+
+	public void startObjects(bool start)
+	{
+		int waypointIndex =  UnityEngine.Random.Range(0, respawnPoints.Length);
+		for( int i = 0; i <predList.Length; i++)
+		{
+			waypointIndex =  UnityEngine.Random.Range(0, respawnPoints.Length);
+			//predList[i].transform.position = respawnPoints[waypointIndex].transform.position;
+			//predList[i].GetComponent<DataManager>().reset();
+			predList[i].SetActive(start);
+			Debug.Log("Active");
+		}
+
+
+				//Prey reset
+		waypointIndex =  UnityEngine.Random.Range(0, respawnPoints.Length);
+		for( int i = 0; i <preyList.Length; i++)
+		{
+			//make sure everyhting is reset
+			waypointIndex =  UnityEngine.Random.Range(0, respawnPoints.Length);
+			//preyList[i].transform.position = respawnPoints[waypointIndex].transform.position;
+			preyList[i].SetActive(start);
+			//preyList[i].gameObject.GetComponent<UnityStandardAssets.Characters.ThirdPerson.basicPreyAI>().reset();
+		}
+
+		preyCount = preyList.Where(c => c.activeSelf == true).ToArray().Length;
+		Debug.Log(preyCount);
+		preyTracker = preyCount;
 
 
 	}
+
+
+
+	
 
 }

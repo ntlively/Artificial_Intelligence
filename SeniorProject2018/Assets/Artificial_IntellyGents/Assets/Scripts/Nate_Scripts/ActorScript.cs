@@ -161,6 +161,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				{
 					target.gameObject.GetComponent<basicPreyAI>().caught(this.transform.position);
 					patroller.preyCaught(target.transform.position);
+					manager.globalGame.GetComponent<GlobalGame>().preyCaughtUpdate();
 				}
 
 				if(!target.gameObject.GetComponent<DataManager>().alive)
