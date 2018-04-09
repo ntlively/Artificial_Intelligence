@@ -70,5 +70,6 @@ public class DataManager : MonoBehaviour {
 	public void reset()
 	{
 		state = State.PATROL;
+		updateTimer = 30.0f;
 	}
 }

@@ -193,8 +193,10 @@ public class GlobalGame : MonoBehaviour {
 			waypointIndex =  UnityEngine.Random.Range(0, respawnPoints.Length);
 			preyList[i].transform.position = respawnPoints[waypointIndex].transform.position;
 			preyList[i].gameObject.GetComponent<UnityStandardAssets.Characters.ThirdPerson.basicPreyAI>().reset();
+			
 		}
 		preyCount = preyList.Where(c => c.activeSelf == true).ToArray().Length;
+		preyTracker = preyCount;
 
 	}
 

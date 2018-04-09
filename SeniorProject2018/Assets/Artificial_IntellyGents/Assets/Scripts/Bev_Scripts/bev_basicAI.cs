@@ -266,10 +266,10 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 
 					if(Vector3.Distance(this.transform.position, this.target.transform.position) <= 2.0f)
 					{
-						/*if(manager.shout)
+						if(manager.shout)
 						{
 							manager.shout = false;
-						}*/
+						}
 						manager.talkTimer = manager.talkTimer-Time.deltaTime;
 						if(manager.talkTimer <= 0.0)
 						{
@@ -279,7 +279,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 							manager.shout = false;
 							manager.state = DataManager.State.PATROL;
 							//exchange information
-							//patroller.weightedList = manager.globalGame.GetComponent<Blackboard>().updateInfluence(patroller.getInfluence(), target.GetComponent<PatrolGuide>().getInfluence());
+							patroller.weightedList = manager.globalGame.GetComponent<Blackboard>().updateInfluence(patroller.getInfluence(), target.GetComponent<PatrolGuide>().getInfluence());
 							this.target = null;
 						
 						}

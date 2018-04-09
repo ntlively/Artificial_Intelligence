@@ -312,17 +312,19 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			this.transform.GetChild(4).gameObject.SetActive(true);
 			this.transform.GetChild(5).gameObject.SetActive(false);
 			//this.transform.GetChild(5).GetComponent<Rigidbody>().AddForce(hitDirection,ForceMode.Impulse);
-			this.transform.GetChild(5).tag = "Prey";
+			//this.transform.GetChild(5).tag = "Prey";
 			//this.transform.tag = "Dead";
 			//this.GetComponent<Rigidbody>().isKinematic = true;
-			//agent.SetDestination(this.transform.position);
+			agent.enabled = true;
 			agent.updatePosition = true;
+			agent.SetDestination(this.transform.position);
 			this.GetComponent<Rigidbody>().constraints =RigidbodyConstraints.None;
 			this.transform.GetChild(5).gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
-			agent.enabled = true;
+			
 			// this.hearingScript.enabled = false;
 			// this.visionScript.enabled = false;
-			manager.state = DataManager.State.HIDE;
+			sn.nextWaypoint = this.transform.position;
+			manager.state = DataManager.State.SEARCH;
 		}
 
 		public bool isAlive()

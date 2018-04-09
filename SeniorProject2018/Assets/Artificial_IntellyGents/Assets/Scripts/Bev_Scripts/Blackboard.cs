@@ -11,7 +11,7 @@ public class Blackboard : MonoBehaviour {
 	public List<WeightPoint> tempWeightChange = new List<WeightPoint>();	
 	public GameObject[] predators; 
 	public float updatePredPosTimer = 2.0f;
-	public float learningWeight = 0.5f;
+	public float learningWeight = 0.01f;
 
 	private float shortestDist = Mathf.Infinity;
 	private float longestDist = Mathf.NegativeInfinity;
@@ -97,17 +97,26 @@ public class Blackboard : MonoBehaviour {
 
 	}
 
-	public void updateInfluence (List<WeightPoint> pred1, List<WeightPoint> pred2)
+	public List<WeightPoint> updateInfluence (List<WeightPoint> pred1, List<WeightPoint> pred2)
 	{
 		//Take in the two predators 
 		//Update influence map between the two
 		for(int influ = 0; influ < pred1.Count; influ++ )
 		{
+			float newWeightPC =  (Mathf.Abs(pred1[influ].preyCaught - pred2[influ].preyCaught))*learningWeight;
+			float newWeightPS =  (Mathf.Abs(pred1[influ].preySpotted - pred2[influ].preySpotted))*learningWeight;
+			float newWeightVT =  (Mathf.Abs(pred1[influ].visitTime - pred2[influ].visitTime))*learningWeight;
 			//lets do an average
+			pred1[influ].preyCaught = pred1[influ].preyCaught + pred1[influ].preyCaught*newWeightPC;
+			pred1[influ].preySpotted = pred1[influ].preySpotted + pred1[influ].preySpotted*newWeightPS;
+			pred1[influ].visitTime =  pred1[influ].visitTime + pred1[influ].visitTime*newWeightVT;
 			//tempWeightChange[influ].weight = (pred1[influ].weight + pred2[influ].weight)/2; 
-			tempWeightChange[influ].preySpotted = 1.0f;
-			tempWeightChange[influ].preyCaught = 1.0f;
+			tempWeightChange[influ].preyCaught = pred1[influ].preyCaught+newWeightPC;
+			tempWeightChange[influ].preySpotted = pred1[influ].preySpotted+newWeightPS;
+			tempWeightChange[influ].visitTime = pred1[influ].visitTime+newWeightVT;
 		}
+
+		return pred1;
 
 	}
 
