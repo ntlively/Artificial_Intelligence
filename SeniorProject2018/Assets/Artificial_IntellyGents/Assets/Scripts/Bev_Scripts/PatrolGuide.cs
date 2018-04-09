@@ -131,7 +131,7 @@ public class PatrolGuide : MonoBehaviour {
 		
 	}
 
-	public virtual void OnDrawGizmos () 
+	public virtual void OnDrawGizmosSelected () 
 	{
 
 		Vector3 fillPoints = new Vector3 (-21.0f, 1.0f, 20.0f);
