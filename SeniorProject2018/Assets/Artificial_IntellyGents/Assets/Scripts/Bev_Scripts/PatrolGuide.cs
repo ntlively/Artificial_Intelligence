@@ -273,12 +273,13 @@ public class PatrolGuide : MonoBehaviour {
 	public void nextHidePosition () 
 	{
 		//Filter reachable points
+		prevWaypoint = nextWaypoint;
 		nextWaypoint = this.transform.position;
 		nextWaypoint[1] += 0.5f;
 
 		reachablePoints = weightedList.Where( x => (Vector3.Distance(nextWaypoint, x.position) < searchRadius)).ToList();
 
-		float bestWeight = nextWeight;
+		float bestWeight = prevWeight;
 		float testWeight = 0;
 		int index = -1;
 		for(int i = 0; i < reachablePoints.Count; i++)
@@ -301,7 +302,7 @@ public class PatrolGuide : MonoBehaviour {
 				}
 			}
 		}
-		prevWaypoint = nextWaypoint;
+		//prevWaypoint = nextWaypoint;
 		prevWeight = nextWeight;
 		nextWeight = bestWeight;
 
@@ -313,7 +314,7 @@ public class PatrolGuide : MonoBehaviour {
 		}
 		else
 		{
-			prevWaypoint = nextWaypoint;
+			nextWaypoint = prevWaypoint;
 		}
 	}
 

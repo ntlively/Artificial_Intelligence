@@ -113,35 +113,51 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 		void Patrol()
 		{
 			//Have the character move to a random way point based on errors.
-			agent.speed = manager.patrolSpeed;
-			sampleTimer += Time.deltaTime;
-			randomCheck -= Time.deltaTime;
+			this.agent.speed = manager.patrolSpeed;
+			this.sampleTimer += Time.deltaTime;
+			this.randomCheck -= Time.deltaTime;
 
-			if(Vector3.Distance(this.transform.position, patroller.nextWaypoint )>= 1.5)
+			if(Vector3.Distance(this.transform.position, this.patroller.nextWaypoint )>= 1.5)
+			{
+				this.agent.SetDestination(this.patroller.nextWaypoint);
+				this.character.Move(this.agent.desiredVelocity, false, false);
+			}
+			else if(this.randomCheck <= 0)
+			{
+				this.randomCheck = 5.0f;
+				this.notSkip = true;
+				this.patroller.nextRandomPosition();
+			}
+			//If the player is close to way point, set the next way point.
+			else if ((Vector3.Distance(this.transform.position, this.patroller.nextWaypoint) <= 1.5) || this.notSkip )
+			{
+				this.patroller.nextHuntPosition();
+				this.notSkip = false;
+				this.sampleTimer = 0.0f;
+			}
+			//If there are no way points close by.
+			else
+			{
+				this.character.Move(Vector3.zero, false, false);
+			}
+			/*if(Vector3.Distance(this.transform.position, patroller.nextWaypoint )>= 1.5 && sampleTimer < sampleTime)
 			{
 				agent.SetDestination(patroller.nextWaypoint);
 				character.Move(agent.desiredVelocity, false, false);
 			}
-			else if(randomCheck < 0)
-			{
-				randomCheck = 5.0f;
-				notSkip = true;
-				patroller.nextRandomPosition();
-			}
 			//If the player is close to way point, set the next way point.
-			else if ((Vector3.Distance(this.transform.position, patroller.nextWaypoint) <= 1.5) && notSkip )
+			else if (Vector3.Distance(this.transform.position, patroller.nextWaypoint) <= 1.5 || sampleTimer >= sampleTime)
 			{
 				patroller.nextHuntPosition();
-				notSkip = false;
 				sampleTimer = 0.0f;
 			}
 			//If there are no way points close by.
 			else
 			{
 				character.Move(Vector3.zero, false, false);
-			}
+			}*/
 
-			patroller.setVisited(this.transform.position);
+			this.patroller.setVisited(this.transform.position);
 
 			visionFunction();
 			hearingFunction();
@@ -312,17 +328,17 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 					foreach (Vision.VisionInfo visibleTarget in visionScript.visibleTargets) 
 					{
 						if(visibleTarget.target.CompareTag("Player") || visibleTarget.target.CompareTag("Prey")){
-							target = visibleTarget.target;
-							manager.state = DataManager.State.CHASE;
-							chasePos = target.position;
-							patroller.preySpotted(target.transform.position);
+							this.target = visibleTarget.target;
+							this.manager.state = DataManager.State.CHASE;
+							this.chasePos = target.position;
+							this.patroller.preySpotted(target.transform.position);
 						}
 						else if( (visibleTarget.target.gameObject.name == "FMS_Pred (1)" || visibleTarget.target.gameObject.name == "FMS_Pred")
-								 &&(manager.needUpdate) 
-								 && (manager.state != DataManager.State.CHASE ||visibleTarget.target.gameObject.GetComponent<DataManager>().state != DataManager.State.TALK)){
-							target = visibleTarget.target;
-							manager.state = DataManager.State.TALK;
-							manager.shout = true;
+								 &&(this.manager.needUpdate) 
+								 && (this.manager.state != DataManager.State.CHASE ||visibleTarget.target.gameObject.GetComponent<DataManager>().state != DataManager.State.TALK)){
+							this.target = visibleTarget.target;
+							this.manager.state = DataManager.State.TALK;
+							this.manager.shout = true;
 						}
 					}
 				}
@@ -337,23 +353,23 @@ namespace UnityStandardAssets.Characters.ThirdPerson{
 
 			//target = null;
 
-			if (hearingScript.hearableTargets.Count >0)
+			if (this.hearingScript.hearableTargets.Count >0)
 				{
 					foreach (Hearing.SoundInfo hearableTarget in hearingScript.hearableTargets) 
 					{
 						if(hearableTarget.target.CompareTag("Player") || hearableTarget.target.CompareTag("Prey")){
-							target = hearableTarget.target;
-							manager.state = DataManager.State.CHASE;
-							chasePos = target.position;
+							this.target = hearableTarget.target;
+							this.manager.state = DataManager.State.CHASE;
+							this.chasePos = target.position;
 						}
 
 						if( (hearableTarget.target.gameObject.name == "FMS_Pred (1)" || hearableTarget.target.gameObject.name == "FMS_Pred" )
 						&& (hearableTarget.target.gameObject.GetComponent<DataManager>().shout) 
-						&& (manager.state != DataManager.State.CHASE || hearableTarget.target.gameObject.GetComponent<DataManager>().state != DataManager.State.TALK)){
+						&& (this.manager.state != DataManager.State.CHASE || hearableTarget.target.gameObject.GetComponent<DataManager>().state != DataManager.State.TALK)){
 
-							target = hearableTarget.target;
-							manager.state = DataManager.State.TALK;
-							manager.shout = true;
+							this.target = hearableTarget.target;
+							this.manager.state = DataManager.State.TALK;
+							this.manager.shout = true;
 						}
 					}
 				}

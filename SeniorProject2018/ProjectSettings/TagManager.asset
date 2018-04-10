@@ -7,6 +7,7 @@ TagManager:
   - Predator
   - Prey
   - Dead
+  - PreyDead
   layers:
   - Default
   - TransparentFX

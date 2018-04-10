@@ -172,6 +172,15 @@ public class GlobalGame : MonoBehaviour {
 		predatorEvaded = 0;
 		resetObjects();
 
+		GameObject [] dolls = GameObject.FindGameObjectsWithTag("Dead");
+
+		//Clear rag dolls
+		Debug.Log("DEAD GUYS"+ dolls.Length);
+		for(int i = 0; i < dolls.Length; i++)
+		{
+			Destroy(dolls[i]);
+		}
+
 	}
 
 	public void resetObjects()
@@ -206,7 +215,7 @@ public class GlobalGame : MonoBehaviour {
 		for( int i = 0; i <predList.Length; i++)
 		{
 			waypointIndex =  UnityEngine.Random.Range(0, respawnPoints.Length);
-			//predList[i].transform.position = respawnPoints[waypointIndex].transform.position;
+			predList[i].transform.position = respawnPoints[waypointIndex].transform.position;
 			//predList[i].GetComponent<DataManager>().reset();
 			predList[i].SetActive(start);
 			Debug.Log("Active");

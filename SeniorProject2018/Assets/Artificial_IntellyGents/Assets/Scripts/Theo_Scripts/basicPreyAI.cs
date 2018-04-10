@@ -19,6 +19,11 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		public Vision visionScript;
 		public Hearing hearingScript;
 
+		//Ragdolls
+		public GameObject ragdoll;
+		//private GameObject thisRagdoll;
+
+
 		// Variables for FLEE
 		private Transform chaser;
 		public Vector3 chasePos;
@@ -41,6 +46,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 			sn = this.GetComponent<PatrolGuide>();
 
+//			this.thisRagdoll = this.ragdoll;
 			sn.nextWaypoint = this.transform.position;
 
 		}
@@ -62,7 +68,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 		IEnumerator Prey()
 		{
-			while(manager.alive)
+			while(true)
 			{
 				switch(manager.state)
 				{
@@ -80,6 +86,9 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 						break;
 					case DataManager.State.THINK:
 						Think();
+						break;
+					case DataManager.State.DEAD:
+						Dead();
 						break;
 				}
 				yield return null;
@@ -278,55 +287,67 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		public void caught(Vector3 catcherPos)
 		{
 			sn.preyCaught(this.transform.position);
-			Vector3 hitDirection = (this.transform.position - catcherPos).normalized;
 			manager.alive = false;
-			this.transform.GetChild(0).gameObject.SetActive(false);
-			this.transform.GetChild(1).gameObject.SetActive(false);
-			this.transform.GetChild(2).gameObject.SetActive(false);
-			this.transform.GetChild(3).gameObject.SetActive(false);
-			this.transform.GetChild(4).gameObject.SetActive(false);
-			this.transform.GetChild(5).gameObject.SetActive(true);
+			manager.state = DataManager.State.DEAD;
+			this.transform.tag = "PreyDead";
+			//agent.SetDestination(this.transform.position);
+			//character.Move(Vector3.zero,false,false);
+			this.transform.GetChild(0).gameObject.GetComponent<SkinnedMeshRenderer>().enabled = false;
+			this.transform.GetChild(1).gameObject.GetComponent<SkinnedMeshRenderer>().enabled = false;
+			this.transform.GetChild(3).gameObject.GetComponent<MeshRenderer>().enabled = false;
+			this.transform.GetChild(4).gameObject.GetComponent<MeshRenderer>().enabled = false;
+			
+			//this.thisRagdoll = Instantiate(this.ragdoll, this.transform.position, this.transform.rotation);
+			//this.thisRagdoll.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+
+			GameObject thisRagdoll = Instantiate(this.ragdoll, this.transform.position, this.transform.rotation);
+			thisRagdoll.tag = "Dead";
+			agent.enabled = false;
+			/*this.transform.GetChild(5).gameObject.SetActive(true);
 			this.transform.GetChild(5).GetComponent<Rigidbody>().AddForce(hitDirection,ForceMode.Impulse);
-			this.transform.GetChild(5).tag = "Dead";
+			this.transform.GetChild(5).tag = "Dead";*
 			//this.transform.tag = "Dead";
-			//this.GetComponent<Rigidbody>().isKinematic = true;
+			this.GetComponent<Rigidbody>().isKinematic = true;
 			//agent.SetDestination(this.transform.position);
 			agent.updatePosition = false;
-			this.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+		
 			this.transform.GetChild(5).gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
-			agent.enabled = false;
+			agent.enabled = false;*/
 			// this.hearingScript.enabled = false;
 			// this.visionScript.enabled = false;
-			manager.state = DataManager.State.DEAD;
+			
 		}
 
 		public void reset()
 		{
-			//sn.preyCaught(this.transform.position);
-			//Vector3 hitDirection = (this.transform.position - catcherPos).normalized;
-			manager.alive = true;
-			this.transform.GetChild(0).gameObject.SetActive(true);
-			this.transform.GetChild(1).gameObject.SetActive(true);
-			this.transform.GetChild(2).gameObject.SetActive(true);
-			this.transform.GetChild(3).gameObject.SetActive(true);
-			this.transform.GetChild(4).gameObject.SetActive(true);
-			this.transform.GetChild(5).gameObject.SetActive(false);
-			//this.transform.GetChild(5).GetComponent<Rigidbody>().AddForce(hitDirection,ForceMode.Impulse);
-			//this.transform.GetChild(5).tag = "Prey";
-			//this.transform.tag = "Dead";
-			//this.GetComponent<Rigidbody>().isKinematic = true;
-			agent.enabled = true;
+
+			/*manager.alive = true;
+			//this.gameObject.SetActive(true);
 			agent.updatePosition = true;
-			agent.SetDestination(this.transform.position);
-			this.GetComponent<Rigidbody>().constraints =RigidbodyConstraints.None;
-			this.transform.GetChild(5).gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
-			
-			// this.hearingScript.enabled = false;
-			// this.visionScript.enabled = false;
-			sn.nextWaypoint = this.transform.position;
-			manager.state = DataManager.State.SEARCH;
+			agent.updateRotation = false;*/
+			this.transform.GetChild(0).gameObject.GetComponent<SkinnedMeshRenderer>().enabled = true;
+			this.transform.GetChild(1).gameObject.GetComponent<SkinnedMeshRenderer>().enabled = true;
+			this.transform.GetChild(3).gameObject.GetComponent<MeshRenderer>().enabled = true;
+			this.transform.GetChild(4).gameObject.GetComponent<MeshRenderer>().enabled = true;
+			//Destroy(this.thisRagdoll);
+			//this.thisRagdoll = Instantiate(this.ragdoll, this.transform.position, this.transform.rotation);
+			//this.thisRagdoll.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+			this.agent.enabled = true;
+
+			this.manager.alive = true;
+			this.transform.tag = "Prey";
+			this.manager.state = DataManager.State.SEARCH;
+			this.sn.nextWaypoint = this.transform.position;
+			//StartCoroutine("Prey");
 		}
 
+
+		public void Dead()
+		{
+			Debug.Log("DEAD PREY");
+			//agent.SetDestination(this.transform.position);
+			//character.Move(Vector3.zero,false,false);
+		}
 		public bool isAlive()
 		{
 			return manager.alive;
