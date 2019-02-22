@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeniorProject2018", "Assembly-CSharp.csproj", "{8E5905F5-A5F9-5C99-4D58-0B80756FBA9D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{8E5905F5-A5F9-5C99-4D58-0B80756FBA9D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeniorProject2018", "Assembly-CSharp-firstpass.csproj", "{C4D000EB-4150-595A-9674-04A130864897}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-firstpass", "Assembly-CSharp-firstpass.csproj", "{C4D000EB-4150-595A-9674-04A130864897}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeniorProject2018", "Assembly-CSharp-Editor-firstpass.csproj", "{35F5593E-0DAB-EC7C-5A0D-3D59A2213F45}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-Editor-firstpass", "Assembly-CSharp-Editor-firstpass.csproj", "{35F5593E-0DAB-EC7C-5A0D-3D59A2213F45}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeniorProject2018", "Assembly-CSharp-Editor.csproj", "{7EAFB90C-68A7-12E8-C224-12B047266958}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-Editor", "Assembly-CSharp-Editor.csproj", "{7EAFB90C-68A7-12E8-C224-12B047266958}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -29,6 +29,23 @@ public class MemoryNode {
 
 //Used for storing data from the envirorment
 [System.Serializable]
+public class NavCheckPoint
+{
+    public Vector3 position;
+    public Vector3 navPosition;
+
+    public bool active;
+
+    public NavCheckPoint(Vector3 pos, Vector3 navPos)
+    {
+        position = pos;
+        navPosition = navPos;
+    }
+
+}
+
+//Used for storing data from the envirorment
+[System.Serializable]
 public class WeightPoint {
     
 	public Vector3 position;
