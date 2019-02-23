@@ -5774,7 +5774,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1695347847600252, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4469120777024560, guid: 6f4f56f72d9c92e4cb07a96270e994cb, type: 3}
       propertyPath: m_LocalPosition.x
@@ -7151,7 +7151,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &436017034
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17507,12 +17507,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1b751e752f07c84d967b8d56d4da745, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridOpacity: 0.5
-  displayTimesCaught: 1
-  displayVisited: 1
-  displayProbabilityDistribution: 1
-  displayPredictedPosition: 1
-  gridList: []
+  gridOpacity: 0.697
+  distanceWeight: 10
+  displayGrid: 1
+--- !u!114 &1210074476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1210074473}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74681b82712b8914696552de477e497b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  actor: {fileID: 0}
+  displayGrid: {fileID: 0}
+  target: {x: 0, y: 0, z: 10}
 --- !u!1 &1211648609
 GameObject:
   m_ObjectHideFlags: 0
@@ -17711,7 +17723,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1221131571
 MonoBehaviour:
   m_ObjectHideFlags: 0
